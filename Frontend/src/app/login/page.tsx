@@ -108,7 +108,7 @@ export default function LoginPage() {
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            <p className="text-center text-gray-700 text-sm">Please login to your account</p>
+            <p className="text-center text-gray-700 text-sm">Please login to your BECdex account</p>
 
             {/* Email */}
             <div>
