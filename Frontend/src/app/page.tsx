@@ -17,22 +17,84 @@ export default function LandingPage() {
   const [activeSlide, setActiveSlide] = useState(0);
   const [expertSlide, setExpertSlide] = useState(0);
   const [isHelpOpen, setIsHelpOpen] = useState(false);
-  const [helpForm, setHelpForm] = useState({ name: "", email: "", phone: "", category: "Feedback", detail: "" });
+  const [helpForm, setHelpForm] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    category: "Feedback",
+    detail: "",
+  });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const experts = [
-    { photo: "/expert/kaisar-akhir.png",   name: "Kaisar Akhir",               title: "Founder & Chairperson of Maritim Muda Nusantara" },
-    { photo: "/expert/basilo.jpg",          name: "Basilio Dias Araujo",         title: "Former Deputy for Coordination of Maritime Sovereignty and Energy, Coordinating Ministry for Maritime Affairs and Investment" },
-    { photo: "/expert/sahatua.jpg",         name: "Capt. Sahattua P. Simatupang", title: "Chairman of Maritime Court, Ministry of Transportation of the Republic of Indonesia" },
-    { photo: "/expert/dr ir diah.jpg",      name: "Dr. Ir. Diah Pranitasari",    title: "Associate Professor, Faculty of Economics and Business, STIE Indonesia Jakarta" },
-    { photo: "/expert/Evi-gravitiani.jpg",  name: "Prof. Dr. Evi Gravitiani",    title: "Professor of Natural Resource Economics, Faculty of Economics and Business, Universitas Sebelas Maret (UNS)" },
-    { photo: "/expert/dr subhan.jpg",       name: "Dr. Beginer Subhan",          title: "Associate Professor of Marine Science and Technology, Faculty of Fisheries and Marine Sciences, IPB University" },
-    { photo: "/expert/gugus_wijonarko.jpg", name: "Dr. Gugus Wijonarko",         title: "Chairman of STIAMAK Barunawati Surabaya" },
-    { photo: "/expert/Derry-Wanta.jpg",     name: "Dr. Derry Wanta",             title: "Lecturer in Accounting at Universitas Darma Persada & Blue Finance Technical Specialist" },
-    { photo: "/expert/sony.jpg",            name: "Dr. Sony Junianto",           title: "Lecturer in Energy Generation Systems, Politeknik Elektronika Negeri Surabaya (PENS)" },
-    { photo: "/expert/nurmaria sarosa.jpg", name: "Nurmaria Sarosa",             title: "Chairperson of WiLAT Indonesia & Independent Commissioner of Bank BRI" },
-    { photo: "/expert/agung_dhamar_syakti.jpg", name: "Prof. Dr. Agung Dhamar Syakti", title: "Rector of Universitas Maritim Raja Ali Haji (UMRAH)" },
-    { photo: "/expert/Prof.-Dr.-Asadatun-Abdullah-S.Pi_.-M.S.M.-M.Si_.jpg", name: "Prof. Dr. Asadatun Abdullah", title: "Professor of Aquatic Product Technology, IPB University" },
+    {
+      photo: "/expert/kaisar-akhir.png",
+      name: "Kaisar Akhir",
+      title: "Founder & Chairperson of Maritim Muda Nusantara",
+    },
+    {
+      photo: "/expert/basilo.jpg",
+      name: "Basilio Dias Araujo",
+      title:
+        "Former Deputy for Coordination of Maritime Sovereignty and Energy, Coordinating Ministry for Maritime Affairs and Investment",
+    },
+    {
+      photo: "/expert/sahatua.jpg",
+      name: "Capt. Sahattua P. Simatupang",
+      title:
+        "Chairman of Maritime Court, Ministry of Transportation of the Republic of Indonesia",
+    },
+    {
+      photo: "/expert/dr ir diah.jpg",
+      name: "Dr. Ir. Diah Pranitasari",
+      title:
+        "Associate Professor, Faculty of Economics and Business, STIE Indonesia Jakarta",
+    },
+    {
+      photo: "/expert/Evi-gravitiani.jpg",
+      name: "Prof. Dr. Evi Gravitiani",
+      title:
+        "Professor of Natural Resource Economics, Faculty of Economics and Business, Universitas Sebelas Maret (UNS)",
+    },
+    {
+      photo: "/expert/dr subhan.jpg",
+      name: "Dr. Beginer Subhan",
+      title:
+        "Associate Professor of Marine Science and Technology, Faculty of Fisheries and Marine Sciences, IPB University",
+    },
+    {
+      photo: "/expert/gugus_wijonarko.jpg",
+      name: "Dr. Gugus Wijonarko",
+      title: "Chairman of STIAMAK Barunawati Surabaya",
+    },
+    {
+      photo: "/expert/Derry-Wanta.jpg",
+      name: "Dr. Derry Wanta",
+      title:
+        "Lecturer in Accounting at Universitas Darma Persada & Blue Finance Technical Specialist",
+    },
+    {
+      photo: "/expert/sony.jpg",
+      name: "Dr. Sony Junianto",
+      title:
+        "Lecturer in Energy Generation Systems, Politeknik Elektronika Negeri Surabaya (PENS)",
+    },
+    {
+      photo: "/expert/nurmaria sarosa.jpg",
+      name: "Nurmaria Sarosa",
+      title:
+        "Chairperson of WiLAT Indonesia & Independent Commissioner of Bank BRI",
+    },
+    {
+      photo: "/expert/agung_dhamar_syakti.jpg",
+      name: "Prof. Dr. Agung Dhamar Syakti",
+      title: "Rector of Universitas Maritim Raja Ali Haji (UMRAH)",
+    },
+    {
+      photo: "/expert/Prof.-Dr.-Asadatun-Abdullah-S.Pi_.-M.S.M.-M.Si_.jpg",
+      name: "Prof. Dr. Asadatun Abdullah",
+      title: "Professor of Aquatic Product Technology, IPB University",
+    },
   ];
   const EXPERTS_PER_VIEW = 5;
   const GAP_PX = 24;
@@ -56,7 +118,11 @@ export default function LandingPage() {
   const handleHelpSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!helpForm.name || !helpForm.email || !helpForm.detail) {
-      toast.error(locale === "id" ? "Mohon isi semua bidang wajib!" : "Please fill in all required fields!");
+      toast.error(
+        locale === "id"
+          ? "Mohon isi semua bidang wajib!"
+          : "Please fill in all required fields!",
+      );
       return;
     }
     setIsSubmitting(true);
@@ -68,11 +134,25 @@ export default function LandingPage() {
         issue_type: helpForm.category,
         detail: helpForm.detail,
       });
-      toast.success(locale === "id" ? "Pesan bantuan Anda telah berhasil dikirim!" : "Your help request has been successfully sent!");
-      setHelpForm({ name: "", email: "", phone: "", category: "Feedback", detail: "" });
+      toast.success(
+        locale === "id"
+          ? "Pesan bantuan Anda telah berhasil dikirim!"
+          : "Your help request has been successfully sent!",
+      );
+      setHelpForm({
+        name: "",
+        email: "",
+        phone: "",
+        category: "Feedback",
+        detail: "",
+      });
       setIsHelpOpen(false);
     } catch {
-      toast.error(locale === "id" ? "Gagal mengirim pesan." : "Failed to send help request.");
+      toast.error(
+        locale === "id"
+          ? "Gagal mengirim pesan."
+          : "Failed to send help request.",
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -92,7 +172,9 @@ export default function LandingPage() {
             </h1>
 
             <div className="space-y-3">
-              <h5 className="text-[#4154f1] text-lg font-bold hover:underline cursor-pointer">{t.hero_what_is}</h5>
+              <h5 className="text-[#4154f1] text-lg font-bold hover:underline cursor-pointer">
+                {t.hero_what_is}
+              </h5>
               <p className="text-gray-600 text-sm md:text-base leading-relaxed text-justify">
                 {t.hero_desc_1}
               </p>
@@ -102,7 +184,9 @@ export default function LandingPage() {
             </div>
 
             <div className="space-y-3 pt-2">
-              <h5 className="text-[#4154f1] text-lg font-bold hover:underline cursor-pointer">{t.hero_how_certified}</h5>
+              <h5 className="text-[#4154f1] text-lg font-bold hover:underline cursor-pointer">
+                {t.hero_how_certified}
+              </h5>
               <p className="text-gray-600 text-sm md:text-base leading-relaxed text-justify">
                 {t.hero_cert_process}
               </p>
@@ -110,13 +194,17 @@ export default function LandingPage() {
 
             <div className="pt-6 text-gray-800 text-xl md:text-2xl font-bold">
               {t.hero_certify_link}{" "}
-              <Link href="/register" className="text-[#4154f1] underline font-extrabold hover:text-[#2e3fe6]">
+              <Link
+                href="/register"
+                className="text-[#4154f1] underline font-extrabold hover:text-[#2e3fe6]">
                 {t.hero_click_here}
               </Link>
             </div>
 
             <div className="pt-6">
-              <Link href="#assessment-standards" className="inline-flex items-center justify-center px-8 py-3 bg-[#4154f1] text-white font-semibold rounded shadow-md hover:bg-[#3445d4] transition-colors">
+              <Link
+                href="#assessment-standards"
+                className="inline-flex items-center justify-center px-8 py-3 bg-[#4154f1] text-white font-semibold rounded shadow-md hover:bg-[#3445d4] transition-colors">
                 Learn More &rarr;
               </Link>
             </div>
@@ -149,7 +237,9 @@ export default function LandingPage() {
               />
               <p className="text-gray-500 text-xs mt-4">
                 {t.hero_info}{" "}
-                <a href="mailto:info@becdex.com" className="text-[#4154f1] font-semibold hover:underline">
+                <a
+                  href="mailto:info@becdex.com"
+                  className="text-[#4154f1] font-semibold hover:underline">
                   info@becdex.com
                 </a>
               </p>
@@ -172,12 +262,26 @@ export default function LandingPage() {
             <p className="assess-stage-desc">{t.assess_stage1_desc}</p>
             <div className="assess-cards assess-cards-3">
               {[
-                { icon: "bi-shield-check",  title: t.assess_s1_c1_title, desc: t.assess_s1_c1_desc },
-                { icon: "bi-water",          title: t.assess_s1_c2_title, desc: t.assess_s1_c2_desc },
-                { icon: "bi-people-fill",    title: t.assess_s1_c3_title, desc: t.assess_s1_c3_desc },
+                {
+                  icon: "bi-shield-check",
+                  title: t.assess_s1_c1_title,
+                  desc: t.assess_s1_c1_desc,
+                },
+                {
+                  icon: "bi-water",
+                  title: t.assess_s1_c2_title,
+                  desc: t.assess_s1_c2_desc,
+                },
+                {
+                  icon: "bi-people-fill",
+                  title: t.assess_s1_c3_title,
+                  desc: t.assess_s1_c3_desc,
+                },
               ].map((card, idx) => (
                 <div key={idx} className="assess-card">
-                  <div className="assess-card-icon"><i className={`bi ${card.icon}`} /></div>
+                  <div className="assess-card-icon">
+                    <i className={`bi ${card.icon}`} />
+                  </div>
                   <div>
                     <h4 className="assess-card-title">{card.title}</h4>
                     <p className="assess-card-desc">{card.desc}</p>
@@ -194,11 +298,21 @@ export default function LandingPage() {
             <p className="assess-stage-desc">{t.assess_stage2_desc}</p>
             <div className="assess-cards assess-cards-2">
               {[
-                { icon: "bi-geo-alt-fill",        title: t.assess_s2_c1_title, desc: t.assess_s2_c1_desc },
-                { icon: "bi-chat-quote-fill",      title: t.assess_s2_c2_title, desc: t.assess_s2_c2_desc },
+                {
+                  icon: "bi-geo-alt-fill",
+                  title: t.assess_s2_c1_title,
+                  desc: t.assess_s2_c1_desc,
+                },
+                {
+                  icon: "bi-chat-quote-fill",
+                  title: t.assess_s2_c2_title,
+                  desc: t.assess_s2_c2_desc,
+                },
               ].map((card, idx) => (
                 <div key={idx} className="assess-card">
-                  <div className="assess-card-icon"><i className={`bi ${card.icon}`} /></div>
+                  <div className="assess-card-icon">
+                    <i className={`bi ${card.icon}`} />
+                  </div>
                   <div>
                     <h4 className="assess-card-title">{card.title}</h4>
                     <p className="assess-card-desc">{card.desc}</p>
@@ -223,22 +337,28 @@ export default function LandingPage() {
           <div className="experts-carousel-outer">
             <button
               className="experts-nav experts-nav-prev"
-              onClick={() => setExpertSlide(s => Math.max(0, s - 1))}
+              onClick={() => setExpertSlide((s) => Math.max(0, s - 1))}
               disabled={expertSlide === 0}
-              aria-label="Previous"
-            >
+              aria-label="Previous">
               &#8249;
             </button>
 
             <div className="experts-track-wrap">
               <div
                 className="experts-track"
-                style={{ transform: `translateX(calc(-${expertSlide} * ((100% + ${GAP_PX}px) / ${EXPERTS_PER_VIEW})))` }}
-              >
+                style={{
+                  transform: `translateX(calc(-${expertSlide} * ((100% + ${GAP_PX}px) / ${EXPERTS_PER_VIEW})))`,
+                }}>
                 {experts.map((expert, idx) => (
                   <div key={idx} className="expert-slide-card">
                     <div className="expert-slide-img">
-                      <Image src={expert.photo} alt={expert.name} width={240} height={300} className="expert-slide-photo" />
+                      <Image
+                        src={expert.photo}
+                        alt={expert.name}
+                        width={240}
+                        height={300}
+                        className="expert-slide-photo"
+                      />
                     </div>
                     <div className="expert-slide-info">
                       <h4>{expert.name}</h4>
@@ -251,10 +371,11 @@ export default function LandingPage() {
 
             <button
               className="experts-nav experts-nav-next"
-              onClick={() => setExpertSlide(s => Math.min(maxExpertSlide, s + 1))}
+              onClick={() =>
+                setExpertSlide((s) => Math.min(maxExpertSlide, s + 1))
+              }
               disabled={expertSlide >= maxExpertSlide}
-              aria-label="Next"
-            >
+              aria-label="Next">
               &#8250;
             </button>
           </div>
@@ -283,11 +404,21 @@ export default function LandingPage() {
               <p className="recognition-subtitle">{t.rec_subtitle}</p>
               <div className="recognition-features">
                 {[
-                  { icon: "bi-patch-check", title: t.rec_f1_title, desc: t.rec_f1_desc },
-                  { icon: "bi-globe2",      title: t.rec_f2_title, desc: t.rec_f2_desc },
+                  {
+                    icon: "bi-patch-check",
+                    title: t.rec_f1_title,
+                    desc: t.rec_f1_desc,
+                  },
+                  {
+                    icon: "bi-globe2",
+                    title: t.rec_f2_title,
+                    desc: t.rec_f2_desc,
+                  },
                 ].map((feat, idx) => (
                   <div key={idx} className="rec-feature">
-                    <div className="rec-feat-icon"><i className={`bi ${feat.icon}`} /></div>
+                    <div className="rec-feat-icon">
+                      <i className={`bi ${feat.icon}`} />
+                    </div>
                     <div>
                       <h4 className="rec-feat-title">{feat.title}</h4>
                       <p className="rec-feat-desc">{feat.desc}</p>
@@ -295,58 +426,103 @@ export default function LandingPage() {
                   </div>
                 ))}
               </div>
-              <Link href="/register" className="rec-btn">{t.rec_btn_text}</Link>
+              <Link href="/register" className="rec-btn">
+                {t.rec_btn_text}
+              </Link>
             </div>
             {/* Right */}
             <div className="recognition-img-wrap">
-              <Image src="/recognition.jpg" alt="BECdex Recognition" width={600} height={480} className="recognition-img" />
+              <Image
+                src="/recognition.jpg"
+                alt="BECdex Recognition"
+                width={600}
+                height={480}
+                className="recognition-img"
+              />
             </div>
           </div>
         </div>
       </section>
 
-
-      {/* Certification Body Section */}
+      {/* Partners & Certifications Section */}
       <section className="bg-white py-14 border-t border-gray-100">
-        <div className="container-custom text-center space-y-6">
-          <div className="section-header">
-            <p>CERTIFICATION BODY</p>
+        <div className="container-custom text-center flex flex-col gap-14">
+          
+          {/* Certification Body */}
+          <div className="space-y-4">
+            <div className="section-header">
+              <p>CERTIFICATION BODY</p>
+            </div>
+            <div className="flex justify-center">
+              <a
+                href="https://maritimepreneur.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:scale-105 transition-transform duration-300">
+                <Image
+                  src="/becdex_icc.webp"
+                  alt="BECdex ICC Logo"
+                  width={220}
+                  height={110}
+                  className="object-contain"
+                />
+              </a>
+            </div>
           </div>
-          <div className="flex justify-center">
-            <a href="https://maritimepreneur.com" target="_blank" rel="noopener noreferrer" className="hover:scale-105 transition-transform duration-300">
-              <Image src="/becdex_icc.webp" alt="BECdex ICC Logo" width={220} height={110} className="object-contain" />
-            </a>
-          </div>
-        </div>
-      </section>
 
-      {/* Member Of Section */}
-      <section className="bg-white py-14 border-t border-gray-100">
-        <div className="container-custom text-center space-y-6">
-          <div className="section-header">
-            <p>MEMBER OF</p>
+          {/* Member Of */}
+          <div className="space-y-4">
+            <div className="section-header">
+              <p>MEMBER OF</p>
+            </div>
+            <div className="flex justify-center items-center gap-10 flex-wrap">
+              <Image
+                src="/member_of.jpg"
+                alt="Member of Logo"
+                width={260}
+                height={110}
+                className="object-contain"
+              />
+              <Image
+                src="/un-global-compact.png"
+                alt="UN Global Compact"
+                width={160}
+                height={160}
+                className="object-contain"
+              />
+            </div>
           </div>
-          <div className="flex justify-center items-center gap-6 flex-wrap">
-            <Image src="/member_of.jpg" alt="Member of Logo" width={260} height={110} className="object-contain" />
-            <Image src="/un-global-compact.png" alt="UN Global Compact" width={120} height={120} className="object-contain" />
-          </div>
-        </div>
-      </section>
 
-      {/* Strategic Partners Section */}
-      <section className="bg-white py-14 border-t border-gray-100">
-        <div className="container-custom text-center space-y-6">
+          {/* Strategic Partners */}
+          <div className="space-y-4">
           <div className="section-header">
             <p>STRATEGIC PARTNERS</p>
           </div>
           <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12 pt-4">
             {[
               { src: "/blue_institute.webp", href: "#" },
-              { src: "/maritim_muda_partner.png", href: "https://maritimmuda.id" },
-              { src: "/stie_ibec_partner.webp", href: "https://ibec.stei.ac.id/" },
+              {
+                src: "/maritim_muda_partner.png",
+                href: "https://maritimmuda.id",
+              },
+              {
+                src: "/stie_ibec_partner.webp",
+                href: "https://ibec.stei.ac.id/",
+              },
             ].map((p, idx) => (
-              <a key={idx} href={p.href} target="_blank" rel="noopener noreferrer" className="hover:scale-105 transition-transform duration-300">
-                <Image src={p.src} alt="Strategic Partner" width={200} height={90} className="object-contain max-h-20" />
+              <a
+                key={idx}
+                href={p.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:scale-105 transition-transform duration-300">
+                <Image
+                  src={p.src}
+                  alt="Strategic Partner"
+                  width={200}
+                  height={90}
+                  className="object-contain max-h-20"
+                />
               </a>
             ))}
           </div>
@@ -354,7 +530,9 @@ export default function LandingPage() {
       </section>
 
       {/* Contact Section */}
-      <section id="contact" className="bg-[#fafbfe] py-16 border-t border-gray-100">
+      <section
+        id="contact"
+        className="bg-[#fafbfe] py-16 border-t border-gray-100">
         <div className="container-custom">
           <div className="section-header">
             <p>{t.contact_title}</p>
@@ -384,9 +562,7 @@ export default function LandingPage() {
                 <Phone size={20} />
               </div>
               <h3>{t.contact_call}</h3>
-              <p>
-                {t.contact_call_desc}
-              </p>
+              <p>{t.contact_call_desc}</p>
             </div>
 
             {/* Card Email */}
@@ -421,8 +597,7 @@ export default function LandingPage() {
       {/* Floating Help Center Trigger Button */}
       <button
         onClick={() => setIsHelpOpen(true)}
-        className="fixed bottom-6 right-6 w-12 h-12 rounded-full bg-[#4154f1] hover:bg-[#2e3fe6] text-white flex items-center justify-center shadow-lg transition-all hover:scale-105 z-40 border border-white/20"
-      >
+        className="fixed bottom-6 right-6 w-12 h-12 rounded-full bg-[#4154f1] hover:bg-[#2e3fe6] text-white flex items-center justify-center shadow-lg transition-all hover:scale-105 z-40 border border-white/20">
         <HelpCircle size={24} />
       </button>
 
@@ -430,63 +605,86 @@ export default function LandingPage() {
       {isHelpOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
           <div className="bg-white rounded-2xl w-full max-w-md p-6 shadow-2xl relative space-y-4">
-            <button onClick={() => setIsHelpOpen(false)} className="absolute right-4 top-4 p-1 rounded-lg text-gray-400 hover:bg-gray-100 hover:text-gray-700">
+            <button
+              onClick={() => setIsHelpOpen(false)}
+              className="absolute right-4 top-4 p-1 rounded-lg text-gray-400 hover:bg-gray-100 hover:text-gray-700">
               <X size={18} />
             </button>
-            <h3 className="text-[#012970] font-black text-xl">{t.help_title}</h3>
+            <h3 className="text-[#012970] font-black text-xl">
+              {t.help_title}
+            </h3>
             <form onSubmit={handleHelpSubmit} className="space-y-3">
               <div>
-                <label className="block text-xs font-semibold text-gray-700 mb-1">{t.help_name}</label>
+                <label className="block text-xs font-semibold text-gray-700 mb-1">
+                  {t.help_name}
+                </label>
                 <input
                   type="text"
                   required
                   value={helpForm.name}
-                  onChange={(e) => setHelpForm({ ...helpForm, name: e.target.value })}
+                  onChange={(e) =>
+                    setHelpForm({ ...helpForm, name: e.target.value })
+                  }
                   placeholder={t.help_placeholder}
                   className="w-full text-xs border border-gray-200 rounded-lg px-3 py-2 bg-gray-50 focus:bg-white outline-none focus:ring-2 focus:ring-[#4154f1]/20"
                 />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-gray-700 mb-1">{t.help_email}</label>
+                <label className="block text-xs font-semibold text-gray-700 mb-1">
+                  {t.help_email}
+                </label>
                 <input
                   type="email"
                   required
                   value={helpForm.email}
-                  onChange={(e) => setHelpForm({ ...helpForm, email: e.target.value })}
+                  onChange={(e) =>
+                    setHelpForm({ ...helpForm, email: e.target.value })
+                  }
                   placeholder={t.help_placeholder}
                   className="w-full text-xs border border-gray-200 rounded-lg px-3 py-2 bg-gray-50 focus:bg-white outline-none focus:ring-2 focus:ring-[#4154f1]/20"
                 />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-gray-700 mb-1">{t.help_phone}</label>
+                <label className="block text-xs font-semibold text-gray-700 mb-1">
+                  {t.help_phone}
+                </label>
                 <input
                   type="tel"
                   required
                   value={helpForm.phone}
-                  onChange={(e) => setHelpForm({ ...helpForm, phone: e.target.value })}
+                  onChange={(e) =>
+                    setHelpForm({ ...helpForm, phone: e.target.value })
+                  }
                   placeholder={t.help_placeholder}
                   className="w-full text-xs border border-gray-200 rounded-lg px-3 py-2 bg-gray-50 focus:bg-white outline-none focus:ring-2 focus:ring-[#4154f1]/20"
                 />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-gray-700 mb-1">{t.help_category}</label>
+                <label className="block text-xs font-semibold text-gray-700 mb-1">
+                  {t.help_category}
+                </label>
                 <select
                   value={helpForm.category}
-                  onChange={(e) => setHelpForm({ ...helpForm, category: e.target.value })}
-                  className="w-full text-xs border border-gray-200 rounded-lg px-3 py-2 bg-gray-50 outline-none"
-                >
+                  onChange={(e) =>
+                    setHelpForm({ ...helpForm, category: e.target.value })
+                  }
+                  className="w-full text-xs border border-gray-200 rounded-lg px-3 py-2 bg-gray-50 outline-none">
                   <option value="Feedback">{t.help_feedback}</option>
                   <option value="Platform">{t.help_platform}</option>
                   <option value="Optional">{t.help_optional}</option>
                 </select>
               </div>
               <div>
-                <label className="block text-xs font-semibold text-gray-700 mb-1">{t.help_detail}</label>
+                <label className="block text-xs font-semibold text-gray-700 mb-1">
+                  {t.help_detail}
+                </label>
                 <textarea
                   required
                   rows={3}
                   value={helpForm.detail}
-                  onChange={(e) => setHelpForm({ ...helpForm, detail: e.target.value })}
+                  onChange={(e) =>
+                    setHelpForm({ ...helpForm, detail: e.target.value })
+                  }
                   className="w-full text-xs border border-gray-200 rounded-lg px-3 py-2 bg-gray-50 focus:bg-white outline-none focus:ring-2 focus:ring-[#4154f1]/20"
                 />
               </div>
@@ -494,16 +692,16 @@ export default function LandingPage() {
                 <button
                   type="button"
                   onClick={() => setIsHelpOpen(false)}
-                  className="px-4 py-2 border border-gray-200 rounded-lg text-xs font-medium text-gray-600 hover:bg-gray-50"
-                >
+                  className="px-4 py-2 border border-gray-200 rounded-lg text-xs font-medium text-gray-600 hover:bg-gray-50">
                   {t.help_close}
                 </button>
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="px-4 py-2 bg-[#4154f1] text-white rounded-lg text-xs font-bold hover:bg-[#2e3fe6] shadow-xs flex items-center gap-1.5 disabled:opacity-60"
-                >
-                  {isSubmitting && <Loader2 size={12} className="animate-spin" />}
+                  className="px-4 py-2 bg-[#4154f1] text-white rounded-lg text-xs font-bold hover:bg-[#2e3fe6] shadow-xs flex items-center gap-1.5 disabled:opacity-60">
+                  {isSubmitting && (
+                    <Loader2 size={12} className="animate-spin" />
+                  )}
                   {t.help_save}
                 </button>
               </div>
