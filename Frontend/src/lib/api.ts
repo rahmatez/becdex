@@ -9,11 +9,20 @@ const api = axios.create({
   },
 });
 
+// Helper untuk set/hapus auth token dari luar komponen
+export function setAuthToken(token: string | null) {
+  if (token) {
+    api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  } else {
+    delete api.defaults.headers.common["Authorization"];
+  }
+}
+
 // Auto-load token dari localStorage (agar tetap login setelah refresh halaman)
 if (typeof window !== "undefined") {
   const token = localStorage.getItem("becdex_token");
   if (token) {
-    api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    setAuthToken(token);
   }
 }
 
@@ -35,7 +44,7 @@ api.interceptors.response.use(
         // Bersihkan state hantu Zustand dan token sebelum pindah halaman
         localStorage.removeItem("becdex-auth");
         localStorage.removeItem("becdex_token");
-        delete api.defaults.headers.common["Authorization"];
+        setAuthToken(null);
         window.location.href = "/login";
       }
     }

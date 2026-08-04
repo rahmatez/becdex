@@ -10,7 +10,7 @@ import { Loader2, ArrowLeft } from "lucide-react";
 import Image from "next/image";
 import Cookies from "js-cookie";
 import { useEffect } from "react";
-import api from "@/lib/api";
+import api, { setAuthToken } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
 import { useLangStore } from "@/store/lang";
 import { useTheme } from "@/context/ThemeContext";
@@ -58,7 +58,7 @@ export default function LoginPage() {
       // Simpan token ke localStorage agar bisa dipakai oleh semua request
       if (token) {
         localStorage.setItem("becdex_token", token);
-        api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+        setAuthToken(token);
       }
 
       setAuth(user);
