@@ -35,6 +35,7 @@ export default function LandingPage() {
     { photo: "/expert/Prof.-Dr.-Asadatun-Abdullah-S.Pi_.-M.S.M.-M.Si_.jpg", name: "Prof. Dr. Asadatun Abdullah", title: "Professor of Aquatic Product Technology, IPB University" },
   ];
   const EXPERTS_PER_VIEW = 4;
+  const GAP_PX = 24;
   const maxExpertSlide = experts.length - EXPERTS_PER_VIEW;
 
   useEffect(() => {
@@ -225,7 +226,7 @@ export default function LandingPage() {
             <div className="experts-track-wrap">
               <div
                 className="experts-track"
-                style={{ transform: `translateX(calc(-${expertSlide} * (100% / ${EXPERTS_PER_VIEW})))` }}
+                style={{ transform: `translateX(calc(-${expertSlide} * ((100% + ${GAP_PX}px) / ${EXPERTS_PER_VIEW})))` }}
               >
                 {experts.map((expert, idx) => (
                   <div key={idx} className="expert-slide-card">
