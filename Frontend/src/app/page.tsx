@@ -34,7 +34,7 @@ export default function LandingPage() {
     { photo: "/expert/agung_dhamar_syakti.jpg", name: "Prof. Dr. Agung Dhamar Syakti", title: "Rector of Universitas Maritim Raja Ali Haji (UMRAH)" },
     { photo: "/expert/Prof.-Dr.-Asadatun-Abdullah-S.Pi_.-M.S.M.-M.Si_.jpg", name: "Prof. Dr. Asadatun Abdullah", title: "Professor of Aquatic Product Technology, IPB University" },
   ];
-  const EXPERTS_PER_VIEW = 4;
+  const EXPERTS_PER_VIEW = 5;
   const GAP_PX = 24;
   const maxExpertSlide = experts.length - EXPERTS_PER_VIEW;
 
