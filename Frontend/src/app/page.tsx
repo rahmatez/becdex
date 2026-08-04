@@ -114,31 +114,38 @@ export default function LandingPage() {
                 {t.hero_click_here}
               </Link>
             </div>
+
+            <div className="pt-6">
+              <Link href="#assessment-standards" className="inline-flex items-center justify-center px-8 py-3 bg-[#4154f1] text-white font-semibold rounded shadow-md hover:bg-[#3445d4] transition-colors">
+                Learn More &rarr;
+              </Link>
+            </div>
           </div>
 
           {/* Right Content: Slideshow Carousel & Flow Diagram */}
-          <div className="space-y-4 pt-0">
+          <div className="space-y-2 pt-0 flex flex-col items-center justify-start lg:pl-8">
             {/* Slideshow (Borderless, no chevrons, no dots) */}
-            <div className="relative w-full overflow-hidden">
-              <div className="relative w-full aspect-4/3 md:aspect-[1.3] overflow-hidden">
+            <div className="relative w-full overflow-hidden max-w-[500px]">
+              <div className="relative w-full aspect-[1.3] overflow-hidden">
                 <Image
                   src={slides[activeSlide]}
                   alt={`Slide ${activeSlide + 1}`}
                   fill
-                  className="object-contain transition-opacity duration-500 scale-115 md:scale-130"
+                  className="object-contain transition-opacity duration-500 scale-105"
                   priority
                 />
               </div>
             </div>
 
             {/* Flow Diagram */}
-            <div className="text-center pt-2">
+            <div className="text-center pt-0 w-full max-w-[480px]">
               <Image
                 src="/newestflow.webp"
                 alt="BECdex Certification Flow"
                 width={500}
                 height={300}
-                className="mx-auto rounded-lg"
+                className="mx-auto"
+                style={{ width: "95%", height: "auto" }}
               />
               <p className="text-gray-500 text-xs mt-4">
                 {t.hero_info}{" "}
