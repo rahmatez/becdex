@@ -15,9 +15,27 @@ export default function LandingPage() {
   const { t, locale } = useTranslation();
   const [mounted, setMounted] = useState(false);
   const [activeSlide, setActiveSlide] = useState(0);
+  const [expertSlide, setExpertSlide] = useState(0);
   const [isHelpOpen, setIsHelpOpen] = useState(false);
   const [helpForm, setHelpForm] = useState({ name: "", email: "", phone: "", category: "Feedback", detail: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const experts = [
+    { photo: "/expert/kaisar-akhir.png",   name: "Kaisar Akhir",               title: "Founder & Chairperson of Maritim Muda Nusantara" },
+    { photo: "/expert/basilo.jpg",          name: "Basilio Dias Araujo",         title: "Former Deputy for Coordination of Maritime Sovereignty and Energy, Coordinating Ministry for Maritime Affairs and Investment" },
+    { photo: "/expert/sahatua.jpg",         name: "Capt. Sahattua P. Simatupang", title: "Chairman of Maritime Court, Ministry of Transportation of the Republic of Indonesia" },
+    { photo: "/expert/dr ir diah.jpg",      name: "Dr. Ir. Diah Pranitasari",    title: "Associate Professor, Faculty of Economics and Business, STIE Indonesia Jakarta" },
+    { photo: "/expert/Evi-gravitiani.jpg",  name: "Prof. Dr. Evi Gravitiani",    title: "Professor of Natural Resource Economics, Faculty of Economics and Business, Universitas Sebelas Maret (UNS)" },
+    { photo: "/expert/dr subhan.jpg",       name: "Dr. Beginer Subhan",          title: "Associate Professor of Marine Science and Technology, Faculty of Fisheries and Marine Sciences, IPB University" },
+    { photo: "/expert/gugus_wijonarko.jpg", name: "Dr. Gugus Wijonarko",         title: "Chairman of STIAMAK Barunawati Surabaya" },
+    { photo: "/expert/Derry-Wanta.jpg",     name: "Dr. Derry Wanta",             title: "Lecturer in Accounting at Universitas Darma Persada & Blue Finance Technical Specialist" },
+    { photo: "/expert/sony.jpg",            name: "Dr. Sony Junianto",           title: "Lecturer in Energy Generation Systems, Politeknik Elektronika Negeri Surabaya (PENS)" },
+    { photo: "/expert/nurmaria sarosa.jpg", name: "Nurmaria Sarosa",             title: "Chairperson of WiLAT Indonesia & Independent Commissioner of Bank BRI" },
+    { photo: "/expert/agung_dhamar_syakti.jpg", name: "Prof. Dr. Agung Dhamar Syakti", title: "Rector of Universitas Maritim Raja Ali Haji (UMRAH)" },
+    { photo: "/expert/Prof.-Dr.-Asadatun-Abdullah-S.Pi_.-M.S.M.-M.Si_.jpg", name: "Prof. Dr. Asadatun Abdullah", title: "Professor of Aquatic Product Technology, IPB University" },
+  ];
+  const EXPERTS_PER_VIEW = 4;
+  const maxExpertSlide = experts.length - EXPERTS_PER_VIEW;
 
   useEffect(() => {
     const timer = setTimeout(() => setMounted(true), 0);
@@ -133,145 +151,152 @@ export default function LandingPage() {
       </section>
 
       {/* ======= Assessment Standards Section ======= */}
-      <section style={{ backgroundColor: "#f6f9ff", padding: "70px 0 30px 0", fontFamily: "'Open Sans', sans-serif" }}>
+      <section className="assess-section">
         <div className="container-custom">
-          <div style={{ textAlign: "left", marginBottom: 40 }}>
-            <h2 style={{ fontSize: 36, fontWeight: 700, color: "#012970", margin: "0 0 15px 0", lineHeight: 1.25, fontFamily: "'Nunito', sans-serif" }}>
-              {t.assess_title}
-            </h2>
-            <p style={{ fontSize: 16, color: "#555", margin: 0, maxWidth: 950, lineHeight: 1.6 }}>
-              {t.assess_subtitle}
-            </p>
+          <div className="assess-header">
+            <h2 className="assess-h2">{t.assess_title}</h2>
+            <p className="assess-subtitle">{t.assess_subtitle}</p>
           </div>
 
           {/* Stage 1 */}
-          <div style={{ marginBottom: 45 }}>
-            <h3 style={{ fontSize: 22, fontWeight: 700, color: "#012970", marginBottom: 12, fontFamily: "'Nunito', sans-serif" }}>
-              1. {t.assess_stage1_title}
-            </h3>
-            <p style={{ fontSize: 15, color: "#5e5e5e", marginBottom: 25, lineHeight: 1.6 }}>{t.assess_stage1_desc}</p>
-            <div className="assess-grid-3">
+          <div className="assess-stage-block">
+            <h3 className="assess-h3">1. {t.assess_stage1_title}</h3>
+            <p className="assess-stage-desc">{t.assess_stage1_desc}</p>
+            <div className="assess-cards assess-cards-3">
               {[
-                { icon: "bi-shield-check", title: t.assess_s1_c1_title, desc: t.assess_s1_c1_desc },
-                { icon: "bi-water",         title: t.assess_s1_c2_title, desc: t.assess_s1_c2_desc },
-                { icon: "bi-people",        title: t.assess_s1_c3_title, desc: t.assess_s1_c3_desc },
+                { icon: "bi-shield-check",  title: t.assess_s1_c1_title, desc: t.assess_s1_c1_desc },
+                { icon: "bi-water",          title: t.assess_s1_c2_title, desc: t.assess_s1_c2_desc },
+                { icon: "bi-people-fill",    title: t.assess_s1_c3_title, desc: t.assess_s1_c3_desc },
               ].map((card, idx) => (
-                <div key={idx} className="assess-card-item">
-                  <div className="assess-icon-box"><i className={`bi ${card.icon}`} /></div>
+                <div key={idx} className="assess-card">
+                  <div className="assess-card-icon"><i className={`bi ${card.icon}`} /></div>
                   <div>
-                    <h4 style={{ fontSize: 17, fontWeight: 700, color: "#132a22", marginBottom: 8, fontFamily: "'Nunito', sans-serif", lineHeight: 1.3 }}>{card.title}</h4>
-                    <p style={{ fontSize: 13.5, color: "#555", margin: 0, lineHeight: 1.5 }}>{card.desc}</p>
+                    <h4 className="assess-card-title">{card.title}</h4>
+                    <p className="assess-card-desc">{card.desc}</p>
                   </div>
                 </div>
               ))}
             </div>
-            <p style={{ fontSize: 14.5, color: "#555", marginTop: 20, lineHeight: 1.6 }}>{t.assess_stage1_footer}</p>
+            <p className="assess-footer">{t.assess_stage1_footer}</p>
           </div>
 
           {/* Stage 2 */}
-          <div style={{ marginBottom: 45 }}>
-            <h3 style={{ fontSize: 22, fontWeight: 700, color: "#012970", marginBottom: 12, fontFamily: "'Nunito', sans-serif" }}>
-              2. {t.assess_stage2_title}
-            </h3>
-            <p style={{ fontSize: 15, color: "#5e5e5e", marginBottom: 25, lineHeight: 1.6 }}>{t.assess_stage2_desc}</p>
-            <div className="assess-grid-2">
+          <div className="assess-stage-block">
+            <h3 className="assess-h3">2. {t.assess_stage2_title}</h3>
+            <p className="assess-stage-desc">{t.assess_stage2_desc}</p>
+            <div className="assess-cards assess-cards-2">
               {[
-                { icon: "bi-geo-alt",         title: t.assess_s2_c1_title, desc: t.assess_s2_c1_desc },
-                { icon: "bi-chat-left-quote", title: t.assess_s2_c2_title, desc: t.assess_s2_c2_desc },
+                { icon: "bi-geo-alt-fill",        title: t.assess_s2_c1_title, desc: t.assess_s2_c1_desc },
+                { icon: "bi-chat-quote-fill",      title: t.assess_s2_c2_title, desc: t.assess_s2_c2_desc },
               ].map((card, idx) => (
-                <div key={idx} className="assess-card-item">
-                  <div className="assess-icon-box"><i className={`bi ${card.icon}`} /></div>
+                <div key={idx} className="assess-card">
+                  <div className="assess-card-icon"><i className={`bi ${card.icon}`} /></div>
                   <div>
-                    <h4 style={{ fontSize: 17, fontWeight: 700, color: "#132a22", marginBottom: 8, fontFamily: "'Nunito', sans-serif", lineHeight: 1.3 }}>{card.title}</h4>
-                    <p style={{ fontSize: 13.5, color: "#555", margin: 0, lineHeight: 1.5 }}>{card.desc}</p>
+                    <h4 className="assess-card-title">{card.title}</h4>
+                    <p className="assess-card-desc">{card.desc}</p>
                   </div>
                 </div>
               ))}
             </div>
-            <p style={{ fontSize: 14.5, color: "#555", marginTop: 20, lineHeight: 1.6 }}>{t.assess_stage2_footer}</p>
+            <p className="assess-footer">{t.assess_stage2_footer}</p>
           </div>
         </div>
       </section>
 
       {/* ======= Experts Section ======= */}
-      <section style={{ backgroundColor: "#fff", padding: "70px 0", fontFamily: "'Open Sans', sans-serif" }}>
+      <section className="experts-section">
         <div className="container-custom">
-          <div style={{ textAlign: "center", marginBottom: 40 }}>
-            <h2 style={{ fontSize: 36, fontWeight: 700, color: "#012970", marginBottom: 15, fontFamily: "'Nunito', sans-serif" }}>
-              {t.expert_title}
-            </h2>
-            <p style={{ fontSize: 16, color: "#555", maxWidth: 800, margin: "0 auto", lineHeight: 1.6 }}>
-              {t.expert_desc}
-            </p>
+          <div className="experts-header">
+            <h2 className="experts-h2">{t.expert_title}</h2>
+            <p className="experts-subtitle">{t.expert_desc}</p>
           </div>
-          <div className="experts-grid">
-            {[
-              { photo: "/expert/kaisar-akhir.png",   name: t.expert_1_name,  title: t.expert_1_title  },
-              { photo: "/expert/basilo.jpg",          name: t.expert_2_name,  title: t.expert_2_title  },
-              { photo: "/expert/sahatua.jpg",         name: t.expert_3_name,  title: t.expert_3_title  },
-              { photo: "/expert/dr ir diah.jpg",      name: t.expert_4_name,  title: t.expert_4_title  },
-              { photo: "/expert/Evi-gravitiani.jpg",  name: t.expert_5_name,  title: t.expert_5_title  },
-              { photo: "/expert/dr subhan.jpg",       name: t.expert_6_name,  title: t.expert_6_title  },
-              { photo: "/expert/gugus_wijonarko.jpg", name: t.expert_7_name,  title: t.expert_7_title  },
-              { photo: "/expert/Derry-Wanta.jpg",     name: t.expert_8_name,  title: t.expert_8_title  },
-              { photo: "/expert/sony.jpg",            name: t.expert_9_name,  title: t.expert_9_title  },
-              { photo: "/expert/nurmaria sarosa.jpg", name: t.expert_11_name, title: t.expert_11_title },
-              { photo: "/expert/agung_dhamar_syakti.jpg", name: t.expert_12_name, title: t.expert_12_title },
-              { photo: "/expert/Prof.-Dr.-Asadatun-Abdullah-S.Pi_.-M.S.M.-M.Si_.jpg", name: t.expert_13_name, title: t.expert_13_title },
-            ].map((expert, idx) => (
-              <div key={idx} className="expert-card-item">
-                <div className="expert-img-wrap">
-                  <Image src={expert.photo} alt={expert.name} width={200} height={250} className="expert-photo" />
-                </div>
-                <div className="expert-info-box">
-                  <h4>{expert.name}</h4>
-                  <p>{expert.title}</p>
-                </div>
+
+          {/* Carousel */}
+          <div className="experts-carousel-outer">
+            <button
+              className="experts-nav experts-nav-prev"
+              onClick={() => setExpertSlide(s => Math.max(0, s - 1))}
+              disabled={expertSlide === 0}
+              aria-label="Previous"
+            >
+              &#8249;
+            </button>
+
+            <div className="experts-track-wrap">
+              <div
+                className="experts-track"
+                style={{ transform: `translateX(calc(-${expertSlide} * (100% / ${EXPERTS_PER_VIEW})))` }}
+              >
+                {experts.map((expert, idx) => (
+                  <div key={idx} className="expert-slide-card">
+                    <div className="expert-slide-img">
+                      <Image src={expert.photo} alt={expert.name} width={240} height={300} className="expert-slide-photo" />
+                    </div>
+                    <div className="expert-slide-info">
+                      <h4>{expert.name}</h4>
+                      <p>{expert.title}</p>
+                    </div>
+                  </div>
+                ))}
               </div>
+            </div>
+
+            <button
+              className="experts-nav experts-nav-next"
+              onClick={() => setExpertSlide(s => Math.min(maxExpertSlide, s + 1))}
+              disabled={expertSlide >= maxExpertSlide}
+              aria-label="Next"
+            >
+              &#8250;
+            </button>
+          </div>
+
+          {/* Dots */}
+          <div className="experts-dots">
+            {Array.from({ length: maxExpertSlide + 1 }).map((_, i) => (
+              <button
+                key={i}
+                className={`experts-dot${expertSlide === i ? " active" : ""}`}
+                onClick={() => setExpertSlide(i)}
+                aria-label={`Slide ${i + 1}`}
+              />
             ))}
           </div>
         </div>
       </section>
 
       {/* ======= Recognition Section ======= */}
-      <section style={{ backgroundColor: "#f6f9ff", padding: "70px 0 80px 0", fontFamily: "'Open Sans', sans-serif" }}>
+      <section className="recognition-section">
         <div className="container-custom">
           <div className="recognition-layout">
-            {/* Left Content */}
-            <div>
-              <h2 style={{ fontSize: 36, fontWeight: 700, color: "#012970", margin: "0 0 20px 0", fontFamily: "'Nunito', sans-serif", lineHeight: 1.25 }}>
-                {t.rec_title}
-              </h2>
-              <p style={{ fontSize: 16, color: "#555", lineHeight: 1.65, margin: "0 0 35px 0" }}>
-                {t.rec_subtitle}
-              </p>
-              <div style={{ display: "flex", flexDirection: "column", gap: 30, marginBottom: 40 }}>
+            {/* Left */}
+            <div className="recognition-content">
+              <h2 className="recognition-h2">{t.rec_title}</h2>
+              <p className="recognition-subtitle">{t.rec_subtitle}</p>
+              <div className="recognition-features">
                 {[
                   { icon: "bi-patch-check", title: t.rec_f1_title, desc: t.rec_f1_desc },
-                  { icon: "bi-globe",       title: t.rec_f2_title, desc: t.rec_f2_desc },
+                  { icon: "bi-globe2",      title: t.rec_f2_title, desc: t.rec_f2_desc },
                 ].map((feat, idx) => (
-                  <div key={idx} style={{ display: "flex", gap: 20, alignItems: "flex-start" }}>
-                    <div style={{ fontSize: 26, color: "#143529", background: "rgba(20,53,41,0.08)", width: 52, height: 52, display: "flex", justifyContent: "center", alignItems: "center", borderRadius: "50%", flexShrink: 0 }}>
-                      <i className={`bi ${feat.icon}`} />
-                    </div>
+                  <div key={idx} className="rec-feature">
+                    <div className="rec-feat-icon"><i className={`bi ${feat.icon}`} /></div>
                     <div>
-                      <h4 style={{ fontSize: 18, fontWeight: 700, color: "#012970", margin: "0 0 8px 0", fontFamily: "'Nunito', sans-serif" }}>{feat.title}</h4>
-                      <p style={{ fontSize: 14.5, color: "#5e5e5e", lineHeight: 1.6, margin: 0 }}>{feat.desc}</p>
+                      <h4 className="rec-feat-title">{feat.title}</h4>
+                      <p className="rec-feat-desc">{feat.desc}</p>
                     </div>
                   </div>
                 ))}
               </div>
-              <Link href="/register" className="recognition-outline-btn">
-                {t.rec_btn_text}
-              </Link>
+              <Link href="/register" className="rec-btn">{t.rec_btn_text}</Link>
             </div>
-            {/* Right Image */}
-            <div style={{ borderRadius: 8, overflow: "hidden" }}>
-              <Image src="/recognition.jpg" alt="BECdex Recognition" width={600} height={450} style={{ width: "100%", height: "auto", display: "block", objectFit: "cover" }} />
+            {/* Right */}
+            <div className="recognition-img-wrap">
+              <Image src="/recognition.jpg" alt="BECdex Recognition" width={600} height={480} className="recognition-img" />
             </div>
           </div>
         </div>
       </section>
+
 
       {/* Certification Body Section */}
       <section className="bg-white py-14 border-t border-gray-100">
