@@ -1,0 +1,15 @@
+<?php
+namespace App\Models;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
+class Question extends Model
+{
+    use HasFactory;
+    protected $fillable = ['indicator_id', 'text', 'sort_order'];
+    protected $casts = ['sort_order' => 'integer'];
+    public function indicator(): BelongsTo { return $this->belongsTo(Indicator::class); }
+    public function answers(): HasMany { return $this->hasMany(Answer::class); }
+}

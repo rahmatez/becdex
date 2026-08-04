@@ -1,0 +1,37 @@
+import axios from "axios";
+
+const api = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api",
+  withCredentials: true,
+  withXSRFToken: true,
+  headers: {
+    "Content-Type": "application/json",
+    Accept: "application/json",
+  },
+});
+
+// Response interceptor: handle 401 globally
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    const originalRequest = error.config;
+
+    // Jangan lakukan redirect paksa jika error-nya berasal dari proses login itu sendiri
+    // Biarkan halaman login yang menangani pesan error-nya (menampilkan toast)
+    if (originalRequest.url?.includes("/auth/login")) {
+      return Promise.reject(error);
+    }
+
+    if (error.response?.status === 401 || error.response?.status === 419) {
+      // Only redirect in browser environment
+      if (typeof window !== "undefined") {
+        // Bersihkan state hantu Zustand sebelum pindah halaman
+        localStorage.removeItem("becdex-auth");
+        window.location.href = "/login";
+      }
+    }
+    return Promise.reject(error);
+  },
+);
+
+export default api;
