@@ -527,6 +527,7 @@ export default function LandingPage() {
             ))}
           </div>
         </div>
+        </div>
       </section>
 
       {/* Contact Section */}
