@@ -30,19 +30,17 @@ export default function LandingPage() {
     {
       photo: "/expert/kaisar-akhir.png",
       name: "Kaisar Akhir",
-      title: "Founder & Chairperson of Maritim Muda Nusantara",
+      title: "Executive Director for Research and Training of Blue Institute Seychelles",
     },
     {
       photo: "/expert/basilo.jpg",
       name: "Basilio Dias Araujo",
-      title:
-        "Former Deputy for Coordination of Maritime Sovereignty and Energy, Coordinating Ministry for Maritime Affairs and Investment",
+      title: "Secretary General of Indonesia China Business Council",
     },
     {
       photo: "/expert/sahatua.jpg",
       name: "Capt. Sahattua P. Simatupang",
-      title:
-        "Chairman of Maritime Court, Ministry of Transportation of the Republic of Indonesia",
+      title: "Chairman of the Admiralty Court of Republic of Indonesia",
     },
     {
       photo: "/expert/dr ir diah.jpg",
