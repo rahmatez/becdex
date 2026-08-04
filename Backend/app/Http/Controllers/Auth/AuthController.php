@@ -53,9 +53,8 @@ class AuthController extends Controller
     public function login(LoginRequest $request): JsonResponse
     {
         $credentials = $request->only('email', 'password');
-        $remember = $request->boolean('remember');
 
-        if (! \Illuminate\Support\Facades\Auth::attempt($credentials, $remember)) {
+        if (! \Illuminate\Support\Facades\Auth::attempt($credentials)) {
             return response()->json([
                 'message' => 'The provided credentials are incorrect.',
             ], 401);
@@ -66,19 +65,20 @@ class AuthController extends Controller
 
         if ($user->is_active !== 1) {
             \Illuminate\Support\Facades\Auth::logout();
-            $request->session()->invalidate();
-            $request->session()->regenerateToken();
 
             return response()->json([
                 'message' => 'Your account has not been activated or has been rejected.',
             ], 403);
         }
 
-        $request->session()->regenerate();
+        // Delete old tokens for this user, then create a fresh one
+        $user->tokens()->delete();
+        $token = $user->createToken('web-login')->plainTextToken;
 
         return response()->json([
             'message' => 'Login successful.',
             'data'    => [
+                'token' => $token,
                 'user'  => new UserResource($user->load('companyDetail.companyField', 'role')),
             ],
         ]);

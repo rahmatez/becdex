@@ -52,11 +52,14 @@ export default function LoginPage() {
 
   const onSubmit = async (data: LoginFormData) => {
     try {
-      const backendUrl = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || "http://localhost:8000";
-      await api.get("/sanctum/csrf-cookie", { baseURL: backendUrl });
-      
       const response = await api.post("/auth/login", data);
-      const { user } = response.data.data;
+      const { user, token } = response.data.data;
+
+      // Simpan token ke localStorage agar bisa dipakai oleh semua request
+      if (token) {
+        localStorage.setItem("becdex_token", token);
+        api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+      }
 
       setAuth(user);
       setLocale("en");

@@ -2,13 +2,20 @@ import axios from "axios";
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api",
-  withCredentials: true,
-  withXSRFToken: true,
+  withCredentials: false,
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",
   },
 });
+
+// Auto-load token dari localStorage (agar tetap login setelah refresh halaman)
+if (typeof window !== "undefined") {
+  const token = localStorage.getItem("becdex_token");
+  if (token) {
+    api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  }
+}
 
 // Response interceptor: handle 401 globally
 api.interceptors.response.use(
@@ -25,8 +32,10 @@ api.interceptors.response.use(
     if (error.response?.status === 401 || error.response?.status === 419) {
       // Only redirect in browser environment
       if (typeof window !== "undefined") {
-        // Bersihkan state hantu Zustand sebelum pindah halaman
+        // Bersihkan state hantu Zustand dan token sebelum pindah halaman
         localStorage.removeItem("becdex-auth");
+        localStorage.removeItem("becdex_token");
+        delete api.defaults.headers.common["Authorization"];
         window.location.href = "/login";
       }
     }
