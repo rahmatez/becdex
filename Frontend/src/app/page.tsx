@@ -132,6 +132,129 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* ======= Assessment Standards Section ======= */}
+      <section className="bg-[#fafbfe] py-16 border-t border-gray-100">
+        <div className="container-custom">
+          <div className="text-left mb-10">
+            <h2 className="text-2xl md:text-3xl font-bold text-[#012970]">{t.assess_title}</h2>
+            <p className="text-gray-500 mt-2 text-sm md:text-base">{t.assess_subtitle}</p>
+          </div>
+
+          {/* Stage 1 */}
+          <div className="mb-12">
+            <h3 className="text-lg font-bold text-[#012970] mb-2">1. {t.assess_stage1_title}</h3>
+            <p className="text-gray-600 text-sm mb-6">{t.assess_stage1_desc}</p>
+            <div className="grid md:grid-cols-3 gap-5">
+              {[
+                { icon: "🛡️", title: t.assess_s1_c1_title, desc: t.assess_s1_c1_desc },
+                { icon: "🌊", title: t.assess_s1_c2_title, desc: t.assess_s1_c2_desc },
+                { icon: "👥", title: t.assess_s1_c3_title, desc: t.assess_s1_c3_desc },
+              ].map((card, idx) => (
+                <div key={idx} className="bg-white rounded-xl p-5 shadow-sm border border-gray-100 flex gap-4 items-start hover:shadow-md transition-shadow">
+                  <div className="text-2xl flex-shrink-0">{card.icon}</div>
+                  <div>
+                    <h4 className="font-bold text-[#012970] text-sm mb-1">{card.title}</h4>
+                    <p className="text-gray-500 text-xs leading-relaxed">{card.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <p className="text-gray-500 text-xs mt-4 italic">{t.assess_stage1_footer}</p>
+          </div>
+
+          {/* Stage 2 */}
+          <div>
+            <h3 className="text-lg font-bold text-[#012970] mb-2">2. {t.assess_stage2_title}</h3>
+            <p className="text-gray-600 text-sm mb-6">{t.assess_stage2_desc}</p>
+            <div className="grid md:grid-cols-2 gap-5">
+              {[
+                { icon: "📍", title: t.assess_s2_c1_title, desc: t.assess_s2_c1_desc },
+                { icon: "💬", title: t.assess_s2_c2_title, desc: t.assess_s2_c2_desc },
+              ].map((card, idx) => (
+                <div key={idx} className="bg-white rounded-xl p-5 shadow-sm border border-gray-100 flex gap-4 items-start hover:shadow-md transition-shadow">
+                  <div className="text-2xl flex-shrink-0">{card.icon}</div>
+                  <div>
+                    <h4 className="font-bold text-[#012970] text-sm mb-1">{card.title}</h4>
+                    <p className="text-gray-500 text-xs leading-relaxed">{card.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <p className="text-gray-500 text-xs mt-4 italic">{t.assess_stage2_footer}</p>
+          </div>
+        </div>
+      </section>
+
+      {/* ======= Experts Section ======= */}
+      <section className="bg-white py-16 border-t border-gray-100">
+        <div className="container-custom">
+          <div className="text-center mb-10">
+            <h2 className="text-2xl md:text-3xl font-bold text-[#012970]">{t.expert_title}</h2>
+            <p className="text-gray-500 mt-2 text-sm md:text-base max-w-2xl mx-auto">{t.expert_desc}</p>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-5">
+            {[
+              { photo: "/expert/kaisar-akhir.png",   name: t.expert_1_name,  title: t.expert_1_title  },
+              { photo: "/expert/basilo.jpg",          name: t.expert_2_name,  title: t.expert_2_title  },
+              { photo: "/expert/sahatua.jpg",         name: t.expert_3_name,  title: t.expert_3_title  },
+              { photo: "/expert/dr ir diah.jpg",      name: t.expert_4_name,  title: t.expert_4_title  },
+              { photo: "/expert/Evi-gravitiani.jpg",  name: t.expert_5_name,  title: t.expert_5_title  },
+              { photo: "/expert/dr subhan.jpg",       name: t.expert_6_name,  title: t.expert_6_title  },
+              { photo: "/expert/gugus_wijonarko.jpg", name: t.expert_7_name,  title: t.expert_7_title  },
+              { photo: "/expert/Derry-Wanta.jpg",     name: t.expert_8_name,  title: t.expert_8_title  },
+              { photo: "/expert/sony.jpg",            name: t.expert_9_name,  title: t.expert_9_title  },
+              { photo: "/expert/nurmaria sarosa.jpg", name: t.expert_11_name, title: t.expert_11_title },
+              { photo: "/expert/agung_dhamar_syakti.jpg", name: t.expert_12_name, title: t.expert_12_title },
+              { photo: "/expert/Prof.-Dr.-Asadatun-Abdullah-S.Pi_.-M.S.M.-M.Si_.jpg", name: t.expert_13_name, title: t.expert_13_title },
+            ].map((expert, idx) => (
+              <div key={idx} className="flex flex-col items-center text-center group">
+                <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-[#4154f1]/20 shadow-sm mb-3 group-hover:border-[#4154f1] transition-colors">
+                  <Image src={expert.photo} alt={expert.name} width={80} height={80} className="w-full h-full object-cover" />
+                </div>
+                <h4 className="font-bold text-[#012970] text-xs leading-tight">{expert.name}</h4>
+                <p className="text-gray-400 text-[10px] mt-1 leading-tight line-clamp-2">{expert.title}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ======= Recognition Section ======= */}
+      <section className="bg-[#fafbfe] py-16 border-t border-gray-100">
+        <div className="container-custom">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            {/* Left Content */}
+            <div className="space-y-6">
+              <h2 className="text-2xl md:text-3xl font-bold text-[#012970]">{t.rec_title}</h2>
+              <p className="text-gray-500 text-sm leading-relaxed">{t.rec_subtitle}</p>
+              <div className="space-y-4">
+                <div className="flex gap-4 items-start">
+                  <div className="w-10 h-10 rounded-full bg-[#4154f1]/10 text-[#4154f1] flex items-center justify-center flex-shrink-0 text-lg">✅</div>
+                  <div>
+                    <h4 className="font-bold text-[#012970] text-sm">{t.rec_f1_title}</h4>
+                    <p className="text-gray-500 text-xs mt-1">{t.rec_f1_desc}</p>
+                  </div>
+                </div>
+                <div className="flex gap-4 items-start">
+                  <div className="w-10 h-10 rounded-full bg-[#4154f1]/10 text-[#4154f1] flex items-center justify-center flex-shrink-0 text-lg">🌐</div>
+                  <div>
+                    <h4 className="font-bold text-[#012970] text-sm">{t.rec_f2_title}</h4>
+                    <p className="text-gray-500 text-xs mt-1">{t.rec_f2_desc}</p>
+                  </div>
+                </div>
+              </div>
+              <Link href="/register" className="inline-block bg-[#4154f1] text-white font-bold text-sm px-6 py-3 rounded-lg hover:bg-[#2e3fe6] transition-colors shadow-sm">
+                {t.rec_btn_text}
+              </Link>
+            </div>
+            {/* Right Image */}
+            <div className="relative rounded-2xl overflow-hidden shadow-md">
+              <Image src="/recognition.jpg" alt="BECdex Recognition" width={600} height={400} className="w-full object-cover" />
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Certification Body Section */}
       <section className="bg-white py-14 border-t border-gray-100">
         <div className="container-custom text-center space-y-6">
