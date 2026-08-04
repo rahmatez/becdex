@@ -326,9 +326,9 @@ export default function LandingPage() {
           <div className="section-header">
             <p>MEMBER OF</p>
           </div>
-          <div className="flex justify-center items-center gap-12 flex-wrap">
+          <div className="flex justify-center items-center gap-6 flex-wrap">
             <Image src="/member_of.jpg" alt="Member of Logo" width={260} height={110} className="object-contain" />
-            <Image src="/un-global-compact.png" alt="UN Global Compact" width={160} height={160} className="object-contain" />
+            <Image src="/un-global-compact.png" alt="UN Global Compact" width={120} height={120} className="object-contain" />
           </div>
         </div>
       </section>
