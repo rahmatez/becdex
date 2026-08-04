@@ -133,66 +133,78 @@ export default function LandingPage() {
       </section>
 
       {/* ======= Assessment Standards Section ======= */}
-      <section className="bg-[#fafbfe] py-16 border-t border-gray-100">
+      <section style={{ backgroundColor: "#f6f9ff", padding: "70px 0 30px 0", fontFamily: "'Open Sans', sans-serif" }}>
         <div className="container-custom">
-          <div className="text-left mb-10">
-            <h2 className="text-2xl md:text-3xl font-bold text-[#012970]">{t.assess_title}</h2>
-            <p className="text-gray-500 mt-2 text-sm md:text-base">{t.assess_subtitle}</p>
+          <div style={{ textAlign: "left", marginBottom: 40 }}>
+            <h2 style={{ fontSize: 36, fontWeight: 700, color: "#012970", margin: "0 0 15px 0", lineHeight: 1.25, fontFamily: "'Nunito', sans-serif" }}>
+              {t.assess_title}
+            </h2>
+            <p style={{ fontSize: 16, color: "#555", margin: 0, maxWidth: 950, lineHeight: 1.6 }}>
+              {t.assess_subtitle}
+            </p>
           </div>
 
           {/* Stage 1 */}
-          <div className="mb-12">
-            <h3 className="text-lg font-bold text-[#012970] mb-2">1. {t.assess_stage1_title}</h3>
-            <p className="text-gray-600 text-sm mb-6">{t.assess_stage1_desc}</p>
-            <div className="grid md:grid-cols-3 gap-5">
+          <div style={{ marginBottom: 45 }}>
+            <h3 style={{ fontSize: 22, fontWeight: 700, color: "#012970", marginBottom: 12, fontFamily: "'Nunito', sans-serif" }}>
+              1. {t.assess_stage1_title}
+            </h3>
+            <p style={{ fontSize: 15, color: "#5e5e5e", marginBottom: 25, lineHeight: 1.6 }}>{t.assess_stage1_desc}</p>
+            <div className="assess-grid-3">
               {[
-                { icon: "🛡️", title: t.assess_s1_c1_title, desc: t.assess_s1_c1_desc },
-                { icon: "🌊", title: t.assess_s1_c2_title, desc: t.assess_s1_c2_desc },
-                { icon: "👥", title: t.assess_s1_c3_title, desc: t.assess_s1_c3_desc },
+                { icon: "bi-shield-check", title: t.assess_s1_c1_title, desc: t.assess_s1_c1_desc },
+                { icon: "bi-water",         title: t.assess_s1_c2_title, desc: t.assess_s1_c2_desc },
+                { icon: "bi-people",        title: t.assess_s1_c3_title, desc: t.assess_s1_c3_desc },
               ].map((card, idx) => (
-                <div key={idx} className="bg-white rounded-xl p-5 shadow-sm border border-gray-100 flex gap-4 items-start hover:shadow-md transition-shadow">
-                  <div className="text-2xl flex-shrink-0">{card.icon}</div>
+                <div key={idx} className="assess-card-item">
+                  <div className="assess-icon-box"><i className={`bi ${card.icon}`} /></div>
                   <div>
-                    <h4 className="font-bold text-[#012970] text-sm mb-1">{card.title}</h4>
-                    <p className="text-gray-500 text-xs leading-relaxed">{card.desc}</p>
+                    <h4 style={{ fontSize: 17, fontWeight: 700, color: "#132a22", marginBottom: 8, fontFamily: "'Nunito', sans-serif", lineHeight: 1.3 }}>{card.title}</h4>
+                    <p style={{ fontSize: 13.5, color: "#555", margin: 0, lineHeight: 1.5 }}>{card.desc}</p>
                   </div>
                 </div>
               ))}
             </div>
-            <p className="text-gray-500 text-xs mt-4 italic">{t.assess_stage1_footer}</p>
+            <p style={{ fontSize: 14.5, color: "#555", marginTop: 20, lineHeight: 1.6 }}>{t.assess_stage1_footer}</p>
           </div>
 
           {/* Stage 2 */}
-          <div>
-            <h3 className="text-lg font-bold text-[#012970] mb-2">2. {t.assess_stage2_title}</h3>
-            <p className="text-gray-600 text-sm mb-6">{t.assess_stage2_desc}</p>
-            <div className="grid md:grid-cols-2 gap-5">
+          <div style={{ marginBottom: 45 }}>
+            <h3 style={{ fontSize: 22, fontWeight: 700, color: "#012970", marginBottom: 12, fontFamily: "'Nunito', sans-serif" }}>
+              2. {t.assess_stage2_title}
+            </h3>
+            <p style={{ fontSize: 15, color: "#5e5e5e", marginBottom: 25, lineHeight: 1.6 }}>{t.assess_stage2_desc}</p>
+            <div className="assess-grid-2">
               {[
-                { icon: "📍", title: t.assess_s2_c1_title, desc: t.assess_s2_c1_desc },
-                { icon: "💬", title: t.assess_s2_c2_title, desc: t.assess_s2_c2_desc },
+                { icon: "bi-geo-alt",         title: t.assess_s2_c1_title, desc: t.assess_s2_c1_desc },
+                { icon: "bi-chat-left-quote", title: t.assess_s2_c2_title, desc: t.assess_s2_c2_desc },
               ].map((card, idx) => (
-                <div key={idx} className="bg-white rounded-xl p-5 shadow-sm border border-gray-100 flex gap-4 items-start hover:shadow-md transition-shadow">
-                  <div className="text-2xl flex-shrink-0">{card.icon}</div>
+                <div key={idx} className="assess-card-item">
+                  <div className="assess-icon-box"><i className={`bi ${card.icon}`} /></div>
                   <div>
-                    <h4 className="font-bold text-[#012970] text-sm mb-1">{card.title}</h4>
-                    <p className="text-gray-500 text-xs leading-relaxed">{card.desc}</p>
+                    <h4 style={{ fontSize: 17, fontWeight: 700, color: "#132a22", marginBottom: 8, fontFamily: "'Nunito', sans-serif", lineHeight: 1.3 }}>{card.title}</h4>
+                    <p style={{ fontSize: 13.5, color: "#555", margin: 0, lineHeight: 1.5 }}>{card.desc}</p>
                   </div>
                 </div>
               ))}
             </div>
-            <p className="text-gray-500 text-xs mt-4 italic">{t.assess_stage2_footer}</p>
+            <p style={{ fontSize: 14.5, color: "#555", marginTop: 20, lineHeight: 1.6 }}>{t.assess_stage2_footer}</p>
           </div>
         </div>
       </section>
 
       {/* ======= Experts Section ======= */}
-      <section className="bg-white py-16 border-t border-gray-100">
+      <section style={{ backgroundColor: "#fff", padding: "70px 0", fontFamily: "'Open Sans', sans-serif" }}>
         <div className="container-custom">
-          <div className="text-center mb-10">
-            <h2 className="text-2xl md:text-3xl font-bold text-[#012970]">{t.expert_title}</h2>
-            <p className="text-gray-500 mt-2 text-sm md:text-base max-w-2xl mx-auto">{t.expert_desc}</p>
+          <div style={{ textAlign: "center", marginBottom: 40 }}>
+            <h2 style={{ fontSize: 36, fontWeight: 700, color: "#012970", marginBottom: 15, fontFamily: "'Nunito', sans-serif" }}>
+              {t.expert_title}
+            </h2>
+            <p style={{ fontSize: 16, color: "#555", maxWidth: 800, margin: "0 auto", lineHeight: 1.6 }}>
+              {t.expert_desc}
+            </p>
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-5">
+          <div className="experts-grid">
             {[
               { photo: "/expert/kaisar-akhir.png",   name: t.expert_1_name,  title: t.expert_1_title  },
               { photo: "/expert/basilo.jpg",          name: t.expert_2_name,  title: t.expert_2_title  },
@@ -207,12 +219,14 @@ export default function LandingPage() {
               { photo: "/expert/agung_dhamar_syakti.jpg", name: t.expert_12_name, title: t.expert_12_title },
               { photo: "/expert/Prof.-Dr.-Asadatun-Abdullah-S.Pi_.-M.S.M.-M.Si_.jpg", name: t.expert_13_name, title: t.expert_13_title },
             ].map((expert, idx) => (
-              <div key={idx} className="flex flex-col items-center text-center group">
-                <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-[#4154f1]/20 shadow-sm mb-3 group-hover:border-[#4154f1] transition-colors">
-                  <Image src={expert.photo} alt={expert.name} width={80} height={80} className="w-full h-full object-cover" />
+              <div key={idx} className="expert-card-item">
+                <div className="expert-img-wrap">
+                  <Image src={expert.photo} alt={expert.name} width={200} height={250} className="expert-photo" />
                 </div>
-                <h4 className="font-bold text-[#012970] text-xs leading-tight">{expert.name}</h4>
-                <p className="text-gray-400 text-[10px] mt-1 leading-tight line-clamp-2">{expert.title}</p>
+                <div className="expert-info-box">
+                  <h4>{expert.name}</h4>
+                  <p>{expert.title}</p>
+                </div>
               </div>
             ))}
           </div>
@@ -220,36 +234,40 @@ export default function LandingPage() {
       </section>
 
       {/* ======= Recognition Section ======= */}
-      <section className="bg-[#fafbfe] py-16 border-t border-gray-100">
+      <section style={{ backgroundColor: "#f6f9ff", padding: "70px 0 80px 0", fontFamily: "'Open Sans', sans-serif" }}>
         <div className="container-custom">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
+          <div className="recognition-layout">
             {/* Left Content */}
-            <div className="space-y-6">
-              <h2 className="text-2xl md:text-3xl font-bold text-[#012970]">{t.rec_title}</h2>
-              <p className="text-gray-500 text-sm leading-relaxed">{t.rec_subtitle}</p>
-              <div className="space-y-4">
-                <div className="flex gap-4 items-start">
-                  <div className="w-10 h-10 rounded-full bg-[#4154f1]/10 text-[#4154f1] flex items-center justify-center flex-shrink-0 text-lg">✅</div>
-                  <div>
-                    <h4 className="font-bold text-[#012970] text-sm">{t.rec_f1_title}</h4>
-                    <p className="text-gray-500 text-xs mt-1">{t.rec_f1_desc}</p>
+            <div>
+              <h2 style={{ fontSize: 36, fontWeight: 700, color: "#012970", margin: "0 0 20px 0", fontFamily: "'Nunito', sans-serif", lineHeight: 1.25 }}>
+                {t.rec_title}
+              </h2>
+              <p style={{ fontSize: 16, color: "#555", lineHeight: 1.65, margin: "0 0 35px 0" }}>
+                {t.rec_subtitle}
+              </p>
+              <div style={{ display: "flex", flexDirection: "column", gap: 30, marginBottom: 40 }}>
+                {[
+                  { icon: "bi-patch-check", title: t.rec_f1_title, desc: t.rec_f1_desc },
+                  { icon: "bi-globe",       title: t.rec_f2_title, desc: t.rec_f2_desc },
+                ].map((feat, idx) => (
+                  <div key={idx} style={{ display: "flex", gap: 20, alignItems: "flex-start" }}>
+                    <div style={{ fontSize: 26, color: "#143529", background: "rgba(20,53,41,0.08)", width: 52, height: 52, display: "flex", justifyContent: "center", alignItems: "center", borderRadius: "50%", flexShrink: 0 }}>
+                      <i className={`bi ${feat.icon}`} />
+                    </div>
+                    <div>
+                      <h4 style={{ fontSize: 18, fontWeight: 700, color: "#012970", margin: "0 0 8px 0", fontFamily: "'Nunito', sans-serif" }}>{feat.title}</h4>
+                      <p style={{ fontSize: 14.5, color: "#5e5e5e", lineHeight: 1.6, margin: 0 }}>{feat.desc}</p>
+                    </div>
                   </div>
-                </div>
-                <div className="flex gap-4 items-start">
-                  <div className="w-10 h-10 rounded-full bg-[#4154f1]/10 text-[#4154f1] flex items-center justify-center flex-shrink-0 text-lg">🌐</div>
-                  <div>
-                    <h4 className="font-bold text-[#012970] text-sm">{t.rec_f2_title}</h4>
-                    <p className="text-gray-500 text-xs mt-1">{t.rec_f2_desc}</p>
-                  </div>
-                </div>
+                ))}
               </div>
-              <Link href="/register" className="inline-block bg-[#4154f1] text-white font-bold text-sm px-6 py-3 rounded-lg hover:bg-[#2e3fe6] transition-colors shadow-sm">
+              <Link href="/register" className="recognition-outline-btn">
                 {t.rec_btn_text}
               </Link>
             </div>
             {/* Right Image */}
-            <div className="relative rounded-2xl overflow-hidden shadow-md">
-              <Image src="/recognition.jpg" alt="BECdex Recognition" width={600} height={400} className="w-full object-cover" />
+            <div style={{ borderRadius: 8, overflow: "hidden" }}>
+              <Image src="/recognition.jpg" alt="BECdex Recognition" width={600} height={450} style={{ width: "100%", height: "auto", display: "block", objectFit: "cover" }} />
             </div>
           </div>
         </div>
