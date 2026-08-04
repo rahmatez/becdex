@@ -8,7 +8,7 @@ import Cookies from "js-cookie";
 import { useAuthStore } from "@/store/auth";
 import { useSidebar } from "@/context/SidebarContext";
 import { cn } from "@/lib/utils";
-import api from "@/lib/api";
+import api, { setAuthToken } from "@/lib/api";
 import {
   LayoutDashboard,
   FileText,
@@ -56,7 +56,10 @@ export function Sidebar() {
       console.error("Logout failed on backend:", error);
     }
     logout();
-    Cookies.remove("becdex_role"); // hapus cookie role agar middleware guard bersih
+    Cookies.remove("becdex_role");
+    Cookies.remove("becdex_session"); // hapus session cookie
+    localStorage.removeItem("becdex_token"); // hapus token dari localStorage
+    setAuthToken(null);
     setShowLogoutModal(false);
     sessionStorage.setItem("logout_success", "1");
     window.location.href = "/login";

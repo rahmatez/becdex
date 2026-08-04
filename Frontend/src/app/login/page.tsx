@@ -59,6 +59,8 @@ export default function LoginPage() {
       if (token) {
         localStorage.setItem("becdex_token", token);
         setAuthToken(token);
+        // Simpan juga ke cookie agar Next.js middleware bisa membacanya
+        Cookies.set("becdex_session", token, { sameSite: "lax", expires: 1 });
       }
 
       setAuth(user);
@@ -68,7 +70,7 @@ export default function LoginPage() {
       // Set role cookie agar middleware bisa enforce role separation
       const roleId = user.role?.id;
       if (roleId) {
-        Cookies.set("becdex_role", String(roleId), { sameSite: "lax" });
+        Cookies.set("becdex_role", String(roleId), { sameSite: "lax", expires: 1 });
       }
 
       toast.success(`Selamat datang, ${user.name}!`);
