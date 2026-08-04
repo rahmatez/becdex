@@ -125,7 +125,7 @@ export default function LandingPage() {
           {/* Right Content: Slideshow Carousel & Flow Diagram */}
           <div className="space-y-2 pt-0 flex flex-col items-center justify-start lg:pl-8">
             {/* Slideshow (Borderless, no chevrons, no dots) */}
-            <div className="relative w-full overflow-hidden max-w-[500px]">
+            <div className="relative w-full overflow-hidden max-w-125">
               <div className="relative w-full aspect-[1.3] overflow-hidden">
                 <Image
                   src={slides[activeSlide]}
@@ -138,7 +138,7 @@ export default function LandingPage() {
             </div>
 
             {/* Flow Diagram */}
-            <div className="text-center pt-0 w-full max-w-[480px]">
+            <div className="text-center pt-0 w-full max-w-120">
               <Image
                 src="/newestflow.webp"
                 alt="BECdex Certification Flow"
