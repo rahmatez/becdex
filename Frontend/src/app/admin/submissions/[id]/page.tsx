@@ -295,15 +295,26 @@ export default function AdminSubmissionDetailPage() {
               <>
                 {submission.status.id === 3 && (
                   <div className="flex w-full gap-2">
-                    <button
-                      onClick={() => approveMutation.mutate()}
-                      disabled={approveMutation.isPending}
-                      className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl border border-emerald-600/80 bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400 hover:bg-emerald-600 hover:text-white font-bold text-[10px] sm:text-xs transition-all cursor-pointer disabled:opacity-50"
-                      title="Selesaikan & Luluskan"
-                    >
-                      <CheckCircle2 size={14} />
-                      <span className="hidden sm:inline">Luluskan</span>
-                    </button>
+                    {submission.survey ? (
+                      <button
+                        onClick={() => setShowCertModal(true)}
+                        className="flex-1 inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[10px] sm:text-xs shadow-md shadow-emerald-600/20 transition-all cursor-pointer"
+                        title="Langsung Terbitkan Sertifikat (Revisi Pasca Survei)"
+                      >
+                        <Award size={14} />
+                        <span className="hidden sm:inline">{t.dash_admin_sub_id_btn_cert || "Terbitkan Sertifikat"}</span>
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => approveMutation.mutate()}
+                        disabled={approveMutation.isPending}
+                        className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl border border-emerald-600/80 bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400 hover:bg-emerald-600 hover:text-white font-bold text-[10px] sm:text-xs transition-all cursor-pointer disabled:opacity-50"
+                        title="Selesaikan & Luluskan"
+                      >
+                        <CheckCircle2 size={14} />
+                        <span className="hidden sm:inline">Luluskan</span>
+                      </button>
+                    )}
                     <button
                       onClick={() => setShowReturnModal(true)}
                       disabled={returnMutation.isPending}
@@ -312,15 +323,6 @@ export default function AdminSubmissionDetailPage() {
                     >
                       <AlertTriangle size={14} />
                       <span className="hidden sm:inline">Revisi</span>
-                    </button>
-                    <button
-                      onClick={() => setShowRejectModal(true)}
-                      disabled={rejectMutation.isPending}
-                      className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl border border-rose-600/80 bg-rose-50 text-rose-700 dark:bg-rose-950/40 dark:text-rose-400 hover:bg-rose-600 hover:text-white font-bold text-[10px] sm:text-xs transition-all cursor-pointer disabled:opacity-50"
-                      title="Tolak Permanen"
-                    >
-                      <XCircle size={14} />
-                      <span className="hidden sm:inline">Tolak</span>
                     </button>
                   </div>
                 )}
