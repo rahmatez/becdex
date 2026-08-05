@@ -3,7 +3,7 @@ const en = {
     nav_home: "Home",
     nav_about: "About Us",
     nav_explore: "Explore",
-    nav_verified_companies: "Verified Companies",
+    nav_verified_companies: "Certified Companies",
     nav_download: "Download",
     nav_login: "Log In",
     nav_register: "Registration",
