@@ -7,6 +7,17 @@ const en = {
     nav_download: "Download",
     nav_login: "Log In",
     nav_register: "Registration",
+    filter_all_categories: "All Categories",
+    cat_standard: "Standard",
+    cat_good: "Good",
+    cat_excellent: "Excellent",
+
+    // 404 Not Found
+    notfound_title: "404 - Page Not Found",
+    notfound_subtitle: "Oops! The page you are looking for doesn't exist.",
+    notfound_desc: "It might have been moved, deleted, or the URL might be mistyped. Please check the web address or return to the homepage.",
+    notfound_btn_home: "Back to Home",
+    notfound_btn_explore: "Explore Certified Companies",
 
     // Header
     header_subtitle: "Blue Economy Index & Certification",
@@ -679,8 +690,8 @@ const en = {
       "Marine Communication, Equipment and Instrumentation",
     ],
 
-    explore_catalog_title: "BECdex Catalog",
-    explore_catalog_desc: "The BECdex Catalog contains the list of criteria, aspects, indicators, and questions used in the BECdex assessment and verification procedure. It serves as a transparent reference for maritime companies to prepare for certification.",
+    explore_catalog_title: "Catalog of Blue Economy Companies",
+    explore_catalog_desc: "The Catalog of Blue Economy Companies contains the list of certified maritime companies, criteria, and assessment indicators used in the BECdex evaluation. It serves as a transparent reference for verified blue economy practices and achievements.",
     explore_coastal_title: "List of Coastal States",
     explore_coastal_desc: "Coastal state is a state with a sea-coastline. There are 153 of 193 member states of United Nations are coastal states in 2021. The length of a country's coastline is measured around all the coasts in the region.",
     explore_coastal_sub: "According to World Atlas Data there are 3 Countries that have the longest coastline:",

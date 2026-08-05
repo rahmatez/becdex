@@ -27,10 +27,11 @@ export default function ExplorePage() {
         <section className="grid lg:grid-cols-2 gap-10 items-center">
           <div className="space-y-4">
             <h3 className="text-3xl font-extrabold">
-              <Link href="/catalog" className="text-[#4154f1] hover:underline">
+              <Link href="/verified-companies" className="text-[#4154f1] hover:underline">
                 {t.explore_catalog_title}
               </Link>
             </h3>
+
             <p className="text-gray-600 text-sm md:text-base leading-relaxed text-justify">
               {t.explore_catalog_desc}
             </p>

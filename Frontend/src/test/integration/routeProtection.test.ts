@@ -6,7 +6,7 @@ import { describe, it, expect } from 'vitest';
 // Route protection logic diuji sebagai pure function.
 
 // Replika logika dari src/middleware.ts
-const PUBLIC_ROUTES = ['/', '/login', '/register', '/verified-companies', '/catalog', '/about', '/explore'];
+const PUBLIC_ROUTES = ['/', '/login', '/register', '/verified-companies', '/about', '/explore'];
 const AUTH_ROUTES   = ['/login', '/register'];
 const ADMIN_ROUTES  = ['/admin'];
 

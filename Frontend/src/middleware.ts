@@ -7,11 +7,11 @@ const PUBLIC_ROUTES = [
   "/forgot-password",
   "/reset-password",
   "/about",
-  "/catalog",
   "/explore",
   "/verified-companies",
   "/download",
 ];
+
 
 // Role IDs yang termasuk admin — harus sinkron dengan Backend/app/Enums/RoleId.php
 const ADMIN_ROLE_IDS = [1, 6, 7, 10];
@@ -31,19 +31,18 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  const isPublicRoute = PUBLIC_ROUTES.some(
-    (route) => pathname === route || pathname.startsWith(route + "/")
-  );
+  const isProtectedRoute = pathname.startsWith("/admin") || pathname.startsWith("/dashboard");
 
-  // Tidak login → redirect ke login untuk route protected
+  // Tidak login → redirect ke login untuk route protected (/admin, /dashboard)
   if (!token) {
-    if (!isPublicRoute) {
+    if (isProtectedRoute) {
       const loginUrl = new URL("/login", request.url);
       loginUrl.searchParams.set("from", pathname);
       return NextResponse.redirect(loginUrl);
     }
     return NextResponse.next();
   }
+
 
   // Sudah login — cek role separation (UX guard; API tetap enforce 403)
   if (roleId !== null) {

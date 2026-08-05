@@ -7,6 +7,17 @@ const id = {
     nav_download: "Unduhan",
     nav_login: "Masuk",
     nav_register: "Registrasi",
+    filter_all_categories: "Semua Kategori",
+    cat_standard: "Standar",
+    cat_good: "Baik",
+    cat_excellent: "Sangat Baik",
+
+    // 404 Not Found
+    notfound_title: "404 - Halaman Tidak Ditemukan",
+    notfound_subtitle: "Waduh! Halaman yang Anda cari tidak ditemukan.",
+    notfound_desc: "Halaman tersebut mungkin telah dipindahkan, dihapus, atau terjadi kesalahan pengetikan alamat URL. Silakan periksa kembali alamat URL atau kembali ke beranda.",
+    notfound_btn_home: "Kembali ke Beranda",
+    notfound_btn_explore: "Jelajahi Perusahaan Tersertifikasi",
 
     // Header
     header_subtitle: "Indeks & Sertifikasi Blue Economy Indonesia",
@@ -679,8 +690,8 @@ const id = {
       "Komunikasi, Peralatan, dan Instrumentasi Laut",
     ],
 
-    explore_catalog_title: "Katalog BECdex",
-    explore_catalog_desc: "Katalog BECdex berisi daftar kriteria, aspek, indikator, dan pertanyaan yang digunakan dalam prosedur penilaian dan verifikasi BECdex. Ini berfungsi sebagai acuan transparan bagi perusahaan maritim untuk mempersiapkan sertifikasi.",
+    explore_catalog_title: "Katalog Perusahaan Ekonomi Biru",
+    explore_catalog_desc: "Katalog Perusahaan Ekonomi Biru berisi daftar perusahaan maritim tersertifikasi, kriteria, dan indikator penilaian yang digunakan dalam evaluasi BECdex. Katalog ini berfungsi sebagai acuan transparan untuk praktik dan pencapaian ekonomi biru yang terverifikasi.",
     explore_coastal_title: "Daftar Negara Pantai",
     explore_coastal_desc: "Negara pantai adalah negara yang memiliki garis pantai laut. Terdapat 153 dari 193 negara anggota Perserikatan Bangsa-Bangsa yang merupakan negara pantai pada tahun 2021. Panjang garis pantai sebuah negara diukur di sekitar seluruh pantai di wilayah tersebut.",
     explore_coastal_sub: "Berdasarkan Data World Atlas, terdapat 3 Negara yang memiliki garis pantai terpanjang:",

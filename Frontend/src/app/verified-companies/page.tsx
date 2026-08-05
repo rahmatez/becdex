@@ -8,6 +8,7 @@ import { PublicFooter } from "@/components/layouts/PublicFooter";
 import { LoadingSpinner } from "@/components/ui/index";
 import { MapPin, FileText, Globe, CheckCircle2, Search, ChevronLeft, ChevronRight } from "lucide-react";
 import { MdCheckCircle } from "react-icons/md";
+import { useTranslation } from "@/store/lang";
 
 
 interface Company {
@@ -30,6 +31,7 @@ interface Company {
 }
 
 export default function VerifiedCompaniesPage() {
+  const { t } = useTranslation();
   const [selectedState, setSelectedState] = useState("All");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedSectors, setSelectedSectors] = useState<string[]>([]);
@@ -65,12 +67,11 @@ export default function VerifiedCompaniesPage() {
   const coastalStates = lookupsData?.countries || [];
   const sectors = lookupsData?.company_fields || [];
   
-  // BECdex Categories are static for now, or you can extract them from companiesData
+  // BECdex Categories: Standard, Good, Excellent
   const becdexCategories = [
-    { id: 1, name: "Bronze" },
-    { id: 2, name: "Silver" },
-    { id: 3, name: "Gold" },
-    { id: 4, name: "Platinum" },
+    { id: "Standard", name: t.cat_standard || "Standard" },
+    { id: "Good", name: t.cat_good || "Good" },
+    { id: "Excellent", name: t.cat_excellent || "Excellent" },
   ];
 
   // Handle Sector Checkbox
@@ -87,13 +88,17 @@ export default function VerifiedCompaniesPage() {
     return items.filter((cert: Company) => {
       // Filter by Coastal State (country ISO)
       if (selectedState !== "All" && cert.user?.company?.company_country !== selectedState) return false;
-      // Filter by Category
-      if (selectedCategory !== "All" && cert.user?.company?.becdex_category?.name !== selectedCategory) return false;
+      // Filter by Category (case-insensitive substring match)
+      if (selectedCategory !== "All") {
+        const catName = (cert.user?.company?.becdex_category?.name || cert.certificate?.name || "").toLowerCase();
+        if (!catName.includes(selectedCategory.toLowerCase())) return false;
+      }
       // Filter by Sectors
       if (selectedSectors.length > 0 && !selectedSectors.includes(cert.user?.company?.company_field?.name || "")) return false;
       return true;
     });
   }, [companiesData, selectedState, selectedCategory, selectedSectors]);
+
 
   const meta = companiesData?.meta;
 
@@ -148,11 +153,12 @@ export default function VerifiedCompaniesPage() {
                   onChange={(e) => setSelectedCategory(e.target.value)}
                   className="w-full border border-gray-300 rounded px-2.5 py-1.5 text-[13px] text-gray-700 focus:outline-none focus:border-[#0d6efd] bg-white"
                 >
-                  <option value="All">All Categories</option>
-                  {becdexCategories.map((c: { id: number; name: string }) => (
-                    <option key={c.id} value={c.name}>{c.name}</option>
+                  <option value="All">{t.filter_all_categories || "All Categories"}</option>
+                  {becdexCategories.map((c) => (
+                    <option key={c.id} value={c.id}>{c.name}</option>
                   ))}
                 </select>
+
               </div>
 
               {/* Sectors */}
