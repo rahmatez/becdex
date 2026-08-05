@@ -819,6 +819,8 @@ const id = {
     rec_f2_title: "Direktori Perusahaan",
     rec_f2_desc: "Publikasi transparan profil perusahaan dan hasil evaluasi dalam Katalog Perusahaan Ekonomi Biru BECdex.",
     rec_btn_text: "Sertifikasi Perusahaan Anda Sekarang",
+    
+    indicator_detail_btn: "Detail Syarat",
 } as const;
 
 export default id;

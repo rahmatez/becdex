@@ -818,6 +818,8 @@ const en = {
     rec_f2_title: "Company Directory",
     rec_f2_desc: "Transparent publication of company profiles and evaluation results in the BECdex Blue Economy Company Catalog.",
     rec_btn_text: "Certify Your Company Now",
+    
+    indicator_detail_btn: "Requirement Details",
 } as const;
 
 export default en;

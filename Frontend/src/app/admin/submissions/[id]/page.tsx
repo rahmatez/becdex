@@ -515,10 +515,13 @@ export default function AdminSubmissionDetailPage() {
                                     regulation: pi.indicator.regulation,
                                   });
                                 }}
-                                className="text-blue-500 hover:text-blue-700 transition-colors p-1 rounded-full hover:bg-blue-50 dark:hover:bg-blue-900/50 cursor-pointer shrink-0"
+                                className="inline-flex items-center gap-1.5 text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors px-2.5 py-1 rounded-full cursor-pointer shrink-0"
                                 title="Lihat Syarat & Bukti Indikator"
                               >
-                                <Info size={16} />
+                                <Info size={14} />
+                                <span className="text-[10px] font-bold uppercase tracking-wider hidden sm:inline-block">
+                                  {t.indicator_detail_btn || "Detail Syarat"}
+                                </span>
                               </span>
                             )}
                           </div>
