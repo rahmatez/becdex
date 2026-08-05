@@ -11,12 +11,17 @@ interface Props {
   submission: SubmissionDetail;
 }
 
-// Bug #10 Fix: Correct flow order — Document Submission, Verification, then Payment
+// Alur Bisnis Baru: Document Submission (2) -> Payment (1) -> Verification (3) -> Revision (4) -> Approved (8) -> Survey (7) -> Certified (5)
 const STATUSES = [
   {
     id: 2,
     label: "Document Submission",
     desc: "Unggah dokumen pendukung dan lengkapi kuesioner assessment",
+  },
+  {
+    id: 1,
+    label: "Pending Payment",
+    desc: "Menunggu pembayaran biaya administrasi sertifikasi",
   },
   {
     id: 3,
@@ -26,28 +31,26 @@ const STATUSES = [
   {
     id: 4,
     label: "Document Submission (2nd)",
-    desc: "Perbaikan atau unggah ulang berkas dokumen yang ditolak admin",
+    desc: "Perbaikan atau unggah ulang berkas dokumen yang direvisi",
   },
   {
-    id: 6,
-    label: "Payment Successful",
-    desc: "Pembayaran terverifikasi setelah lulus evaluasi awal",
+    id: 8,
+    label: "Approved & Ready for Survey",
+    desc: "Dokumen disetujui, menunggu jadwal survei lapangan",
   },
-  { id: 7, label: "Location Survey", desc: "Survei lokasi lapangan & wawancara terjadwal" },
-  { id: 5, label: "Certified Blue Economy", desc: <>Proses sertifikasi selesai resmi diterbitkan <MdCelebration className="inline text-amber-500 w-4 h-4 mb-1" /></> },
+  {
+    id: 7,
+    label: "Location Survey",
+    desc: "Survei lokasi lapangan & wawancara sedang berlangsung",
+  },
+  { id: 5, label: "Certified Blue Economy", desc: <>Proses sertifikasi selesai dan resmi diterbitkan <MdCelebration className="inline text-amber-500 w-4 h-4 mb-1" /></> },
 ];
 
-// Bug #11 Fix: Correct ordered flow matching the above STATUSES order
-const ORDERED_FLOW = [2, 3, 4, 6, 7, 5];
+const ORDERED_FLOW = [2, 1, 3, 4, 8, 7, 5];
 
 export function StatusTab({ submission }: Props) {
   const currentStatusId = submission.status.id;
   const currentIndex = ORDERED_FLOW.indexOf(currentStatusId);
-
-  const passedIds = new Set<number>();
-  for (let i = 0; i < currentIndex; i++) {
-    passedIds.add(ORDERED_FLOW[i]);
-  }
 
   const { data: logsData } = useQuery({
     queryKey: ["activity-logs", submission.id],
@@ -57,6 +60,17 @@ export function StatusTab({ submission }: Props) {
     },
   });
   const logs = logsData || [];
+
+  const hasRevision = logs.some((l: any) => l.action?.includes('return'));
+
+  const passedIds = new Set<number>();
+  for (let i = 0; i < currentIndex; i++) {
+    const flowId = ORDERED_FLOW[i];
+    if (flowId === 4 && !hasRevision) {
+      continue; // Skip marking 4 as passed if no revision occurred
+    }
+    passedIds.add(flowId);
+  }
 
   return (
     <div className="max-w-2xl mx-auto">
