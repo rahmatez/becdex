@@ -245,6 +245,13 @@ class SubmissionAdminController extends Controller
             ], 422);
         }
 
+        // Pastikan skor masih memenuhi syarat kelulusan (Penting karena skor bisa turun saat direvisi)
+        if ($submission->valid_score < 70 || $submission->getUploadedIndicatorsCount() < 35) {
+            return response()->json([
+                'message' => 'Tidak dapat menerbitkan sertifikat: Skor valid saat ini (' . $submission->valid_score . ') atau kelengkapan dokumen belum memenuhi syarat minimum kelulusan. Pastikan semua perbaikan telah di-Valid-kan.'
+            ], 422);
+        }
+
         $publishedAt = \Carbon\Carbon::parse($request->published_at);
         $validUntil  = $publishedAt->copy()->addYears(3);
 
