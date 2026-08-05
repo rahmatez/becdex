@@ -43,7 +43,8 @@ class SubmissionAdminListTest extends TestCase
             $this->assertContains($submission->id, $returnedIds, "Submission status {$submission->submission_status_id} seharusnya tampil.");
         }
 
-        $this->assertNotContains($hidden->id, $returnedIds, 'Submission status 5 (Certified) tidak seharusnya tampil di default list.');
+        // Karena default filter dihapus, status 5 sekarang seharusnya tampil juga.
+        $this->assertContains($hidden->id, $returnedIds, 'Submission status 5 (Certified) sekarang seharusnya tampil di default list.');
     }
 
     // ─── B-F7-02 ──────────────────────────────────────────────────────────────
