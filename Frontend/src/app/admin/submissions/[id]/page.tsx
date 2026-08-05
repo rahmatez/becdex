@@ -152,7 +152,7 @@ export default function AdminSubmissionDetailPage() {
       await api.post(`/admin/submissions/${id}/approve`);
     },
     onSuccess: () => {
-      toast.success("Pengajuan berhasil diluluskan. Perusahaan kini bisa melakukan pembayaran.");
+      toast.success("Verifikasi selesai! Pengajuan siap dijadwalkan untuk survei lapangan.");
       refetch();
     },
     onError: (error: unknown) => {
@@ -323,7 +323,7 @@ export default function AdminSubmissionDetailPage() {
                     </button>
                   </div>
                 )}
-                {submission.status.id === 6 && (
+                {submission.status.id === 8 && (
                   <button
                     onClick={() => setShowSurveyModal(true)}
                     className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl border border-blue-600/80 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950/50 font-bold text-xs transition-all cursor-pointer"

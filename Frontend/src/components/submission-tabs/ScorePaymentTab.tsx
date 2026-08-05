@@ -102,7 +102,7 @@ export function ScorePaymentTab({ submission, onUpdate }: Props) {
       return res.data;
     },
     onSuccess: () => {
-      toast.success("Submission berhasil dikirim ke admin untuk diverifikasi!");
+      toast.success("Pengajuan berhasil dikunci! Silakan selesaikan pembayaran biaya sertifikasi.");
       queryClient.invalidateQueries({ queryKey: ["submission", submission.id] });
       queryClient.invalidateQueries({ queryKey: ["score", submission.id] });
       onUpdate();

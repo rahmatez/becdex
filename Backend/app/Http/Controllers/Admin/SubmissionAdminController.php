@@ -38,8 +38,10 @@ class SubmissionAdminController extends Controller
         if ($request->status) {
             $query->where('submission_status_id', $request->status);
         } else {
-            // Default: tampilkan yang perlu diverifikasi (termasuk status 6 - Payment Successful)
-            $query->whereIn('submission_status_id', [2, 3, 6, 7]);
+            // Default: tampilkan yang perlu diproses Admin (sudah bayar atau sedang berjalan)
+            // Status 1 = Menunggu Pembayaran User (Admin bisa pantau), 3 = Dalam Verifikasi,
+            // 7 = Survei Lapangan, 8 = Siap Survei (sudah diverifikasi Admin)
+            $query->whereIn('submission_status_id', [1, 3, 7, 8]);
         }
 
         $submissions = $query->latest()->paginate(15);
@@ -165,9 +167,9 @@ class SubmissionAdminController extends Controller
 
         $submission = Submission::findOrFail($id);
 
-        if (!in_array($submission->submission_status_id, [6, 7])) {
+        if (!in_array($submission->submission_status_id, [8, 7])) {
             return response()->json([
-                'message' => 'Survei lokasi hanya dapat dijadwalkan setelah pembayaran berhasil diverifikasi (Status 6) atau dijadwal ulang (Status 7).'
+                'message' => 'Survei lokasi hanya dapat dijadwalkan setelah Admin menyelesaikan verifikasi dokumen (Status 8) atau dijadwal ulang (Status 7).'
             ], 422);
         }
 
@@ -405,29 +407,29 @@ class SubmissionAdminController extends Controller
             return response()->json(['message' => 'Skor atau kelengkapan dokumen belum memenuhi syarat lolos (Minimal skor 70 dan 35 indikator memiliki bukti).'], 400);
         }
 
-        $submission->update(['submission_status_id' => 8]);
+        $submission->update(['submission_status_id' => 8]); // Approved — Ready for Survey
 
         ActivityLog::create([
             'submission_id' => $submission->id,
             'user_id'       => Auth::id(),
             'action'        => 'admin_approve_verification',
-            'description'   => "Admin menyelesaikan verifikasi dokumen dan meluluskan pengajuan untuk lanjut ke pembayaran."
+            'description'   => "Admin menyelesaikan verifikasi dokumen dan meluluskan pengajuan untuk lanjut ke survei lapangan."
         ]);
 
         if ($submission->user) {
             $submission->user->notify(new SystemNotification(
-                'Lolos Verifikasi Dokumen',
-                'Selamat! Dokumen Anda telah disetujui. Silakan lanjutkan ke tahap pembayaran.',
+                'Verifikasi Dokumen Selesai',
+                'Selamat! Dokumen Anda telah diverifikasi dan disetujui. Tim kami akan segera menghubungi Anda untuk mengatur jadwal survei lapangan.',
                 '/dashboard/submissions/' . $submission->id
             ));
             try {
-                Mail::to($submission->user->email)->queue(new SubmissionStatusMail($submission, 'Dokumen kuesioner Anda telah berhasil diverifikasi dan disetujui. Silakan masuk ke dasbor Anda untuk melakukan pembayaran administrasi sertifikasi.'));
+                Mail::to($submission->user->email)->queue(new SubmissionStatusMail($submission, 'Dokumen kuesioner Anda telah berhasil diverifikasi dan disetujui oleh tim penilai BECdex. Tim kami akan segera menghubungi Anda untuk mengatur jadwal survei lapangan.'));
             } catch (\Exception $e) {
                 Log::error('Failed to send status email (Approve): ' . $e->getMessage());
             }
         }
 
-        return response()->json(['message' => 'Submission berhasil diluluskan (Status 8)']);
+        return response()->json(['message' => 'Submission berhasil diluluskan. Siap untuk penjadwalan survei lapangan (Status 8)']);
     }
 
     /**
