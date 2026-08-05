@@ -126,9 +126,12 @@ export function ScorePaymentTab({ submission, onUpdate }: Props) {
   const canPay      = score.can_proceed_to_payment && !score.has_successful_payment;
   const alreadyPaid = score.has_successful_payment;
 
-  // Bug #9: Check if submission is in "Payment Successful" state but not yet submitted to verification
-  const isPaymentSuccessful = submission.status.id === 6;
-  const isOnVerification    = submission.status.id === 3;
+  // Status-based UI flags
+  const isDraftOrRevision  = [2, 4].includes(submission.status.id); // User still filling
+  const isPendingPayment   = submission.status.id === 1;             // Submitted, waiting for payment
+  const isOnVerification   = submission.status.id === 3;             // Paid, admin verifying
+  const isSurvey           = submission.status.id === 7;             // Survey stage
+  const isCertified        = submission.status.id === 5;             // Certified
 
   return (
     <div className="max-w-xl mx-auto space-y-6">
@@ -240,17 +243,17 @@ export function ScorePaymentTab({ submission, onUpdate }: Props) {
         </div>
       </div>
 
-      {/* Show "Submit ke Verifikasi" when user is in status 2 (Document Submission) or 4 (Document Submission 2nd Attempt) */}
-      {[2, 4].includes(submission.status.id) && (
+      {/* === STATUS 2/4: Draft — User masih mengisi, belum submit === */}
+      {isDraftOrRevision && (
         <div className="space-y-4">
           <div className="flex items-start gap-3.5 bg-blue-50/80 dark:bg-blue-950/50 border border-blue-200 dark:border-blue-800/80 rounded-2xl p-5 shadow-2xs">
             <SendHorizonal size={22} className="text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
             <div>
               <p className="text-sm font-extrabold text-[#0c2340] dark:text-white">
-                Siap Kirim ke Verifikasi Admin
+                Kunci & Lanjutkan ke Pembayaran
               </p>
               <p className="text-xs text-slate-600 dark:text-slate-300 mt-1 leading-relaxed font-medium">
-                Jika Anda sudah melengkapi kuesioner dan dokumen, silakan kirimkan ke tim penilai admin untuk diverifikasi. Tombol pembayaran akan muncul jika Anda dinyatakan memenuhi kriteria lolos awal.
+                Jika Anda sudah melengkapi kuesioner dan dokumen, klik tombol di bawah untuk mengunci pengajuan. Anda akan diarahkan ke tahap pembayaran biaya sertifikasi. Pengajuan tidak dapat diubah setelah dikunci.
               </p>
             </div>
           </div>
@@ -268,30 +271,45 @@ export function ScorePaymentTab({ submission, onUpdate }: Props) {
             )}
             <span>
               {submitVerificationMutation.isPending
-                ? "Mengirimkan ke Antrian Verifikasi..."
-                : "Kirim ke Verifikasi Admin Sekarang"}
+                ? "Mengunci pengajuan..."
+                : "Kunci & Lanjut ke Pembayaran"}
             </span>
           </button>
         </div>
       )}
 
-      {/* Already in verification or certified, but NOT canPay (meaning admin hasn't finished grading yet) */}
-      {(isOnVerification || submission.status.id === 5) && !canPay && (
-        <div className="flex items-start gap-3.5 bg-blue-50/80 dark:bg-blue-950/50 border border-blue-200 dark:border-blue-800/80 rounded-2xl p-5 shadow-2xs">
-          <ShieldCheck size={22} className="text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
+      {/* === STATUS 1: Pending Payment — Menunggu pembayaran user === */}
+      {isPendingPayment && !canPay && (
+        <div className="flex items-start gap-3.5 bg-amber-50/80 dark:bg-amber-950/50 border border-amber-200 dark:border-amber-800/80 rounded-2xl p-5 shadow-2xs">
+          <Clock size={22} className="text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
           <div>
-            <p className="text-sm font-extrabold text-[#0c2340] dark:text-white">
-              Pengajuan Dalam Tahap Verifikasi Resmi
+            <p className="text-sm font-extrabold text-amber-900 dark:text-amber-200">
+              Pengajuan Dikunci — Menunggu Pembayaran
             </p>
-            <p className="text-xs text-slate-600 dark:text-slate-300 mt-1 leading-relaxed font-medium">
-              Seluruh berkas dokumen dan jawaban kuesioner Anda sedang diperiksa secara menyeluruh oleh tim penilai admin. Status akan diperbarui secara real-time.
+            <p className="text-xs text-amber-700 dark:text-amber-300 mt-1 leading-relaxed font-medium">
+              Pengajuan Anda sudah dikunci. Selesaikan pembayaran biaya sertifikasi di bawah untuk melanjutkan ke tahap verifikasi oleh Admin.
             </p>
           </div>
         </div>
       )}
 
-      {/* Payment Section — only shown when Admin has graded (canPay is true) and user hasn't paid */}
-      {!alreadyPaid && !isPaymentSuccessful && canPay && (
+      {/* === STATUS 3: Admin sedang memverifikasi (setelah bayar) === */}
+      {isOnVerification && (
+        <div className="flex items-start gap-3.5 bg-blue-50/80 dark:bg-blue-950/50 border border-blue-200 dark:border-blue-800/80 rounded-2xl p-5 shadow-2xs">
+          <ShieldCheck size={22} className="text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
+          <div>
+            <p className="text-sm font-extrabold text-[#0c2340] dark:text-white">
+              Pembayaran Dikonfirmasi — Dalam Proses Verifikasi Admin
+            </p>
+            <p className="text-xs text-slate-600 dark:text-slate-300 mt-1 leading-relaxed font-medium">
+              Pembayaran Anda telah kami terima. Seluruh berkas dokumen sedang diperiksa oleh tim penilai admin. Status akan diperbarui secara real-time. Pantau terus notifikasi Anda.
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* === Payment Section — hanya muncul ketika status 1 (Pending Payment) dan belum bayar === */}
+      {!alreadyPaid && isPendingPayment && canPay && (
         <div className="space-y-4">
           {/* Xendit Info Banner */}
           <div className="flex items-start gap-3 bg-blue-50/70 dark:bg-blue-950/40 border border-blue-200/80 dark:border-blue-800/80 rounded-2xl p-4 shadow-xs">
@@ -316,49 +334,43 @@ export function ScorePaymentTab({ submission, onUpdate }: Props) {
             <span>
               {payMutation.isPending
                 ? "Membuat Invoice Pembayaran..."
-                : canPay
-                ? "Bayar Biaya Sertifikasi Sekarang via Xendit"
-                : "Lengkapi Seluruh Persyaratan Terlebih Dahulu"}
+                : "Bayar Biaya Sertifikasi Sekarang via Xendit"}
             </span>
           </button>
 
           {/* Refresh Status Check */}
-          {canPay && (
-            <button
-              id="btn-refresh-payment-status"
-              onClick={() => refreshMutation.mutate()}
-              disabled={refreshMutation.isPending}
-              className="w-full flex items-center justify-center gap-2 border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800/80 text-slate-700 dark:text-slate-200 py-3 rounded-xl text-xs md:text-sm font-bold transition-all shadow-2xs cursor-pointer"
-            >
-              {refreshMutation.isPending ? (
-                <Loader2 size={15} className="animate-spin text-blue-600" />
-              ) : (
-                <RefreshCw size={15} className="text-blue-600 dark:text-blue-400" />
-              )}
-              <span>Sudah Membayar? Cek & Mutakhirkan Status Pembayaran</span>
-            </button>
-          )}
+          <button
+            id="btn-refresh-payment-status"
+            onClick={() => refreshMutation.mutate()}
+            disabled={refreshMutation.isPending}
+            className="w-full flex items-center justify-center gap-2 border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800/80 text-slate-700 dark:text-slate-200 py-3 rounded-xl text-xs md:text-sm font-bold transition-all shadow-2xs cursor-pointer"
+          >
+            {refreshMutation.isPending ? (
+              <Loader2 size={15} className="animate-spin text-blue-600" />
+            ) : (
+              <RefreshCw size={15} className="text-blue-600 dark:text-blue-400" />
+            )}
+            <span>Sudah Membayar? Cek & Mutakhirkan Status Pembayaran</span>
+          </button>
 
           {/* Pending Info */}
-          {canPay && (
-            <div className="flex items-center justify-center gap-2 text-xs text-slate-400 dark:text-slate-500 font-medium pt-1">
-              <Clock size={13} />
-              <span>Invoice pembayaran aktif dan berlaku selama 24 jam sejak dibuat.</span>
-            </div>
-          )}
+          <div className="flex items-center justify-center gap-2 text-xs text-slate-400 dark:text-slate-500 font-medium pt-1">
+            <Clock size={13} />
+            <span>Invoice pembayaran aktif dan berlaku selama 24 jam sejak dibuat.</span>
+          </div>
         </div>
       )}
 
-      {/* Already paid but waiting to submit */}
-      {alreadyPaid && !isPaymentSuccessful && !isOnVerification && submission.status.id !== 5 && (
+      {/* === Sudah bayar, sudah di verifikasi atau lebih lanjut === */}
+      {alreadyPaid && !isOnVerification && !isSurvey && !isCertified && (
         <div className="flex items-start gap-3.5 bg-emerald-50/80 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800/80 rounded-2xl p-5 shadow-2xs">
           <CheckCircle2 size={22} className="text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
           <div>
             <p className="text-sm font-extrabold text-emerald-900 dark:text-emerald-200">
-              Verifikasi Pembayaran Berhasil
+              Pembayaran Berhasil Dikonfirmasi
             </p>
             <p className="text-xs text-emerald-700 dark:text-emerald-300 mt-1 leading-relaxed font-medium">
-              Pembayaran Berhasil. Tim kami sedang meninjau dan akan segera mengatur Jadwal Survei Lokasi ke perusahaan Anda. Pantau terus email dan notifikasi Anda secara berkala.
+              Pembayaran Anda telah diterima. Tim kami akan segera memverifikasi dokumen dan mengatur jadwal survei lapangan ke perusahaan Anda.
             </p>
           </div>
         </div>

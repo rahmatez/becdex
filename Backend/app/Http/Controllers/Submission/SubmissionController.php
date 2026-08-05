@@ -149,7 +149,8 @@ class SubmissionController extends Controller
 
     /**
      * POST /api/submissions/{id}/submit
-     * Submit ke verifikasi admin (ubah status → 3)
+     * Kunci submission dan arahkan user ke pembayaran (ubah status → 1 Pending Payment)
+     * Setelah bayar, webhook Xendit akan ubah ke status 3 (On Verification Process)
      */
     public function submitForVerification(Request $request, string $id): JsonResponse
     {
@@ -167,18 +168,15 @@ class SubmissionController extends Controller
             ], 422);
         }
 
+        // Simpan initial score, ubah status ke Pending Payment (1)
+        // User wajib bayar dulu sebelum admin bisa melakukan verifikasi
         $submission->update([
-            'submission_status_id' => 3, // On Verification Process
-            'initial_score' => $initialScore
+            'submission_status_id' => 1, // Pending Payment
+            'initial_score'        => $initialScore,
         ]);
 
-        // Update all per-indicator status to Submitted, EXCEPT those already verified (3)
-        $submission->perIndicators()
-            ->where('per_indicator_status_id', '!=', 3)
-            ->update(['per_indicator_status_id' => 2]);
-
         return response()->json([
-            'message' => 'Submission sent for verification.',
+            'message' => 'Submission berhasil dikunci. Silakan lanjutkan ke pembayaran biaya sertifikasi.',
             'data'    => new SubmissionResource($submission->load('status')),
         ]);
     }

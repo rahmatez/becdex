@@ -175,10 +175,17 @@ class PaymentController extends Controller
                 'paid_at'            => $finalStatus === 'settlement' ? Carbon::now() : null,
             ]);
 
-            // Jika pembayaran sukses → update submission status ke "Payment Successful"
+            // Jika pembayaran sukses → tandai Payment Successful (6) sementara, lalu langsung
+            // naikkan ke On Verification Process (3) agar Admin bisa mulai memverifikasi.
             if ($finalStatus === 'settlement') {
-                $transaction->submission->update(['submission_status_id' => 6]);
-                
+                $submission = $transaction->submission;
+                $submission->update(['submission_status_id' => 3]);
+
+                // Tandai semua per-indicator sebagai Submitted agar Admin bisa mereviewnya
+                $submission->perIndicators()
+                    ->where('per_indicator_status_id', '!=', 4) // Jangan timpa yang sudah Verified
+                    ->update(['per_indicator_status_id' => 2]);
+
                 // Kirim email kwitansi (Payment Receipt) ke user
                 try {
                     Mail::to($transaction->user->email)->queue(new PaymentReceiptMail($transaction));
@@ -187,11 +194,11 @@ class PaymentController extends Controller
                     Log::error('Xendit webhook: failed to send payment receipt', ['error' => $e->getMessage()]);
                 }
 
-                Log::info('Xendit webhook: payment settled', ['order_id' => $externalId]);
+                Log::info('Xendit webhook: payment settled, submission moved to On Verification (3)', ['order_id' => $externalId]);
             } else if ($finalStatus === 'expire') {
-                // Kembalikan ke status 8 agar pengguna bisa membuat invoice baru
-                $transaction->submission->update(['submission_status_id' => 8]);
-                Log::info('Xendit webhook: invoice expired, reverted submission to status 8', ['order_id' => $externalId]);
+                // Kembalikan ke status 1 (Pending Payment) agar user bisa membuat invoice baru
+                $transaction->submission->update(['submission_status_id' => 1]);
+                Log::info('Xendit webhook: invoice expired, reverted submission to Pending Payment (1)', ['order_id' => $externalId]);
             }
         });
 
@@ -237,11 +244,15 @@ class PaymentController extends Controller
                 ]);
 
                 if ($finalStatus === 'settlement') {
-                    $submission->update(['submission_status_id' => 6]); // Payment Successful
-                    Log::info('checkPayment: payment confirmed as settled', ['order_id' => $transaction->order_id]);
+                    // Naikkan langsung ke On Verification (3) agar Admin dapat mulai memverifikasi
+                    $submission->update(['submission_status_id' => 3]);
+                    $submission->perIndicators()
+                        ->where('per_indicator_status_id', '!=', 4)
+                        ->update(['per_indicator_status_id' => 2]);
+                    Log::info('checkPayment: payment confirmed, submission moved to On Verification (3)', ['order_id' => $transaction->order_id]);
                 } else if ($finalStatus === 'expire') {
-                    $submission->update(['submission_status_id' => 8]); // Revert back to Status 8
-                    Log::info('checkPayment: payment confirmed as expired, reverted to status 8', ['order_id' => $transaction->order_id]);
+                    $submission->update(['submission_status_id' => 1]); // Kembali ke Pending Payment
+                    Log::info('checkPayment: payment expired, reverted to Pending Payment (1)', ['order_id' => $transaction->order_id]);
                 }
             }
 

@@ -128,12 +128,15 @@ class Submission extends Model
     }
 
     /**
-     * Syarat lanjut ke pembayaran: initial_score >= 70 DAN documents >= 35
+     * Syarat lanjut ke pembayaran:
+     * - Status 1 (Pending Payment — setelah user klik submit)
+     * - initial_score >= 70 DAN documents >= 35
+     * (Pembayaran dilakukan SEBELUM verifikasi admin di alur baru)
      */
     public function canProceedToPayment(): bool
     {
-        return in_array($this->submission_status_id, [1, 8])
-            && $this->valid_score >= 70
+        return $this->submission_status_id === 1
+            && $this->initial_score >= 70
             && $this->getUploadedIndicatorsCount() >= 35;
     }
 
