@@ -151,6 +151,8 @@ class SubmissionController extends Controller
      * POST /api/submissions/{id}/submit
      * Kunci submission dan arahkan user ke pembayaran (ubah status → 1 Pending Payment)
      * Setelah bayar, webhook Xendit akan ubah ke status 3 (On Verification Process)
+     * EXCEPTION: Jika user sudah pernah bayar (dikembalikan dari survei untuk revisi),
+     * langsung masuk ke Status 3 tanpa perlu bayar lagi.
      */
     public function submitForVerification(Request $request, string $id): JsonResponse
     {
@@ -168,8 +170,29 @@ class SubmissionController extends Controller
             ], 422);
         }
 
+        // Cek apakah user sudah pernah bayar (misal: dikembalikan dari survei untuk revisi)
+        $alreadyPaid = $submission->hasSuccessfulPayment();
+
+        if ($alreadyPaid) {
+            // Langsung masuk ke verifikasi — tidak perlu bayar lagi
+            $submission->update([
+                'submission_status_id' => 3, // On Verification Process
+                'initial_score'        => $initialScore,
+            ]);
+
+            // Tandai semua per-indicator sebagai Submitted agar Admin bisa mereview ulang
+            $submission->perIndicators()
+                ->where('per_indicator_status_id', '!=', 4) // Jangan timpa yang sudah Verified
+                ->update(['per_indicator_status_id' => 2]);
+
+            return response()->json([
+                'message' => 'Revisi berhasil dikirim ulang ke Admin untuk ditinjau kembali. Tidak diperlukan pembayaran ulang.',
+                'data'    => new SubmissionResource($submission->load('status')),
+            ]);
+        }
+
         // Simpan initial score, ubah status ke Pending Payment (1)
-        // User wajib bayar dulu sebelum admin bisa melakukan verifikasi
+        // User wajib bayar dulu sebelum admin bisa melakukan verifikasi (pertama kali)
         $submission->update([
             'submission_status_id' => 1, // Pending Payment
             'initial_score'        => $initialScore,

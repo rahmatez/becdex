@@ -126,7 +126,8 @@ export default function AdminSubmissionDetailPage() {
     });
   };
 
-  const isAdminEditable = submission?.status.id === 3;
+  // Admin bisa edit indikator saat: Status 3 (Verifikasi) ATAU Status 7 (Survei — untuk tandai revisi)
+  const isAdminEditable = submission?.status.id === 3 || submission?.status.id === 7;
 
   const returnMutation = useMutation({
     mutationFn: async () => {
@@ -342,13 +343,13 @@ export default function AdminSubmissionDetailPage() {
                       <span>{t.dash_admin_sub_id_btn_cert || "Terbitkan Sertifikat"}</span>
                     </button>
                     <button
-                      onClick={() => setShowRejectModal(true)}
-                      disabled={rejectMutation.isPending}
-                      className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl border border-rose-600/80 bg-rose-50 text-rose-700 dark:bg-rose-950/40 dark:text-rose-400 hover:bg-rose-600 hover:text-white font-bold text-[10px] sm:text-xs transition-all cursor-pointer disabled:opacity-50"
-                      title="Gagal Survei / Tolak Permanen"
+                      onClick={() => setShowReturnModal(true)}
+                      disabled={returnMutation.isPending}
+                      className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl border border-amber-500/80 bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-400 hover:bg-amber-500 hover:text-white font-bold text-[10px] sm:text-xs transition-all cursor-pointer disabled:opacity-50"
+                      title="Kembalikan untuk Revisi Pasca Survei"
                     >
-                      <XCircle size={14} />
-                      <span className="hidden sm:inline">Tolak</span>
+                      <AlertTriangle size={14} />
+                      <span className="hidden sm:inline">Revisi</span>
                     </button>
                   </div>
                 )}
@@ -438,6 +439,13 @@ export default function AdminSubmissionDetailPage() {
                             )}
                           />
                           <span className="truncate">{pi.indicator.name}</span>
+                          {/* Badge Perlu Dicek Ulang — tampil saat indikator ditandai Revisi (Declined) */}
+                          {pi.status.id === 5 && (
+                            <span className="shrink-0 inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-rose-100 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 text-[10px] font-bold border border-rose-200 dark:border-rose-800">
+                              <AlertTriangle size={9} />
+                              Perlu Dicek Ulang
+                            </span>
+                          )}
                           {isExpanded ? (
                             <ChevronDown size={16} className="shrink-0 text-slate-400" />
                           ) : (

@@ -95,21 +95,28 @@ export function ScorePaymentTab({ submission, onUpdate }: Props) {
     },
   });
 
-  // ── Bug #9 Fix: Submit to verification after payment ───────────────────────
+  // ── Submit (pertama kali bayar) ATAU kirim ulang revisi pasca survei ──────
   const submitVerificationMutation = useMutation({
     mutationFn: async () => {
       const res = await api.post(`/submissions/${submission.id}/submit`);
       return res.data;
     },
-    onSuccess: () => {
-      toast.success("Pengajuan berhasil dikunci! Silakan selesaikan pembayaran biaya sertifikasi.");
+    onSuccess: (data) => {
+      // Backend returns different message if already paid (survey revision)
+      const msg = (data as { message?: string })?.message ?? "";
+      const isRevision = msg.toLowerCase().includes("revisi");
+      if (isRevision) {
+        toast.success("Revisi berhasil dikirim! Admin akan meninjau ulang dokumen yang direvisi.");
+      } else {
+        toast.success("Pengajuan berhasil dikunci! Silakan selesaikan pembayaran biaya sertifikasi.");
+      }
       queryClient.invalidateQueries({ queryKey: ["submission", submission.id] });
       queryClient.invalidateQueries({ queryKey: ["score", submission.id] });
       onUpdate();
     },
     onError: (error: unknown) => {
       const err = error as ApiError;
-      toast.error(err.response?.data?.message || "Gagal mengirim ke verifikasi.");
+      toast.error(err.response?.data?.message || "Gagal mengirim pengajuan.");
     },
   });
 

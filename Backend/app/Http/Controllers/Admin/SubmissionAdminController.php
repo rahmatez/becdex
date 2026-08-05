@@ -342,42 +342,56 @@ class SubmissionAdminController extends Controller
     /**
      * POST /api/admin/submissions/{id}/return
      * Kembalikan submission ke user untuk revisi (Ubah status -> 4)
+     * Berlaku dari Status 3 (Verifikasi Dokumen) MAUPUN Status 7 (Survei Lapangan)
      */
     public function returnToUser(Request $request, string $id): JsonResponse
     {
         $submission = Submission::with('user')->findOrFail($id);
 
-        // Hanya bisa dikembalikan jika sedang dalam tahap verifikasi (3)
-        if ($submission->submission_status_id !== 3) {
+        // Bisa dikembalikan dari Status 3 (verifikasi) ATAU Status 7 (survei lapangan)
+        if (!in_array($submission->submission_status_id, [3, 7])) {
             return response()->json([
-                'message' => 'Pengajuan tidak sedang dalam tahap verifikasi.',
+                'message' => 'Pengajuan tidak sedang dalam tahap verifikasi atau survei lapangan.',
             ], 422);
         }
 
-        // Pastikan ada setidaknya satu indikator yang ditandai revisi (per_indicator_status_id = 4)
+        $fromSurvey = $submission->submission_status_id === 7;
+
+        // Pastikan ada setidaknya satu indikator yang ditandai revisi (per_indicator_status_id = 5 = Declined)
         $hasRevision = \App\Models\SubmissionPerIndicator::where('submission_id', $submission->id)
-            ->where('per_indicator_status_id', 4)
+            ->where('per_indicator_status_id', 5)
             ->exists();
 
         if (!$hasRevision) {
             return response()->json([
-                'message' => 'Tidak ada indikator yang ditandai untuk revisi. Silakan tandai minimal satu indikator menjadi revisi terlebih dahulu.',
+                'message' => 'Tidak ada indikator yang ditandai untuk revisi. Silakan tandai minimal satu indikator sebagai "Revisi" terlebih dahulu.',
             ], 422);
         }
 
-        $submission->update(['submission_status_id' => 4]); // Document Submission (2nd)
+        $submission->update(['submission_status_id' => 4]); // Document Submission (2nd Attempt)
+
+        $actionLabel = $fromSurvey ? 'admin_return_from_survey' : 'admin_return_submission';
+        $actionDesc  = $fromSurvey
+            ? "Admin mengembalikan dokumen untuk diperbaiki berdasarkan hasil survei lapangan. Alasan: {$request->reason}"
+            : "Admin mengembalikan dokumen untuk diperbaiki (Alasan: {$request->reason})";
 
         ActivityLog::create([
             'submission_id' => $submission->id,
             'user_id'       => Auth::id(),
-            'action'        => 'admin_return_submission',
-            'description'   => "Admin mengembalikan dokumen untuk diperbaiki (Reason: {$request->reason})"
+            'action'        => $actionLabel,
+            'description'   => $actionDesc,
         ]);
 
-        $message = 'Pengajuan Anda dikembalikan oleh tim penilai karena: ' . $request->reason;
+        $notifTitle = $fromSurvey
+            ? 'Revisi Diperlukan Pasca Survei Lapangan'
+            : 'Pengajuan Dikembalikan (Perlu Revisi)';
+        $message = $fromSurvey
+            ? 'Berdasarkan hasil survei lapangan, terdapat dokumen yang perlu diperbaiki: ' . $request->reason
+            : 'Pengajuan Anda dikembalikan oleh tim penilai karena: ' . $request->reason;
+
         if ($submission->user) {
             $submission->user->notify(new SystemNotification(
-                'Pengajuan Dikembalikan (Perlu Revisi)',
+                $notifTitle,
                 $message,
                 '/dashboard/submissions/' . $submission->id
             ));
@@ -388,7 +402,11 @@ class SubmissionAdminController extends Controller
             }
         }
 
-        return response()->json(['message' => 'Submission berhasil dikembalikan ke User (Status 4)']);
+        $responseMsg = $fromSurvey
+            ? 'Dokumen dikembalikan ke perusahaan untuk revisi pasca survei (Status 4). Perusahaan tidak perlu membayar ulang.'
+            : 'Submission berhasil dikembalikan ke User (Status 4)';
+
+        return response()->json(['message' => $responseMsg]);
     }
 
     /**
