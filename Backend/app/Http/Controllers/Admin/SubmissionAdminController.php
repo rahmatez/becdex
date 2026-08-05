@@ -39,9 +39,9 @@ class SubmissionAdminController extends Controller
             $query->where('submission_status_id', $request->status);
         } else {
             // Default: tampilkan yang perlu diproses Admin (sudah bayar atau sedang berjalan)
-            // Status 1 = Menunggu Pembayaran User (Admin bisa pantau), 3 = Dalam Verifikasi,
+            // Status 1 = Menunggu Pembayaran User (Admin bisa pantau), 6 = Pembayaran Berhasil, 3 = Dalam Verifikasi,
             // 7 = Survei Lapangan, 8 = Siap Survei (sudah diverifikasi Admin)
-            $query->whereIn('submission_status_id', [1, 3, 7, 8]);
+            $query->whereIn('submission_status_id', [1, 6, 3, 7, 8]);
         }
 
         $submissions = $query->latest()->paginate(15);

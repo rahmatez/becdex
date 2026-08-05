@@ -82,7 +82,7 @@ class SubmissionFlowTest extends TestCase
     // ─── B-F3-01 ──────────────────────────────────────────────────────────────
 
     /** @test */
-    public function company_can_submit_draft_to_admin_verification()
+    public function company_can_submit_draft_to_pending_payment()
     {
         $this->actingAs($this->company);
         $submission = Submission::factory()->draft()->create(['user_id' => $this->company->id]);
@@ -92,7 +92,7 @@ class SubmissionFlowTest extends TestCase
         $response->assertStatus(200);
         $this->assertDatabaseHas('submissions', [
             'id'                   => $submission->id,
-            'submission_status_id' => 3,
+            'submission_status_id' => 1,
         ]);
     }
 
@@ -104,6 +104,12 @@ class SubmissionFlowTest extends TestCase
         $this->actingAs($this->company);
         $submission = Submission::factory()->revision()->create(['user_id' => $this->company->id]);
         $this->populateSubmissionWithHighScoresAndDocs($submission);
+
+        // Simulate that the company has already paid
+        \App\Models\PaymentTransaction::factory()->create([
+            'submission_id'      => $submission->id,
+            'transaction_status' => 'settlement',
+        ]);
 
         $response = $this->postJson("/api/submissions/{$submission->id}/submit");
 
@@ -235,7 +241,7 @@ class SubmissionFlowTest extends TestCase
         SubmissionPerIndicator::create([
             'submission_id'          => $submission->id,
             'indicator_id'           => $indicator->id,
-            'per_indicator_status_id'=> 4, // Declined/needs revision
+            'per_indicator_status_id'=> 5, // Declined/needs revision
         ]);
 
         $response = $this->postJson("/api/admin/submissions/{$submission->id}/return", [
@@ -260,13 +266,13 @@ class SubmissionFlowTest extends TestCase
             'user_id' => $this->company->id,
         ]);
 
-        // Tidak ada indikator yang ditandai revisi (per_indicator_status_id = 4)
-        // Hanya ada indikator yang diverifikasi (status 5 = Verified)
+        // Tidak ada indikator yang ditandai revisi (per_indicator_status_id = 5)
+        // Hanya ada indikator yang diverifikasi (status 4 = Verified)
         $indicator = $this->createIndicator();
         SubmissionPerIndicator::create([
             'submission_id'          => $submission->id,
             'indicator_id'           => $indicator->id,
-            'per_indicator_status_id'=> 5, // Verified — bukan revisi
+            'per_indicator_status_id'=> 4, // Verified — bukan revisi
         ]);
 
         $response = $this->postJson("/api/admin/submissions/{$submission->id}/return", [
@@ -274,7 +280,7 @@ class SubmissionFlowTest extends TestCase
         ]);
 
         $response->assertStatus(422)
-            ->assertJsonFragment(['message' => 'Tidak ada indikator yang ditandai untuk revisi. Silakan tandai minimal satu indikator menjadi revisi terlebih dahulu.']);
+            ->assertJsonFragment(['message' => 'Tidak ada indikator yang ditandai untuk revisi. Silakan tandai minimal satu indikator sebagai "Revisi" terlebih dahulu.']);
 
         // Submission harus tetap di status 3 (On Verification)
         $this->assertDatabaseHas('submissions', [
@@ -332,10 +338,10 @@ class SubmissionFlowTest extends TestCase
     // ─── B-F3-10 ──────────────────────────────────────────────────────────────
 
     /** @test */
-    public function admin_can_schedule_location_survey_from_status_6()
+    public function admin_can_schedule_location_survey_from_status_8()
     {
         $this->actingAs($this->admin);
-        $submission = Submission::factory()->paymentSuccessful()->create([
+        $submission = Submission::factory()->approved()->create([
             'user_id' => $this->company->id,
         ]);
 
@@ -412,6 +418,7 @@ class SubmissionFlowTest extends TestCase
             'user_id'     => $this->company->id,
             'valid_score' => 85.0,
         ]);
+        $this->populateSubmissionWithHighScoresAndDocs($submission);
 
         // Ensure a certificate category exists
         \App\Models\Certificate::updateOrCreate(

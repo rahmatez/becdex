@@ -36,12 +36,12 @@ class PaymentWebhookTest extends TestCase
         return Indicator::factory()->create(['principle_id' => $principle->id]);
     }
 
-    private function buildApprovedSubmissionWithDocs(): Submission
+    private function buildPendingPaymentSubmissionWithDocs(): Submission
     {
         $submission = Submission::factory()->create([
             'user_id'              => $this->company->id,
-            'submission_status_id' => 8,
-            'valid_score'          => 75.0,
+            'submission_status_id' => 1,
+            'initial_score'        => 75.0,
         ]);
         for ($i = 0; $i < 35; $i++) {
             $indicator = $this->createIndicator();
@@ -95,7 +95,7 @@ class PaymentWebhookTest extends TestCase
     // ─── B-F6-05 ──────────────────────────────────────────────────────────────
 
     /** @test */
-    public function xendit_webhook_expired_reverts_submission_to_approved_status()
+    public function xendit_webhook_expired_reverts_submission_to_pending_payment()
     {
         $submission = Submission::factory()->pendingPayment()->create([
             'user_id' => $this->company->id,
@@ -121,10 +121,10 @@ class PaymentWebhookTest extends TestCase
             'transaction_status' => 'expire',
         ]);
 
-        // Submission should revert to status 8 (Lolos Verifikasi)
+        // Submission should revert to status 1 (Pending Payment)
         $this->assertDatabaseHas('submissions', [
             'id'                   => $submission->id,
-            'submission_status_id' => 8,
+            'submission_status_id' => 1,
         ]);
     }
 
@@ -173,7 +173,7 @@ class PaymentWebhookTest extends TestCase
         $this->app->instance(\App\Services\XenditService::class, $mockXendit);
 
         $this->actingAs($this->company);
-        $submission = $this->buildApprovedSubmissionWithDocs();
+        $submission = $this->buildPendingPaymentSubmissionWithDocs();
 
         $response = $this->postJson("/api/submissions/{$submission->id}/payment");
 
@@ -219,7 +219,7 @@ class PaymentWebhookTest extends TestCase
         ]);
 
         $this->actingAs($this->company);
-        $submission = $this->buildApprovedSubmissionWithDocs();
+        $submission = $this->buildPendingPaymentSubmissionWithDocs();
 
         $expiredAt = date('Y-m-d H:i:s', strtotime('+23 hours'));
         $existingTx = PaymentTransaction::factory()->pending()->create([
@@ -255,7 +255,7 @@ class PaymentWebhookTest extends TestCase
     public function payment_check_returns_200_with_no_pending_message_when_no_invoice_exists()
     {
         $this->actingAs($this->company);
-        $submission = $this->buildApprovedSubmissionWithDocs();
+        $submission = $this->buildPendingPaymentSubmissionWithDocs();
         $submission->update(['submission_status_id' => 1]);
 
         // Tidak ada PaymentTransaction — langsung ke no pending branch
@@ -272,7 +272,7 @@ class PaymentWebhookTest extends TestCase
     public function payment_check_returns_graceful_error_when_xendit_sdk_fails()
     {
         $this->actingAs($this->company);
-        $submission = $this->buildApprovedSubmissionWithDocs();
+        $submission = $this->buildPendingPaymentSubmissionWithDocs();
         $submission->update(['submission_status_id' => 1]);
 
         // Buat pending transaction dengan xendit_invoice_id

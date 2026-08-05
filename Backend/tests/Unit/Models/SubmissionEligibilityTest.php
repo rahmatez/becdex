@@ -21,8 +21,8 @@ class SubmissionEligibilityTest extends TestCase
         $user = User::factory()->company()->create();
         $submission = Submission::factory()->create([
             'user_id'              => $user->id,
-            'submission_status_id' => 8,
-            'valid_score'          => 75.0,
+            'submission_status_id' => 1,
+            'initial_score'        => 75.0,
         ]);
 
         // Add 35 documents on distinct indicators

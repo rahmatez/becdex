@@ -19,7 +19,7 @@ class SubmissionAdminListTest extends TestCase
 
         // Buat 1 submission per status yang seharusnya tampil
         $visible = [];
-        foreach ([2, 3, 6, 7] as $statusId) {
+        foreach ([1, 3, 6, 7, 8] as $statusId) {
             $visible[] = Submission::factory()->create([
                 'user_id'              => $company->id,
                 'submission_status_id' => $statusId,

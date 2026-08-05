@@ -30,7 +30,7 @@ class LoginTest extends TestCase
         $this->assertContains($response->status(), [200, 500]);
 
         if ($response->status() === 200) {
-            $response->assertJsonStructure(['user' => ['id', 'name', 'email']]);
+            $response->assertJsonStructure(['data' => ['user' => ['id', 'name', 'email']]]);
         }
     }
 
