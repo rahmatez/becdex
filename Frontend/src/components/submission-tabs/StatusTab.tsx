@@ -11,6 +11,13 @@ interface Props {
   submission: SubmissionDetail;
 }
 
+interface ActivityLogItem {
+  id: number;
+  action: string;
+  description: string;
+  created_at: string;
+}
+
 // Alur Bisnis Baru: Document Submission (2) -> Payment (1) -> Verification (3) -> Revision (4) -> Approved (8) -> Survey (7) -> Certified (5)
 const STATUSES = [
   {
@@ -61,7 +68,7 @@ export function StatusTab({ submission }: Props) {
   });
   const logs = logsData || [];
 
-  const hasRevision = logs.some((l: any) => l.action?.includes('return'));
+  const hasRevision = logs.some((l: ActivityLogItem) => l.action?.includes('return'));
 
   const passedIds = new Set<number>();
   for (let i = 0; i < currentIndex; i++) {
@@ -236,7 +243,7 @@ export function StatusTab({ submission }: Props) {
 
         {logs.length > 0 ? (
           <div className="space-y-4">
-            {logs.map((log: any) => (
+            {logs.map((log: ActivityLogItem) => (
               <div key={log.id} className="flex gap-4">
                 <div className="flex flex-col items-center">
                   <div className="w-2.5 h-2.5 rounded-full bg-blue-500 shrink-0 mt-1.5" />
