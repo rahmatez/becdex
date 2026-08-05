@@ -5,7 +5,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useDropzone } from "react-dropzone";
 import { toast } from "sonner";
 import { ChevronDown, ChevronRight, Loader2, Upload, Trash2, FileText, AlertTriangle, MessageSquare, Info, X, BookOpen, Scale, CheckCircle2 } from "lucide-react";
-import { MdCheckCircle, MdSearch, MdWarning, MdLock } from "react-icons/md";
+import { MdCheckCircle, MdSearch, MdWarning } from "react-icons/md";
 import { SubmissionDetail, PerIndicator } from "@/types";
 import api from "@/lib/api";
 import { cn } from "@/lib/utils";
@@ -792,7 +792,7 @@ export function AssessmentTab({ submission, onUpdate }: Props) {
                                           )}
 
                                           {!isIndicatorEditable && docs.length === 0 && (
-                                            <span className="text-[10px] text-slate-400 italic mt-1 truncate max-w-[200px] block">{t.tab_assessment_no_doc || "Belum ada dokumen pendukung"}</span>
+                                            <span className="text-[10px] text-slate-400 italic mt-1 truncate max-w-50 block">{t.tab_assessment_no_doc || "Belum ada dokumen pendukung"}</span>
                                           )}
                                         </>
                                       );
