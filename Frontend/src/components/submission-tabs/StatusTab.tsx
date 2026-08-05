@@ -16,6 +16,9 @@ interface ActivityLogItem {
   action: string;
   description: string;
   created_at: string;
+  user?: {
+    name: string;
+  };
 }
 
 // Alur Bisnis Baru: Document Submission (2) -> Payment (1) -> Verification (3) -> Revision (4) -> Approved (8) -> Survey (7) -> Certified (5)
