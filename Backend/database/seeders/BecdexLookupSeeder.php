@@ -24,11 +24,11 @@ class BecdexLookupSeeder extends Seeder
             ['id'=>1,'name'=>'Pending Payment','color'=>'warning'],
             ['id'=>2,'name'=>'Document Submission','color'=>'info'],
             ['id'=>3,'name'=>'On Verification Process','color'=>'primary'],
-            ['id'=>4,'name'=>'Document Submission (Second Attempt)','color'=>'warning'],
+            ['id'=>4,'name'=>'Document Revision','color'=>'warning'],
             ['id'=>5,'name'=>'Certified','color'=>'success'],
             ['id'=>6,'name'=>'Payment Successful','color'=>'success'],
             ['id'=>7,'name'=>'Continue To Location Survey','color'=>'light'],
-            ['id'=>8,'name'=>'Approved (Ready for Payment)','color'=>'primary'],
+            ['id'=>8,'name'=>'Approved (Ready for Survey)','color'=>'primary'],
             ['id'=>9,'name'=>'Rejected Permanently','color'=>'danger'],
         ];
         foreach ($statuses as $s) SubmissionStatus::updateOrCreate(['id'=>$s['id']], $s);

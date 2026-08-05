@@ -131,6 +131,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('submissions/{id}/indicators/{ind}', [SubmissionAdminController::class, 'updateIndicator']);
         Route::post('submissions/{id}/survey',          [SubmissionAdminController::class, 'addSurvey']);
         Route::post('submissions/{id}/certificate',     [SubmissionAdminController::class, 'issueCertificate']);
+        Route::post('submissions/{id}/start',           [SubmissionAdminController::class, 'startVerification']);
         Route::post('submissions/{id}/approve',         [SubmissionAdminController::class, 'approve']);
         Route::post('submissions/{id}/reject',          [SubmissionAdminController::class, 'reject']);
         Route::post('submissions/{id}/return',          [SubmissionAdminController::class, 'returnToUser']);

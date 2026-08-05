@@ -420,6 +420,33 @@ class SubmissionAdminController extends Controller
     }
 
     /**
+     * POST /api/admin/submissions/{id}/start
+     * Admin memulai verifikasi dari status 6 (Payment Successful)
+     */
+    public function startVerification(string $id): JsonResponse
+    {
+        $submission = Submission::findOrFail($id);
+
+        if ($submission->submission_status_id != 6) {
+            return response()->json(['message' => 'Hanya submission dengan status Payment Successful yang bisa dimulai verifikasinya.'], 400);
+        }
+
+        $submission->update(['submission_status_id' => 3]); // On Verification Process
+
+        ActivityLog::create([
+            'submission_id' => $submission->id,
+            'user_id'       => Auth::id(),
+            'action'        => 'admin_start_verification',
+            'description'   => "Admin memulai proses verifikasi dokumen pengajuan."
+        ]);
+
+        return response()->json([
+            'message' => 'Proses verifikasi berhasil dimulai.',
+            'status'  => 3
+        ]);
+    }
+
+    /**
      * POST /api/admin/submissions/{id}/approve
      * Admin menyelesaikan verifikasi dan meluluskan submission (Status 8)
      */

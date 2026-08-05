@@ -242,7 +242,7 @@ export default function AdminSubmissionsPage() {
                       <td className="px-6 py-4 text-right">
                         <button
                           onClick={() => {
-                            if (s.status?.id === 2) {
+                            if (s.status?.id === 6) {
                               setReviewConfirmId(s.id);
                             } else {
                               router.push(`/admin/submissions/${s.id}`);
@@ -322,8 +322,17 @@ export default function AdminSubmissionsPage() {
                 {t.dash_admin_sub_modal_cancel || "Batal"}
               </button>
               <button
-                onClick={() => {
-                  router.push(`/admin/submissions/${reviewConfirmId}`);
+                onClick={async () => {
+                  if (reviewConfirmId) {
+                    try {
+                      await api.post(`/admin/submissions/${reviewConfirmId}/start`);
+                      router.push(`/admin/submissions/${reviewConfirmId}`);
+                    } catch (error) {
+                      console.error("Failed to start verification", error);
+                      // Fallback redirect if something went wrong
+                      router.push(`/admin/submissions/${reviewConfirmId}`);
+                    }
+                  }
                 }}
                 className="px-5 py-2.5 rounded-xl text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-md shadow-blue-600/20 transition-all cursor-pointer"
               >
