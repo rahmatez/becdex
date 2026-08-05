@@ -553,34 +553,6 @@ export default function AdminSubmissionDetailPage() {
                       {isExpanded && (
                         <div className="bg-slate-50/80 dark:bg-slate-800/50 border-t border-slate-200/60 dark:border-slate-800 p-5 space-y-5 animate-in fade-in duration-150">
 
-                          {/* Evidence Requirements Box */}
-                          {(pi.indicator.evidence || pi.indicator.verification_method || pi.indicator.regulation) && (
-                            <div className="p-3.5 rounded-xl border border-amber-200/80 dark:border-amber-800 bg-amber-50/60 dark:bg-amber-950/20 space-y-2.5">
-                              <p className="text-[10px] font-bold text-amber-700 dark:text-amber-400 uppercase tracking-widest flex items-center gap-1.5">
-                                <Info size={11} />
-                                {(t as unknown as Record<string, string>).admin_sub_id_evidence_box_title || "Standar Bukti yang Harus Dipenuhi User"}
-                              </p>
-                              {pi.indicator.evidence && (
-                                <div>
-                                  <p className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-0.5">{(t as unknown as Record<string, string>).admin_sub_id_evidence_req || "Bukti Diperlukan"}</p>
-                                  <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">{pi.indicator.evidence}</p>
-                                </div>
-                              )}
-                              {pi.indicator.verification_method && (
-                                <div>
-                                  <p className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-0.5">{(t as unknown as Record<string, string>).admin_sub_id_evidence_ver || "Metode Verifikasi"}</p>
-                                  <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">{pi.indicator.verification_method}</p>
-                                </div>
-                              )}
-                              {pi.indicator.regulation && (
-                                <div>
-                                  <p className="text-[10px] font-bold text-purple-600 dark:text-purple-400 uppercase tracking-wider mb-0.5">{(t as unknown as Record<string, string>).admin_sub_id_evidence_reg || "Dasar Hukum"}</p>
-                                  <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">{pi.indicator.regulation}</p>
-                                </div>
-                              )}
-                            </div>
-                          )}
-
                           {/* Documents List */}
                           <div>
                             <span className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">
