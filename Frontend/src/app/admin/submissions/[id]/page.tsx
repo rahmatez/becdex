@@ -36,7 +36,7 @@ interface PerIndicatorItem {
     evidence?: string | null;
     verification_method?: string | null;
     regulation?: string | null;
-    principle: { name: string; outcome: { aspect: { name: string } } };
+    principle: { name: string; outcome: { name: string; aspect: { name: string } } };
     questions: IndicatorQuestion[];
   };
 }
@@ -190,7 +190,9 @@ export default function AdminSubmissionDetailPage() {
     },
   });
 
-  const grouped = new Map<string, Map<string, Map<string, typeof submission.per_indicators>>>();
+
+
+  const grouped = new Map<string, Map<string, Map<string, PerIndicatorItem[]>>>();
   for (const pi of submission?.per_indicators ?? []) {
     const aspect = pi.indicator.principle.outcome.aspect.name;
     const outcome = pi.indicator.principle.outcome.name;
@@ -246,13 +248,6 @@ export default function AdminSubmissionDetailPage() {
         </div>
       </AppLayout>
     );
-  }
-
-  const grouped = new Map<string, typeof submission.per_indicators>();
-  for (const pi of submission.per_indicators ?? []) {
-    const aspect = pi.indicator.principle.outcome.aspect.name;
-    if (!grouped.has(aspect)) grouped.set(aspect, []);
-    grouped.get(aspect)!.push(pi);
   }
 
   const isCertified = submission.status.id === 5;
