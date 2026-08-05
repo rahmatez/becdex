@@ -365,7 +365,7 @@ export default function AdminSubmissionDetailPage() {
                       title="Kembalikan untuk Revisi"
                     >
                       <AlertTriangle size={14} />
-                      <span className="hidden sm:inline">Revisi</span>
+                      <span className="hidden sm:inline">{t.admin_sub_badge_revision || "Revisi"}</span>
                     </button>
                   </div>
                 )}
@@ -394,7 +394,7 @@ export default function AdminSubmissionDetailPage() {
                       title="Kembalikan untuk Revisi Pasca Survei"
                     >
                       <AlertTriangle size={14} />
-                      <span className="hidden sm:inline">Revisi</span>
+                      <span className="hidden sm:inline">{t.admin_sub_badge_revision || "Revisi"}</span>
                     </button>
                   </div>
                 )}
@@ -462,7 +462,7 @@ export default function AdminSubmissionDetailPage() {
                 <span>{t.dash_admin_sub_id_aspect || "Aspek:"} {aspect}</span>
               </div>
 
-              <div className="p-4 space-y-4">
+            <div className="p-4 space-y-4">
                 {Array.from(outcomeMap.entries()).map(([outcomeName, principleMap]) => (
                   <div key={outcomeName} className="space-y-3">
                     <div className="flex items-center gap-2 text-xs font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-wider px-1 pt-2">
@@ -474,7 +474,7 @@ export default function AdminSubmissionDetailPage() {
                       <div key={principleName} className="pl-2 space-y-2.5">
                         <p className="text-xs text-blue-600 dark:text-blue-400 font-bold px-1 flex items-center gap-1.5">
                           <span>&bull;</span>
-                          <span>Principle {principleNumberMap.get(principleName)}: {principleName}</span>
+                          <span>{t.dash_admin_sub_principle || "Prinsip"} {principleNumberMap.get(principleName)}: {principleName}</span>
                         </p>
 
                         <div className="divide-y divide-slate-100 dark:divide-slate-800 border border-slate-200/60 dark:border-slate-800/80 rounded-xl overflow-hidden bg-white dark:bg-slate-900 shadow-2xs">
@@ -500,7 +500,7 @@ export default function AdminSubmissionDetailPage() {
                           />
                           <div className="flex items-center gap-2 flex-1 min-w-0">
                             <span className="shrink-0 text-[10px] font-extrabold text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded-md font-mono uppercase tracking-widest">
-                              Indicator {indicatorNumberMap.get(pi.indicator_id) ?? "—"}
+                              {t.dash_admin_sub_id_indicator || "Indikator"} {indicatorNumberMap.get(pi.indicator_id) ?? "—"}
                             </span>
                             <span className="truncate">{pi.indicator.name}</span>
                             {(pi.indicator.description || pi.indicator.evidence || pi.indicator.regulation) && (
@@ -516,7 +516,7 @@ export default function AdminSubmissionDetailPage() {
                                   });
                                 }}
                                 className="inline-flex items-center gap-1.5 text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors px-2.5 py-1 rounded-full cursor-pointer shrink-0"
-                                title="Lihat Syarat & Bukti Indikator"
+                                title={t.dash_admin_sub_id_tooltip_detail || "Lihat Syarat & Bukti Indikator"}
                               >
                                 <Info size={14} />
                                 <span className="text-[10px] font-bold uppercase tracking-wider hidden sm:inline-block">
@@ -529,7 +529,7 @@ export default function AdminSubmissionDetailPage() {
                           {(pi.status.id === 5 || (pi.status.id === 2 && pi.comment)) && (
                             <span className="shrink-0 inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-rose-100 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 text-[10px] font-bold border border-rose-200 dark:border-rose-800">
                               <AlertTriangle size={9} />
-                              Perlu Dicek Ulang
+                              {t.dash_admin_sub_id_revision_needed || "Perlu Dicek Ulang"}
                             </span>
                           )}
                           {isExpanded ? (
@@ -737,7 +737,7 @@ export default function AdminSubmissionDetailPage() {
               <div className="w-16 h-16 bg-rose-50 dark:bg-rose-900/30 rounded-full flex items-center justify-center mx-auto mb-4 border-4 border-rose-100 dark:border-rose-900/50">
                 <AlertTriangle className="text-rose-600 dark:text-rose-400" size={32} />
               </div>
-              <h3 className="text-xl font-extrabold text-slate-800 dark:text-white mb-2">Konfirmasi Pengembalian</h3>
+              <h3 className="text-xl font-extrabold text-slate-800 dark:text-white mb-2">{t.admin_sub_modal_confirm_return || "Konfirmasi Pengembalian"}</h3>
               <p className="text-sm text-slate-500 dark:text-slate-400 mb-6 leading-relaxed">
                 {t.dash_admin_sub_id_return_confirm || "Kembalikan dokumen ini ke perusahaan untuk direvisi? Pastikan Anda telah menandai indikator yang bermasalah dengan status 'Revisi'."}
               </p>
@@ -782,7 +782,7 @@ export default function AdminSubmissionDetailPage() {
               <div className="w-16 h-16 bg-rose-50 dark:bg-rose-900/30 rounded-full flex items-center justify-center mx-auto mb-4 border-4 border-rose-100 dark:border-rose-900/50">
                 <XCircle className="text-rose-600 dark:text-rose-400" size={32} />
               </div>
-              <h3 className="text-xl font-extrabold text-slate-800 dark:text-white mb-2">Tolak Permanen</h3>
+              <h3 className="text-xl font-extrabold text-slate-800 dark:text-white mb-2">{t.admin_sub_btn_reject_perm || "Tolak Permanen"}</h3>
               <p className="text-sm text-slate-500 dark:text-slate-400 mb-4 leading-relaxed">
                 Tindakan ini tidak dapat dibatalkan. Pengajuan akan dikunci secara permanen. Mohon sertakan alasan penolakan.
               </p>

@@ -23,6 +23,7 @@ import { SubmissionDetail, ScoreData, PaymentTransaction } from "@/types";
 import { ScoreGauge } from "@/components/ui/index";
 import api from "@/lib/api";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "@/store/lang";
 
 type ApiError = { response?: { data?: { message?: string } } };
 
@@ -32,6 +33,7 @@ interface Props {
 }
 
 export function ScorePaymentTab({ submission, onUpdate }: Props) {
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
 
   const { data: scoreData, isLoading } = useQuery<{ data: ScoreData }>({
@@ -187,7 +189,7 @@ export function ScorePaymentTab({ submission, onUpdate }: Props) {
         <div className="flex items-center justify-between">
           <p className="text-sm font-extrabold text-slate-800 dark:text-white tracking-tight flex items-center gap-2">
             <FileCheck size={16} className="text-blue-600 dark:text-blue-400" />
-            <span>Persyaratan Kelayakan Lanjut ke Pembayaran</span>
+            <span>{t.tab_payment_req || "Persyaratan Kelayakan Lanjut ke Pembayaran"}</span>
           </p>
           <span
             className={cn(
@@ -357,7 +359,7 @@ export function ScorePaymentTab({ submission, onUpdate }: Props) {
             ) : (
               <RefreshCw size={15} className="text-blue-600 dark:text-blue-400" />
             )}
-            <span>Sudah Membayar? Cek & Mutakhirkan Status Pembayaran</span>
+            <span>{t.tab_payment_check || "Sudah Membayar? Cek & Mutakhirkan Status Pembayaran"}</span>
           </button>
 
           {/* Pending Info */}

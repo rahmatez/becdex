@@ -342,7 +342,7 @@ export default function ProfilePage() {
                   <span>{t.dash_profile_country || "Asal Negara"} <span className="text-red-500">*</span></span>
                 </label>
                 <select required {...register("company_country")} className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/80 text-slate-800 dark:text-white text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
-                  <option value="">Pilih Negara</option>
+                  <option value="">{t.dash_profile_sel_country || "Pilih Negara"}</option>
                   {lookups.countries.map((c: { id: number; iso: string; name: string }) => (
                     <option key={c.id} value={c.iso}>{c.name}</option>
                   ))}
@@ -363,7 +363,7 @@ export default function ProfilePage() {
                   <span>{t.dash_profile_field || "Bidang Perusahaan"} <span className="text-red-500">*</span></span>
                 </label>
                 <select required {...register("company_field_id")} className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/80 text-slate-800 dark:text-white text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
-                  <option value="">Pilih Sektor Usaha</option>
+                  <option value="">{t.dash_profile_sel_sector || "Pilih Sektor Usaha"}</option>
                   {lookups.company_fields.map((f: { id: number; name: string }) => (
                     <option key={f.id} value={f.id}>{f.name}</option>
                   ))}

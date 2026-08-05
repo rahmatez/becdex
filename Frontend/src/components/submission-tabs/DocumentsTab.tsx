@@ -8,6 +8,7 @@ import { Upload, Trash2, FileText, Loader2 } from "lucide-react";
 import { SubmissionDetail, ScoreData } from "@/types";
 import api from "@/lib/api";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "@/store/lang";
 
 
 interface Props {
@@ -26,6 +27,8 @@ function DocumentUploadZone({
   indicatorName: string;
   onSuccess: () => void;
 }) {
+  const { t } = useTranslation();
+  
   const mutation = useMutation({
     mutationFn: async (file: File) => {
       const form = new FormData();
@@ -78,7 +81,7 @@ function DocumentUploadZone({
       {mutation.isPending ? (
         <div className="flex items-center justify-center gap-2.5 text-blue-600 dark:text-blue-400 font-bold py-1">
           <Loader2 size={16} className="animate-spin" />
-          <span className="text-xs md:text-sm">Mengunggah berkas ke server...</span>
+          <span className="text-sm font-semibold">{t.tab_doc_uploading || "Mengunggah berkas ke server..."}</span>
         </div>
       ) : (
         <div className="flex flex-col sm:flex-row items-center justify-center gap-2.5 text-slate-500 dark:text-slate-400 py-1 font-medium">
@@ -97,6 +100,8 @@ function DocumentUploadZone({
 }
 
 export function DocumentsTab({ submission, onUpdate }: Props) {
+  const { t } = useTranslation();
+
   const deleteMutation = useMutation({
     mutationFn: async (docId: number) => {
       await api.delete(`/submissions/${submission.id}/documents/${docId}`);
@@ -176,7 +181,7 @@ export function DocumentsTab({ submission, onUpdate }: Props) {
         {eligibleIndicators.length === 0 ? (
           <div className="text-center py-12 border border-dashed border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 rounded-2xl transition-colors">
             <FileText className="w-8 h-8 text-slate-300 dark:text-slate-600 mx-auto mb-2" />
-            <p className="text-sm text-slate-600 dark:text-slate-300 font-extrabold">Belum Ada Dokumen untuk Diunggah</p>
+            <p className="text-slate-500">{t.tab_doc_empty || "Belum Ada Dokumen untuk Diunggah"}</p>
             <p className="text-xs text-slate-400 dark:text-slate-500 mt-1 max-w-xs mx-auto">
               Silakan isi kuesioner assessment terlebih dahulu dan jawab &quot;Ya&quot; pada indikator yang sesuai dengan perusahaan Anda.
             </p>
@@ -274,7 +279,7 @@ export function DocumentsTab({ submission, onUpdate }: Props) {
                 )}
 
                 {!canEdit && docs.length === 0 && (
-                  <p className="text-xs text-slate-400 italic font-medium py-2">Belum ada berkas pendukung diunggah untuk indikator ini</p>
+                  <p className="text-sm text-slate-400 italic text-center p-4">{t.tab_doc_no_support || "Belum ada berkas pendukung diunggah untuk indikator ini"}</p>
                 )}
               </div>
             );

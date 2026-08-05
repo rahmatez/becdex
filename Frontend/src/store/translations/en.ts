@@ -820,6 +820,55 @@ const en = {
     rec_btn_text: "Certify Your Company Now",
     
     indicator_detail_btn: "Requirement Details",
+    
+    // --- Tabs ---
+    tab_assessment_uploading: "Uploading file...",
+    tab_assessment_format: "Format PDF/JPG/PNG (max. 10MB)",
+    tab_assessment_scoring_guide: "Scoring Guide",
+    tab_assessment_show_all: "Show All Questions",
+    tab_assessment_filter_unanswered: "Filter: Unanswered",
+    tab_assessment_saving: "Saving...",
+    tab_assessment_saved: "Auto-Saved",
+    tab_assessment_unanswered: "Unanswered",
+    tab_assessment_done: "Done",
+    tab_assessment_no_doc: "No supporting document yet",
+    
+    // Scoring levels
+    score_0_title: "No Evidence",
+    score_0_desc: "No written commitment, policy, SOP, or evidence of implementation.",
+    score_1_title: "Commitment Exists",
+    score_1_desc: "There is evidence of written commitment, policy, or SOP, but not yet implemented.",
+    score_2_title: "Partial Implementation",
+    score_2_desc: "Policy is partially implemented, but evidence/track record is not comprehensive.",
+    score_3_title: "Full Implementation",
+    score_3_desc: "Full implementation. Proven by valid, measurable, trackable, and consistent supporting data.",
+
+    // Documents Tab
+    tab_doc_uploading: "Uploading file to server...",
+    tab_doc_empty: "No Documents to Upload Yet",
+    tab_doc_no_support: "No supporting files uploaded for this indicator yet",
+
+    // Status & Certificate Tab
+    tab_status_cert_issued: "Certification process complete and officially issued",
+    tab_status_survey_schedule: "Field Survey Schedule:",
+    tab_cert_status: "Submission Status:",
+    tab_cert_download: "Download Official Certificate PDF",
+    tab_cert_print: "Print Certificate",
+
+    // Score Payment Tab
+    tab_payment_req: "Eligibility Requirements for Payment",
+    tab_payment_check: "Already paid? Check & Update Payment Status",
+
+    // Admin Panel
+    admin_sub_badge_revision: "Revision",
+    admin_sub_modal_confirm_return: "Confirm Return",
+    admin_sub_btn_reject_perm: "Permanent Reject",
+    dash_admin_fw_modal_select: "Select {label}...",
+
+    // Dashboard
+    dash_profile_sel_country: "Select Country",
+    dash_profile_sel_sector: "Select Business Sector",
+    dash_sub_err_load: "Failed to Load Submission Data",
 } as const;
 
 export default en;

@@ -2,12 +2,14 @@
 
 import { Award, Clock, Download, Printer } from "lucide-react";
 import { SubmissionDetail } from "@/types";
+import { useTranslation } from "@/store/lang";
 
 interface Props {
   submission: SubmissionDetail;
 }
 
 export function CertificateTab({ submission }: Props) {
+  const { t } = useTranslation();
   const cert = submission.certificate;
   const isCertified = submission.status.id === 5;
 
@@ -25,7 +27,7 @@ export function CertificateTab({ submission }: Props) {
         </p>
         <div className="mt-6 inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 text-xs font-bold text-slate-600 dark:text-slate-300 shadow-2xs">
           <Clock size={14} className="text-blue-500" />
-          <span>Status Pengajuan: {submission.status.name}</span>
+          <p className="text-xs font-semibold text-slate-500 uppercase tracking-widest">{t.tab_cert_status || "Status Pengajuan:"} <span className="text-slate-800 dark:text-slate-200">{submission.status.name}</span></p>
         </div>
       </div>
     );
@@ -58,14 +60,14 @@ export function CertificateTab({ submission }: Props) {
             className="flex-1 inline-flex items-center justify-center gap-2.5 bg-[#0c2340] hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-500 text-white py-3.5 rounded-xl font-extrabold text-xs transition-all shadow-md shadow-[#0c2340]/20"
           >
             <Download size={16} />
-            <span>Unduh PDF Sertifikat Resmi</span>
+              <span>{t.tab_cert_download || "Unduh PDF Sertifikat Resmi"}</span>
           </a>
           <button
             onClick={handlePrintCertificate}
             className="inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 font-bold text-xs transition-all shadow-2xs cursor-pointer shrink-0"
           >
             <Printer size={16} />
-            <span>Cetak Sertifikat</span>
+              <span>{t.tab_cert_print || "Cetak Sertifikat"}</span>
           </button>
         </div>
       )}

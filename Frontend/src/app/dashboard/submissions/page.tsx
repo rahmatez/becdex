@@ -97,8 +97,8 @@ export default function SubmissionsListPage() {
       <AppLayout title={t.dash_sub_title || "Daftar Submission"}>
         <div className="rounded-2xl border border-rose-200 bg-rose-50 p-6 text-center text-rose-700 dark:border-rose-900/50 dark:bg-rose-950/30 max-w-lg mx-auto my-12">
           <AlertCircle className="mx-auto h-8 w-8 text-rose-500 mb-2" />
-          <h3 className="font-bold text-base">Gagal Memuat Data Pengajuan</h3>
-          <p className="text-xs mt-1 text-rose-600">Terjadi kesalahan saat terhubung ke server BECdex. Silakan muat ulang halaman.</p>
+          <h3 className="font-bold text-base">{t.dash_sub_err_load || "Gagal Memuat Data Pengajuan"}</h3>
+          <p className="text-xs mt-1 text-rose-600">{t.dash_sub_err_desc || "Terjadi kesalahan saat terhubung ke server BECdex. Silakan muat ulang halaman."}</p>
         </div>
       </AppLayout>
     );

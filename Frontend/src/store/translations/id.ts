@@ -821,6 +821,55 @@ const id = {
     rec_btn_text: "Sertifikasi Perusahaan Anda Sekarang",
     
     indicator_detail_btn: "Detail Syarat",
+    
+    // --- Tabs ---
+    tab_assessment_uploading: "Mengunggah berkas...",
+    tab_assessment_format: "Format PDF/JPG/PNG (maks. 10MB)",
+    tab_assessment_scoring_guide: "Panduan Skoring",
+    tab_assessment_show_all: "Tampilkan Semua Pertanyaan",
+    tab_assessment_filter_unanswered: "Filter: Belum Terjawab",
+    tab_assessment_saving: "Menyimpan...",
+    tab_assessment_saved: "Auto-Saved",
+    tab_assessment_unanswered: "Belum Terjawab",
+    tab_assessment_done: "Selesai",
+    tab_assessment_no_doc: "Belum ada dokumen pendukung",
+    
+    // Scoring levels
+    score_0_title: "Tidak Ada Bukti",
+    score_0_desc: "Tidak ada komitmen tertulis, kebijakan, SOP, maupun bukti implementasi sama sekali.",
+    score_1_title: "Ada Komitmen",
+    score_1_desc: "Terdapat bukti berupa komitmen, kebijakan, atau SOP tertulis, namun belum terbukti diimplementasikan di lapangan.",
+    score_2_title: "Implementasi Sebagian",
+    score_2_desc: "Kebijakan sudah mulai diimplementasikan sebagian, namun bukti lapangan/rekam jejak belum komprehensif.",
+    score_3_title: "Implementasi Penuh",
+    score_3_desc: "Implementasi penuh secara menyeluruh. Dibuktikan dengan data pendukung yang valid, terukur, dapat dilacak, dan konsisten.",
+
+    // Documents Tab
+    tab_doc_uploading: "Mengunggah berkas ke server...",
+    tab_doc_empty: "Belum Ada Dokumen untuk Diunggah",
+    tab_doc_no_support: "Belum ada berkas pendukung diunggah untuk indikator ini",
+
+    // Status & Certificate Tab
+    tab_status_cert_issued: "Proses sertifikasi selesai dan resmi diterbitkan",
+    tab_status_survey_schedule: "Jadwal Survei Lapangan:",
+    tab_cert_status: "Status Pengajuan:",
+    tab_cert_download: "Unduh PDF Sertifikat Resmi",
+    tab_cert_print: "Cetak Sertifikat",
+
+    // Score Payment Tab
+    tab_payment_req: "Persyaratan Kelayakan Lanjut ke Pembayaran",
+    tab_payment_check: "Sudah Membayar? Cek & Mutakhirkan Status Pembayaran",
+
+    // Admin Panel
+    admin_sub_badge_revision: "Revisi",
+    admin_sub_modal_confirm_return: "Konfirmasi Pengembalian",
+    admin_sub_btn_reject_perm: "Tolak Permanen",
+    dash_admin_fw_modal_select: "Pilih {label}...",
+
+    // Dashboard
+    dash_profile_sel_country: "Pilih Negara",
+    dash_profile_sel_sector: "Pilih Sektor Usaha",
+    dash_sub_err_load: "Gagal Memuat Data Pengajuan",
 } as const;
 
 export default id;

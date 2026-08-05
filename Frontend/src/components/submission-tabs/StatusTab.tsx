@@ -6,6 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import api from "@/lib/api";
 import { SubmissionDetail } from "@/types";
 import { formatDate, cn } from "@/lib/utils";
+import { useTranslation } from "@/store/lang";
 
 interface Props {
   submission: SubmissionDetail;
@@ -64,6 +65,7 @@ const STATUSES = [
 const ORDERED_FLOW = [2, 1, 6, 3, 4, 8, 7, 5];
 
 export function StatusTab({ submission }: Props) {
+  const { t } = useTranslation();
   const currentStatusId = submission.status.id;
   const currentIndex = ORDERED_FLOW.indexOf(currentStatusId);
 
@@ -204,9 +206,10 @@ export function StatusTab({ submission }: Props) {
                     {s.id === 7 && isActive && submission.survey && (
                       <div className="mt-3 bg-white dark:bg-slate-900 rounded-xl p-3.5 border border-blue-200/80 dark:border-blue-900/60 text-xs space-y-2 shadow-2xs">
                         <div className="flex items-center gap-2 text-slate-700 dark:text-slate-200 font-bold">
-                          <Calendar size={14} className="text-blue-600 dark:text-blue-400" />
-                          <span>Jadwal Survei Lapangan: {formatDate(submission.survey.scheduled_at)}</span>
+                          <Calendar size={14} className="text-blue-500 mt-0.5" />
+                          <p className="font-semibold text-slate-800 dark:text-slate-200">{t.tab_status_survey_schedule || "Jadwal Survei Lapangan:"} {formatDate(submission.survey.scheduled_at)}</p>
                         </div>
+                        <p className="text-sm text-slate-600 dark:text-slate-400 mt-1 leading-relaxed whitespace-pre-wrap">{submission.survey.notes}</p>
                         {submission.survey.location_link && (
                           <div className="flex items-center gap-2">
                             <MapPin size={14} className="text-blue-600 dark:text-blue-400" />
