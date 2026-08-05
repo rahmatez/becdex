@@ -185,20 +185,23 @@ class AuthController extends Controller
         }
         $user->update($updateData);
 
-        if ($isCompany && $user->companyDetail) {
-            $user->companyDetail->update([
-                'company_phone'    => $request->company_phone,
-                'company_country'  => $request->company_country,
-                'company_field_id' => $request->company_field_id,
-                'pic_name'         => $request->pic_name,
-                'pic_position'     => $request->pic_position,
-                'pic_email'        => $request->pic_email,
-                'pic_phone'        => $request->pic_phone,
-                'description'      => $request->description,
-                'address'          => $request->address,
-                'website'          => $request->website,
-                'brand_name'       => $request->brand_name,
-            ]);
+        if ($isCompany) {
+            $user->companyDetail()->updateOrCreate(
+                ['user_id' => $user->id],
+                [
+                    'company_phone'    => $request->company_phone,
+                    'company_country'  => $request->company_country,
+                    'company_field_id' => $request->company_field_id,
+                    'pic_name'         => $request->pic_name,
+                    'pic_position'     => $request->pic_position,
+                    'pic_email'        => $request->pic_email,
+                    'pic_phone'        => $request->pic_phone,
+                    'description'      => $request->description,
+                    'address'          => $request->address,
+                    'website'          => $request->website,
+                    'brand_name'       => $request->brand_name,
+                ]
+            );
         }
 
         return response()->json([
