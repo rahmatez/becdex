@@ -863,12 +863,16 @@ const en = {
     admin_sub_badge_revision: "Revision",
     admin_sub_modal_confirm_return: "Confirm Return",
     admin_sub_btn_reject_perm: "Permanent Reject",
-    dash_admin_fw_modal_select: "Select {label}...",
+    dash_admin_sub_principle: "Principle",
+    dash_admin_sub_id_indicator: "Indicator",
+    dash_admin_sub_id_tooltip_detail: "View Indicator Requirements & Evidence",
+    dash_admin_sub_id_revision_needed: "Needs Revision",
 
     // Dashboard
     dash_profile_sel_country: "Select Country",
     dash_profile_sel_sector: "Select Business Sector",
     dash_sub_err_load: "Failed to Load Submission Data",
+    dash_sub_err_desc: "An error occurred while connecting to the BECdex server. Please refresh the page.",
 } as const;
 
 export default en;

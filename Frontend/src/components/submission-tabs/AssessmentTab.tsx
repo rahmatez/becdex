@@ -49,6 +49,8 @@ function DocumentUploadZone({
   indicatorName: string;
   onSuccess: () => void;
 }) {
+  const { t } = useTranslation();
+  
   const mutation = useMutation({
     mutationFn: async (file: File) => {
       const form = new FormData();
@@ -809,7 +811,9 @@ export function AssessmentTab({ submission, onUpdate }: Props) {
                                   </div>
                                 )}
                               </div>
-                            );
+                            )}
+                          </div>
+                        );
                           })}
                         </div>
                       ))}

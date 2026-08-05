@@ -864,12 +864,16 @@ const id = {
     admin_sub_badge_revision: "Revisi",
     admin_sub_modal_confirm_return: "Konfirmasi Pengembalian",
     admin_sub_btn_reject_perm: "Tolak Permanen",
-    dash_admin_fw_modal_select: "Pilih {label}...",
+    dash_admin_sub_principle: "Prinsip",
+    dash_admin_sub_id_indicator: "Indikator",
+    dash_admin_sub_id_tooltip_detail: "Lihat Syarat & Bukti Indikator",
+    dash_admin_sub_id_revision_needed: "Perlu Dicek Ulang",
 
     // Dashboard
     dash_profile_sel_country: "Pilih Negara",
     dash_profile_sel_sector: "Pilih Sektor Usaha",
     dash_sub_err_load: "Gagal Memuat Data Pengajuan",
+    dash_sub_err_desc: "Terjadi kesalahan saat terhubung ke server BECdex. Silakan muat ulang halaman.",
 } as const;
 
 export default id;
