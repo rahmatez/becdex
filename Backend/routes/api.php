@@ -33,9 +33,9 @@ use Illuminate\Support\Facades\Route;
 
 // ── PUBLIC ROUTES ─────────────────────────────────────────────────────────
 Route::prefix('auth')->group(function () {
-    Route::post('register', [AuthController::class, 'register'])->middleware('throttle:10,1');
+    Route::post('register', [AuthController::class, 'register'])->middleware(env('APP_ENV') === 'local' ? 'throttle:60,1' : 'throttle:10,1');
     // Rate limiting: max 5 login attempts per minute per IP (brute-force protection)
-    Route::post('login', [AuthController::class, 'login'])->middleware('throttle:5,1');
+    Route::post('login', [AuthController::class, 'login'])->middleware(env('APP_ENV') === 'local' ? 'throttle:100,1' : 'throttle:5,1');
     
     // Password Reset Routes
     Route::post('forgot-password', [\App\Http\Controllers\Auth\NewPasswordController::class, 'forgotPassword'])
