@@ -4,13 +4,15 @@ import { useState, useMemo, useCallback } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useDropzone } from "react-dropzone";
 import { toast } from "sonner";
-import { ChevronDown, ChevronRight, Loader2, Upload, Trash2, FileText, MessageSquare, Info, X, BookOpen, Scale, CheckCircle2 } from "lucide-react";
+import { ChevronDown, ChevronRight, Loader2, Upload, Trash2, FileText, AlertTriangle, MessageSquare, Info, X, BookOpen, Scale, CheckCircle2 } from "lucide-react";
 import { MdCheckCircle, MdSearch, MdWarning, MdLock } from "react-icons/md";
 import { SubmissionDetail, PerIndicator } from "@/types";
 import api from "@/lib/api";
 import { cn } from "@/lib/utils";
 import { IndicatorChat } from "./IndicatorChat";
 import { useTranslation } from "@/store/lang";
+
+const ENABLE_SCORE_SELECTION = false;
 
 interface Props {
   submission: SubmissionDetail;
@@ -127,6 +129,10 @@ export function AssessmentTab({ submission, onUpdate }: Props) {
     return initial;
   });
 
+  // Bug #1 & #2 Fix: Track questions where user clicked "Ya" but hasn't selected a score yet
+  // This prevents double-save and distinguishes "pending yes" from "has score"
+  const [pendingYes, setPendingYes] = useState<Set<number>>(new Set());
+
   const [expandedAspects, setExpandedAspects] = useState<Set<string>>(new Set());
   const [expandedIndicators, setExpandedIndicators] = useState<Set<number>>(new Set());
   const [infoModalIndicator, setInfoModalIndicator] = useState<{
@@ -159,6 +165,7 @@ export function AssessmentTab({ submission, onUpdate }: Props) {
     return map;
   }, [grouped]);
 
+  // Fix Bug #1: Mutation sends actual numeric value (not boolean)
   const saveSingleAnswerMutation = useMutation({
     mutationFn: async ({ questionId, value }: { questionId: number; value: number }) => {
       await api.put(`/submissions/${submission.id}/answers`, {
@@ -173,11 +180,17 @@ export function AssessmentTab({ submission, onUpdate }: Props) {
     },
   });
 
+  // Fix Bug #2: Clicking "Ya" only marks local pendingYes state, does NOT save to API
   const handleYesClick = (questionId: number) => {
     // If already answered with a real score (> 0), no-op (already "Yes")
     if ((answers[questionId] ?? 0) > 0) return;
-    setAnswers((prev) => ({ ...prev, [questionId]: 2 }));
-    saveSingleAnswerMutation.mutate({ questionId, value: 2 });
+    
+    if (ENABLE_SCORE_SELECTION) {
+      setPendingYes((prev) => new Set([...prev, questionId]));
+    } else {
+      setAnswers((prev) => ({ ...prev, [questionId]: 2 }));
+      saveSingleAnswerMutation.mutate({ questionId, value: 2 });
+    }
   };
 
   // Fix Bug #3: Warn user if they answer "Tidak" when indicator has documents
@@ -188,7 +201,7 @@ export function AssessmentTab({ submission, onUpdate }: Props) {
       // Check if this is the last "Ya" question for this indicator
       const hasOtherYesInIndicator = pi.indicator.questions
         .filter((q) => q.id !== questionId)
-        .some((q) => (answers[q.id] ?? 0) > 0);
+        .some((q) => pendingYes.has(q.id) || (answers[q.id] ?? 0) > 0);
 
       if (!hasOtherYesInIndicator) {
         const confirmed = window.confirm(
@@ -198,12 +211,32 @@ export function AssessmentTab({ submission, onUpdate }: Props) {
       }
     }
 
+    if (ENABLE_SCORE_SELECTION) {
+      // Remove from pendingYes
+      setPendingYes((prev) => {
+        const next = new Set(prev);
+        next.delete(questionId);
+        return next;
+      });
+    }
+
     // Update local state and save to API
     setAnswers((prev) => ({ ...prev, [questionId]: 0 }));
     saveSingleAnswerMutation.mutate({ questionId, value: 0 });
   };
 
-
+  // Fix Bug #1: Score selection saves the actual numeric score to API
+  const handleScoreSelect = (questionId: number, value: number) => {
+    // Remove from pendingYes now that a score is selected
+    setPendingYes((prev) => {
+      const next = new Set(prev);
+      next.delete(questionId);
+      return next;
+    });
+    // Save actual numeric value
+    setAnswers((prev) => ({ ...prev, [questionId]: value }));
+    saveSingleAnswerMutation.mutate({ questionId, value });
+  };
 
   const deleteMutation = useMutation({
     mutationFn: async (docId: number) => {
@@ -271,7 +304,7 @@ export function AssessmentTab({ submission, onUpdate }: Props) {
           for (const pi of perIndicators) {
             for (const q of pi.indicator.questions) {
               const val = answers[q.id];
-              if (val === undefined) {
+              if (val === undefined && !pendingYes.has(q.id)) {
                 count++;
               }
             }
@@ -281,7 +314,7 @@ export function AssessmentTab({ submission, onUpdate }: Props) {
       counts.set(aspectName, count);
     }
     return counts;
-  }, [grouped, answers]);
+  }, [grouped, answers, pendingYes]);
 
   return (
     <div>
@@ -483,7 +516,7 @@ export function AssessmentTab({ submission, onUpdate }: Props) {
                           {perIndicators.map((pi) => {
                             // Check if indicator has any unanswered questions
                             const indUnanswered = pi.indicator.questions.filter(
-                              (q) => answers[q.id] === undefined
+                              (q) => answers[q.id] === undefined && !pendingYes.has(q.id)
                             ).length;
                             if (showUnansweredOnly && indUnanswered === 0) return null;
 
@@ -559,8 +592,12 @@ export function AssessmentTab({ submission, onUpdate }: Props) {
                                     <div className="bg-slate-50/50 dark:bg-slate-900/60 border-t border-slate-100 dark:border-slate-800 px-4 py-4 space-y-4">
                                       <div className="space-y-3">
                                         {pi.indicator.questions.map((question) => {
+                                          // Fix Bug #2: isYes checks pendingYes OR stored score > 0
                                           const storedValue = answers[question.id];
-                                          const isYes = storedValue !== undefined && storedValue > 0;
+                                          const hasSavedScore = storedValue !== undefined && storedValue > 0;
+                                          const isPendingYes = pendingYes.has(question.id);
+                                          const isYes = isPendingYes || hasSavedScore;
+                                          // Fix Bug #4: Clearly distinguish unanswered vs answered "Tidak"
                                           const isExplicitlyNo = storedValue === 0;
 
                                           return (
@@ -573,10 +610,12 @@ export function AssessmentTab({ submission, onUpdate }: Props) {
                                                   className="text-xs md:text-sm text-slate-700 dark:text-slate-200 font-medium whitespace-pre-line leading-relaxed mb-1"
                                                   dangerouslySetInnerHTML={{ __html: question.text }}
                                                 />
-                                                <p className="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1">
-                                                  <Info size={10} />
-                                                  (Otomatis Skor 2)
-                                                </p>
+                                                {!ENABLE_SCORE_SELECTION && (
+                                                  <p className="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1">
+                                                    <Info size={10} />
+                                                    (Ketika &quot;Ya&quot;, otomatis bernilai Skor 2)
+                                                  </p>
+                                                )}
                                               </div>
                                               {isIndicatorEditable ? (
                                                 <div className="flex items-center gap-1.5 shrink-0">
@@ -604,6 +643,39 @@ export function AssessmentTab({ submission, onUpdate }: Props) {
                                             >
                                               Tidak
                                             </button>
+
+                                            {/* Fix Bug #2: Score dropdown — only show when "Ya", and require selection */}
+                                            {ENABLE_SCORE_SELECTION && isYes && (
+                                              <select
+                                                value={hasSavedScore ? storedValue : ""}
+                                                onChange={(e) => {
+                                                  const val = e.target.value === "" ? null : Number(e.target.value);
+                                                  if (val !== null) {
+                                                    handleScoreSelect(question.id, val);
+                                                  }
+                                                }}
+                                                className={cn(
+                                                  "px-2 py-1 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-[#4e73df] cursor-pointer",
+                                                  isPendingYes && !hasSavedScore
+                                                    ? "border-amber-400 bg-amber-50 text-amber-700" // Highlight: score not yet selected
+                                                    : "border-slate-200 bg-white"
+                                                )}
+                                              >
+                                                <option value="">
+                                                  {isPendingYes && !hasSavedScore ? "Pilih Skor" : "Skor"}
+                                                </option>
+                                                <option value="0.5">0.5</option>
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                              </select>
+                                            )}
+
+                                            {/* Bug #3: Warning icon when pendingYes but no score */}
+                                            {ENABLE_SCORE_SELECTION && isPendingYes && !hasSavedScore && (
+                                              <span title="Pilih skor terlebih dahulu">
+                                                <AlertTriangle size={14} className="text-amber-500 shrink-0" />
+                                              </span>
+                                            )}
                                           </div>
                                         ) : (
                                           // Fix Bug #4: View mode — clear badge for unanswered / Tidak / Ya
@@ -634,12 +706,22 @@ export function AssessmentTab({ submission, onUpdate }: Props) {
 
                                 {/* Dynamic Document Upload Section — only show if any question answered "Ya" */}
                                 {pi.indicator.questions.some(
-                                  (q) => (answers[q.id] ?? 0) > 0
+                                  (q) => pendingYes.has(q.id) || (answers[q.id] ?? 0) > 0
                                 ) && (
                                   <div className="border-t border-slate-200/60 pt-4 mt-2">
                                     <h4 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
                                       Dokumen Pendukung Indikator
                                     </h4>
+
+                                    {/* Warning if any question is in pendingYes (score not yet selected) */}
+                                    {ENABLE_SCORE_SELECTION && pi.indicator.questions.some((q) => pendingYes.has(q.id)) && (
+                                      <div className="flex items-center gap-2 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 mb-3">
+                                        <AlertTriangle size={13} className="text-amber-500 shrink-0" />
+                                        <p className="text-xs text-amber-700">
+                                          Pilih skor untuk jawaban &quot;Ya&quot; sebelum mengupload dokumen.
+                                        </p>
+                                      </div>
+                                    )}
 
                                     {/* Uploaded Documents List */}
                                     {(() => {
