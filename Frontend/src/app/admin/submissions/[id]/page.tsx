@@ -439,8 +439,8 @@ export default function AdminSubmissionDetailPage() {
                             )}
                           />
                           <span className="truncate">{pi.indicator.name}</span>
-                          {/* Badge Perlu Dicek Ulang — tampil saat indikator ditandai Revisi (Declined) */}
-                          {pi.status.id === 5 && (
+                          {/* Badge Perlu Dicek Ulang — tampil saat indikator ditandai Revisi (Declined) ATAU sudah disubmit ulang (Submitted) tapi punya comment bekas revisi */}
+                          {(pi.status.id === 5 || (pi.status.id === 2 && pi.comment)) && (
                             <span className="shrink-0 inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-rose-100 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 text-[10px] font-bold border border-rose-200 dark:border-rose-800">
                               <AlertTriangle size={9} />
                               Perlu Dicek Ulang
