@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 import { toast } from "sonner";
@@ -32,6 +32,7 @@ interface PerIndicatorItem {
   status: { id: number; name: string; color: string };
   indicator: {
     name: string;
+    description?: string | null;
     evidence?: string | null;
     verification_method?: string | null;
     regulation?: string | null;
@@ -151,10 +152,10 @@ export default function AdminSubmissionDetailPage() {
 
   const [infoModalIndicator, setInfoModalIndicator] = useState<{
     name: string;
-    description: string;
-    evidence: string;
-    verification_method: string;
-    regulation: string;
+    description?: string | null;
+    evidence?: string | null;
+    verification_method?: string | null;
+    regulation?: string | null;
   } | null>(null);
 
   const approveMutation = useMutation({
@@ -1027,7 +1028,7 @@ export default function AdminSubmissionDetailPage() {
 
       {/* Info Modal — Audit Checklist Detail (Replicated from User View) */}
       {infoModalIndicator && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-100 flex items-center justify-center p-4">
           <div
             className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
             onClick={() => setInfoModalIndicator(null)}
