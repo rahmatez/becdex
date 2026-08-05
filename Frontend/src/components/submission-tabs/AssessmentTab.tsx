@@ -165,6 +165,22 @@ export function AssessmentTab({ submission, onUpdate }: Props) {
     return map;
   }, [grouped]);
 
+  // Build sequential number map for Principles
+  const principleNumberMap = useMemo(() => {
+    const map = new Map<string, number>();
+    let counter = 0;
+    for (const outcomeMap of grouped.values()) {
+      for (const principleMap of outcomeMap.values()) {
+        for (const principleName of principleMap.keys()) {
+          if (!map.has(principleName)) {
+            map.set(principleName, ++counter);
+          }
+        }
+      }
+    }
+    return map;
+  }, [grouped]);
+
   // Fix Bug #1: Mutation sends actual numeric value (not boolean)
   const saveSingleAnswerMutation = useMutation({
     mutationFn: async ({ questionId, value }: { questionId: number; value: number }) => {
@@ -510,7 +526,7 @@ export function AssessmentTab({ submission, onUpdate }: Props) {
                         <div key={principleName} className="pl-2 space-y-2.5">
                           <p className="text-xs text-blue-600 dark:text-blue-400 font-bold px-1 flex items-center gap-1.5">
                             <span>&bull;</span>
-                            <span>{principleName}</span>
+                            <span>Principle {principleNumberMap.get(principleName)}: {principleName}</span>
                           </p>
 
                           {perIndicators.map((pi) => {
@@ -541,8 +557,8 @@ export function AssessmentTab({ submission, onUpdate }: Props) {
                                       )}
                                     />
                                     <span className="text-xs md:text-sm font-bold text-slate-800 dark:text-slate-100 tracking-tight flex items-center gap-2">
-                                      <span className="shrink-0 text-[10px] font-extrabold text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded-md font-mono">
-                                        #{indicatorNumberMap.get(pi.indicator_id) ?? "—"}
+                                      <span className="shrink-0 text-[10px] font-extrabold text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded-md font-mono uppercase tracking-widest">
+                                        Indicator {indicatorNumberMap.get(pi.indicator_id) ?? "—"}
                                       </span>
                                       {pi.indicator.name}
                                       {(pi.indicator.description || pi.indicator.evidence || pi.indicator.regulation) && (
