@@ -12,7 +12,8 @@ import api from "@/lib/api";
 import { cn } from "@/lib/utils";
 import {
   ArrowLeft, CheckCircle2, XCircle, ChevronDown, ChevronRight,
-  FileText, Loader2, Award, MapPin, Building2, ShieldCheck, Mail, Briefcase, Calendar, ExternalLink, X, AlertTriangle, Users, FileSearch, Activity, MessageSquare, Info
+  FileText, Loader2, Award, MapPin, Building2, BookOpen, Scale,
+  ShieldCheck, Mail, Briefcase, Calendar, ExternalLink, X, AlertTriangle, Users, FileSearch, Activity, MessageSquare, Info
 } from "lucide-react";
 import { MdFolder } from "react-icons/md";
 import AssessorTab from "@/components/admin-tabs/AssessorTab";
@@ -148,6 +149,14 @@ export default function AdminSubmissionDetailPage() {
   const [showRejectModal, setShowRejectModal] = useState(false);
   const [rejectReason, setRejectReason] = useState("");
 
+  const [infoModalIndicator, setInfoModalIndicator] = useState<{
+    name: string;
+    description: string;
+    evidence: string;
+    verification_method: string;
+    regulation: string;
+  } | null>(null);
+
   const approveMutation = useMutation({
     mutationFn: async () => {
       await api.post(`/admin/submissions/${id}/approve`);
@@ -179,6 +188,18 @@ export default function AdminSubmissionDetailPage() {
       toast.error(err.response?.data?.message || "Gagal menolak pengajuan.");
     },
   });
+
+  // Build sequential indicator number map (linear by array order, matches User View)
+  const indicatorNumberMap = useMemo(() => {
+    const map = new Map<number, number>();
+    let counter = 0;
+    for (const pi of submission?.per_indicators ?? []) {
+      if (!map.has(pi.indicator_id)) {
+        map.set(pi.indicator_id, ++counter);
+      }
+    }
+    return map;
+  }, [submission?.per_indicators]);
 
   if (isLoading) {
     return (
@@ -440,7 +461,30 @@ export default function AdminSubmissionDetailPage() {
                               "bg-amber-400"
                             )}
                           />
-                          <span className="truncate">{pi.indicator.name}</span>
+                          <div className="flex items-center gap-2 flex-1 min-w-0">
+                            <span className="shrink-0 text-[10px] font-extrabold text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded-md font-mono uppercase tracking-widest">
+                              Indicator {indicatorNumberMap.get(pi.indicator_id) ?? "—"}
+                            </span>
+                            <span className="truncate">{pi.indicator.name}</span>
+                            {(pi.indicator.description || pi.indicator.evidence || pi.indicator.regulation) && (
+                              <span
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setInfoModalIndicator({
+                                    name: pi.indicator.name,
+                                    description: pi.indicator.description,
+                                    evidence: pi.indicator.evidence,
+                                    verification_method: pi.indicator.verification_method,
+                                    regulation: pi.indicator.regulation,
+                                  });
+                                }}
+                                className="text-blue-500 hover:text-blue-700 transition-colors p-1 rounded-full hover:bg-blue-50 dark:hover:bg-blue-900/50 cursor-pointer shrink-0"
+                                title="Lihat Syarat & Bukti Indikator"
+                              >
+                                <Info size={16} />
+                              </span>
+                            )}
+                          </div>
                           {/* Badge Perlu Dicek Ulang — tampil saat indikator ditandai Revisi (Declined) ATAU sudah disubmit ulang (Submitted) tapi punya comment bekas revisi */}
                           {(pi.status.id === 5 || (pi.status.id === 2 && pi.comment)) && (
                             <span className="shrink-0 inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-rose-100 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 text-[10px] font-bold border border-rose-200 dark:border-rose-800">
@@ -976,6 +1020,104 @@ export default function AdminSubmissionDetailPage() {
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Info Modal — Audit Checklist Detail (Replicated from User View) */}
+      {infoModalIndicator && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          <div
+            className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
+            onClick={() => setInfoModalIndicator(null)}
+          />
+          <div className="relative bg-white dark:bg-slate-900 rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+            {/* Modal Header */}
+            <div className="flex items-start justify-between p-5 border-b border-slate-100 dark:border-slate-800 bg-blue-50/50 dark:bg-slate-800/30">
+              <div className="flex gap-3 flex-1 min-w-0">
+                <div className="w-10 h-10 rounded-xl bg-blue-100 dark:bg-blue-900/60 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
+                  <Info size={20} />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-extrabold text-base text-slate-900 dark:text-white leading-tight">
+                    {infoModalIndicator.name}
+                  </h3>
+                  <p className="text-xs font-semibold text-blue-600 dark:text-blue-400 mt-0.5 uppercase tracking-wider">
+                    {t.assessment_modal_title || "Syarat & Bukti Indikator"}
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setInfoModalIndicator(null)}
+                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer shrink-0"
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className="p-5 max-h-[65vh] overflow-y-auto space-y-4">
+              {/* Description */}
+              {infoModalIndicator.description && (
+                <div>
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 flex items-center gap-1.5">
+                    <BookOpen size={11} /> {t.assessment_modal_desc || "Deskripsi Indikator"}
+                  </p>
+                  <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+                    {infoModalIndicator.description}
+                  </p>
+                </div>
+              )}
+
+              {/* Evidence */}
+              {infoModalIndicator.evidence && (
+                <div className="p-3.5 rounded-xl border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/30">
+                  <p className="text-[10px] font-bold text-amber-700 dark:text-amber-400 uppercase tracking-widest mb-1.5 flex items-center gap-1.5">
+                    <FileText size={11} /> {t.assessment_modal_evidence || "Bukti yang Diperlukan"}
+                  </p>
+                  <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+                    {infoModalIndicator.evidence}
+                  </p>
+                </div>
+              )}
+
+              {/* Verification Method */}
+              {infoModalIndicator.verification_method && (
+                <div className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800">
+                  <p className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1.5 flex items-center gap-1.5">
+                    <CheckCircle2 size={11} /> {t.assessment_modal_verification || "Metode Verifikasi"}
+                  </p>
+                  <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+                    {infoModalIndicator.verification_method}
+                  </p>
+                </div>
+              )}
+
+              {/* Regulation */}
+              {infoModalIndicator.regulation && (
+                <div className="p-3.5 rounded-xl border border-purple-200 dark:border-purple-800 bg-purple-50 dark:bg-purple-950/30">
+                  <p className="text-[10px] font-bold text-purple-700 dark:text-purple-400 uppercase tracking-widest mb-1.5 flex items-center gap-1.5">
+                    <Scale size={11} /> {t.assessment_modal_regulation || "Dasar Hukum & Regulasi"}
+                  </p>
+                  <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+                    {infoModalIndicator.regulation}
+                  </p>
+                </div>
+              )}
+            </div>
+
+            {/* Modal Footer */}
+            <div className="p-4 border-t border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/60 flex items-center justify-between">
+              <p className="text-xs text-slate-400 dark:text-slate-500">
+                {t.assessment_modal_footer_text || "Siapkan semua dokumen sebelum mengupload"}
+              </p>
+              <button
+                onClick={() => setInfoModalIndicator(null)}
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold transition-all shadow-sm cursor-pointer text-sm"
+              >
+                {t.assessment_modal_btn_understand || "Mengerti"}
+              </button>
             </div>
           </div>
         </div>
