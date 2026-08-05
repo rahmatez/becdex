@@ -268,7 +268,7 @@ export function ScorePaymentTab({ submission, onUpdate }: Props) {
           <button
             id="btn-submit-verification"
             onClick={() => submitVerificationMutation.mutate()}
-            disabled={submitVerificationMutation.isPending}
+            disabled={submitVerificationMutation.isPending || !score.requirements.score_met || !score.requirements.documents_met}
             className="w-full flex items-center justify-center gap-2.5 bg-[#0c2340] hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-500 text-white py-4 rounded-xl font-extrabold text-sm transition-all shadow-md shadow-[#0c2340]/20 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
           >
             {submitVerificationMutation.isPending ? (

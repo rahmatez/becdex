@@ -36,8 +36,13 @@ const STATUSES = [
     desc: "Tim penilai admin sedang memverifikasi berkas dan skor Anda",
   },
   {
+    id: 6,
+    label: "Payment Successful",
+    desc: "Pembayaran telah diterima, menunggu proses verifikasi oleh Admin",
+  },
+  {
     id: 4,
-    label: "Document Submission (2nd)",
+    label: "Document Revision",
     desc: "Perbaikan atau unggah ulang berkas dokumen yang direvisi",
   },
   {
@@ -53,7 +58,7 @@ const STATUSES = [
   { id: 5, label: "Certified Blue Economy", desc: <>Proses sertifikasi selesai dan resmi diterbitkan <MdCelebration className="inline text-amber-500 w-4 h-4 mb-1" /></> },
 ];
 
-const ORDERED_FLOW = [2, 1, 3, 4, 8, 7, 5];
+const ORDERED_FLOW = [2, 1, 6, 3, 4, 8, 7, 5];
 
 export function StatusTab({ submission }: Props) {
   const currentStatusId = submission.status.id;
