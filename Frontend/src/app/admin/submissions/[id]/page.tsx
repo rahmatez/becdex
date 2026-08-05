@@ -190,6 +190,20 @@ export default function AdminSubmissionDetailPage() {
     },
   });
 
+  const grouped = new Map<string, Map<string, Map<string, typeof submission.per_indicators>>>();
+  for (const pi of submission?.per_indicators ?? []) {
+    const aspect = pi.indicator.principle.outcome.aspect.name;
+    const outcome = pi.indicator.principle.outcome.name;
+    const principle = pi.indicator.principle.name;
+
+    if (!grouped.has(aspect)) grouped.set(aspect, new Map());
+    const outcomeMap = grouped.get(aspect)!;
+    if (!outcomeMap.has(outcome)) outcomeMap.set(outcome, new Map());
+    const principleMap = outcomeMap.get(outcome)!;
+    if (!principleMap.has(principle)) principleMap.set(principle, []);
+    principleMap.get(principle)!.push(pi);
+  }
+
   // Build sequential indicator number map (linear by array order, matches User View)
   const indicatorNumberMap = useMemo(() => {
     const map = new Map<number, number>();
@@ -197,6 +211,18 @@ export default function AdminSubmissionDetailPage() {
     for (const pi of submission?.per_indicators ?? []) {
       if (!map.has(pi.indicator_id)) {
         map.set(pi.indicator_id, ++counter);
+      }
+    }
+    return map;
+  }, [submission?.per_indicators]);
+
+  const principleNumberMap = useMemo(() => {
+    const map = new Map<string, number>();
+    let counter = 0;
+    for (const pi of submission?.per_indicators ?? []) {
+      const pName = pi.indicator.principle.name;
+      if (!map.has(pName)) {
+        map.set(pName, ++counter);
       }
     }
     return map;
@@ -434,15 +460,30 @@ export default function AdminSubmissionDetailPage() {
         </div>
 
         <div className="p-6 space-y-6">
-          {Array.from(grouped.entries()).map(([aspect, perIndicators]) => (
+          {Array.from(grouped.entries()).map(([aspect, outcomeMap]) => (
             <div key={aspect} className="border border-slate-200/80 dark:border-slate-800 rounded-2xl overflow-hidden shadow-2xs">
               <div className="px-5 py-3.5 bg-slate-100/90 dark:bg-slate-800/80 border-b border-slate-200/80 dark:border-slate-800 font-extrabold text-sm text-slate-800 dark:text-white flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-blue-600" />
                 <span>{t.dash_admin_sub_id_aspect || "Aspek:"} {aspect}</span>
               </div>
 
-              <div className="divide-y divide-slate-100 dark:divide-slate-800">
-                {perIndicators!.map((pi: PerIndicatorItem) => {
+              <div className="p-4 space-y-4">
+                {Array.from(outcomeMap.entries()).map(([outcomeName, principleMap]) => (
+                  <div key={outcomeName} className="space-y-3">
+                    <div className="flex items-center gap-2 text-xs font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-wider px-1 pt-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
+                      <span>{outcomeName}</span>
+                    </div>
+
+                    {Array.from(principleMap.entries()).map(([principleName, perIndicators]) => (
+                      <div key={principleName} className="pl-2 space-y-2.5">
+                        <p className="text-xs text-blue-600 dark:text-blue-400 font-bold px-1 flex items-center gap-1.5">
+                          <span>&bull;</span>
+                          <span>Principle {principleNumberMap.get(principleName)}: {principleName}</span>
+                        </p>
+
+                        <div className="divide-y divide-slate-100 dark:divide-slate-800 border border-slate-200/60 dark:border-slate-800/80 rounded-xl overflow-hidden bg-white dark:bg-slate-900 shadow-2xs">
+                          {perIndicators!.map((pi: PerIndicatorItem) => {
                   const isExpanded = expandedIndicators.has(pi.indicator_id);
                   const docs = (submission.documents ?? []).filter(
                     (d) => (d as IndicatorDoc & { indicator_id: number }).indicator_id === pi.indicator_id
@@ -672,6 +713,11 @@ export default function AdminSubmissionDetailPage() {
               </div>
             </div>
           ))}
+        </div>
+      ))}
+    </div>
+  </div>
+))}
         </div>
       </div>
       </>
