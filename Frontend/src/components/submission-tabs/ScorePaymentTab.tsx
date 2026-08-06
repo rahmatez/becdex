@@ -235,7 +235,7 @@ export function ScorePaymentTab({ submission, onUpdate }: Props) {
                 <AlertCircle size={18} className="text-rose-500 shrink-0" />
               )}
               <span className="text-xs md:text-sm font-semibold text-slate-700 dark:text-slate-200">
-                Kelengkapan Berkas Diunggah (&ge; {score.requirements.min_documents} Dokumen)
+                {t.score_req_documents} (&ge; {score.requirements.min_documents} Indikator)
               </span>
             </div>
             <span

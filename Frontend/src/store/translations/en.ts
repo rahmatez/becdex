@@ -744,6 +744,7 @@ const en = {
     assessment_modal_regulation: "Legal Basis & Regulation",
     assessment_modal_footer_text: "Prepare all documents before uploading",
     assessment_modal_btn_understand: "I Understand",
+    score_req_documents: "Uploaded Indicator Completeness",
 
     admin_fw_fld_evidence: "Required Evidence",
     admin_fw_fld_verification: "Verification Method",

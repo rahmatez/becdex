@@ -745,6 +745,7 @@ const id = {
     assessment_modal_regulation: "Dasar Hukum & Regulasi",
     assessment_modal_footer_text: "Siapkan semua dokumen sebelum mengupload",
     assessment_modal_btn_understand: "Mengerti",
+    score_req_documents: "Kelengkapan Indikator Diunggah",
 
     admin_fw_fld_evidence: "Bukti yang Diperlukan",
     admin_fw_fld_verification: "Metode Verifikasi",
