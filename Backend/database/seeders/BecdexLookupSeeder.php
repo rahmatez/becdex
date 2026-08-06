@@ -64,5 +64,29 @@ class BecdexLookupSeeder extends Seeder
             'file_path' => 'certificates/standard.jpg',
             'description' => 'Standar'
         ]);
+
+        // Company Fields (Sectors)
+        $fields = [
+            ['id' => 1, 'name' => 'Perikanan Tangkap & Budidaya'],
+            ['id' => 2, 'name' => 'Bioteknologi & Pengolahan Hasil Laut'],
+            ['id' => 3, 'name' => 'Pariwisata Bahari & Ekowisata'],
+            ['id' => 4, 'name' => 'Transportasi & Logistik Maritim'],
+            ['id' => 5, 'name' => 'Energi Terbarukan Laut'],
+            ['id' => 6, 'name' => 'Jasa & Teknologi Kelautan'],
+        ];
+        foreach ($fields as $f) \App\Models\CompanyField::updateOrCreate(['id' => $f['id']], $f);
+
+        // Coastal Countries
+        $countries = [
+            ['id' => 1, 'iso' => 'IDN', 'name' => 'Indonesia'],
+            ['id' => 2, 'iso' => 'MYS', 'name' => 'Malaysia'],
+            ['id' => 3, 'iso' => 'SGP', 'name' => 'Singapore'],
+            ['id' => 4, 'iso' => 'THA', 'name' => 'Thailand'],
+            ['id' => 5, 'iso' => 'PHL', 'name' => 'Philippines'],
+            ['id' => 6, 'iso' => 'VNM', 'name' => 'Vietnam'],
+            ['id' => 7, 'iso' => 'AUS', 'name' => 'Australia'],
+        ];
+        foreach ($countries as $c) \App\Models\Country::updateOrCreate(['id' => $c['id']], $c);
     }
 }
+

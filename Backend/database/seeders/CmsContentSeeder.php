@@ -240,6 +240,14 @@ class CmsContentSeeder extends Seeder
                 // Auto generate label if not set: e.g., 'home.hero.title' -> 'Home Hero Title'
                 $content['label'] = ucwords(str_replace(['.', '_'], ' ', $content['key']));
             }
+
+            if (is_array($content['value_en'])) {
+                $content['value_en'] = json_encode($content['value_en'], JSON_UNESCAPED_UNICODE);
+            }
+            if (is_array($content['value_id'])) {
+                $content['value_id'] = json_encode($content['value_id'], JSON_UNESCAPED_UNICODE);
+            }
+
             $content['default_value_en'] = $content['value_en'];
             $content['default_value_id'] = $content['value_id'];
 
@@ -248,5 +256,6 @@ class CmsContentSeeder extends Seeder
                 $content
             );
         }
+
     }
 }

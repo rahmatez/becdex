@@ -13,7 +13,12 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             BecdexLookupSeeder::class,
             AssessmentFrameworkSeeder::class,
+            IndicatorAuditDataSeeder::class,
             AdminUserSeeder::class,
+            DemoCompanySeeder::class,
+            CmsContentSeeder::class,
         ]);
+
+
     }
 }

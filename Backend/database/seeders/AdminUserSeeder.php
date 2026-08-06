@@ -11,11 +11,25 @@ class AdminUserSeeder extends Seeder
         User::updateOrCreate(
             ['email' => 'admin@becdex.com'],
             [
-                'name'      => 'BECdex Admin',
-                'password'  => Hash::make('admin123'),
-                'role_id'   => 1,
-                'is_active' => 1,
+                'name'              => 'BECdex Admin',
+                'password'          => Hash::make('admin123'),
+                'role_id'           => 1,
+                'is_active'         => 1,
+                'email_verified_at' => now(),
             ]
         );
+
+        User::updateOrCreate(
+            ['email' => 'admin@admin.com'],
+            [
+                'name'              => 'BECdex Admin',
+                'password'          => Hash::make('admin123'),
+                'role_id'           => 1,
+                'is_active'         => 1,
+                'email_verified_at' => now(),
+            ]
+        );
+
+
     }
 }

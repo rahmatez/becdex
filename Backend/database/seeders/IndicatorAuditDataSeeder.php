@@ -367,15 +367,33 @@ class IndicatorAuditDataSeeder extends Seeder
         ];
 
         foreach ($data as $id => $row) {
-            DB::table('indicators')->where('id', $id)->update([
-                'name'                => $row['name'],
-                'description'         => $row['description'],
-                'evidence'            => $row['evidence'],
-                'verification_method' => $row['verification_method'],
-                'regulation'          => $row['regulation'],
-            ]);
+            // Assign 5 indicators per principle (10 principles total)
+            $principleId = (int) ceil($id / 5);
+
+            $indicator = \App\Models\Indicator::updateOrCreate(
+                ['id' => $id],
+                [
+                    'principle_id'        => $principleId,
+                    'name'                => $row['name'],
+                    'description'         => $row['description'],
+                    'evidence'            => $row['evidence'],
+                    'verification_method' => $row['verification_method'],
+                    'regulation'          => $row['regulation'],
+                    'sort_order'          => $id,
+                ]
+            );
+
+            \App\Models\Question::updateOrCreate(
+                ['indicator_id' => $indicator->id],
+                [
+                    'text'       => 'Apakah perusahaan memenuhi kriteria ' . $row['name'] . '? (' . \Illuminate\Support\Str::limit($row['description'], 150) . ')',
+                    'sort_order' => $id,
+                ]
+            );
+
         }
 
-        $this->command->info('IndicatorAuditDataSeeder: Updated ' . count($data) . ' indicators with evidence, verification_method, and regulation data.');
+        $this->command->info('IndicatorAuditDataSeeder: Successfully seeded ' . count($data) . ' indicators & questions with full audit metadata.');
     }
 }
+

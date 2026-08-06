@@ -82,18 +82,21 @@ class DemoCompanySeeder extends Seeder
             $user = User::firstOrCreate(
                 ['email' => $companyData['email']],
                 [
-                    'name'      => $companyData['name'],
-                    'password'  => Hash::make('user12345'),
-                    'role_id'   => RoleId::Company->value,
-                    'is_active' => 1,
+                    'name'              => $companyData['name'],
+                    'password'          => Hash::make('user12345'),
+                    'role_id'           => RoleId::Company->value,
+                    'is_active'         => 1,
+                    'email_verified_at' => now(),
                 ]
             );
 
-            // Ensure password and active status are correct even if user existed
+            // Ensure password, active status, and verified status are correct even if user existed
             $user->update([
-                'password'  => Hash::make('user12345'),
-                'is_active' => 1,
+                'password'          => Hash::make('user12345'),
+                'is_active'         => 1,
+                'email_verified_at' => now(),
             ]);
+
 
             // ── 2. Create or update company detail ────────────────────────────────
             CompanyDetail::updateOrCreate(
