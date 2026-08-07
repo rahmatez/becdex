@@ -23,7 +23,7 @@ import { IndicatorChat } from "@/components/submission-tabs/IndicatorChat";
 import { useTranslation } from "@/store/lang";
 
 interface IndicatorDoc { id: number; file_url: string; original_name: string; }
-interface IndicatorQuestion { id: number; text: string; }
+interface IndicatorQuestion { id: number; text: string; text_en?: string | null; }
 
 interface PerIndicatorItem {
   id: number;
@@ -646,9 +646,10 @@ export default function AdminSubmissionDetailPage() {
                                     className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs border-b border-slate-100 dark:border-slate-800 pb-3 last:border-0 last:pb-0"
                                   >
                                     <div className="flex-1 min-w-0">
-                                      <p className="text-slate-800 dark:text-slate-200 font-semibold leading-snug whitespace-pre-line">
-                                        {q.text}
-                                      </p>
+                                      <p 
+                                        className="text-slate-800 dark:text-slate-200 font-semibold leading-snug whitespace-pre-line"
+                                        dangerouslySetInnerHTML={{ __html: (locale === 'en' ? (q.text_en || q.text) : (q.text || q.text_en)) ?? "" }}
+                                      />
                                       <div className="flex items-center gap-2 mt-1.5 text-[11px]">
                                         <span className="text-slate-400">{t.dash_admin_sub_id_claim_label || "Klaim Pengaju:"}</span>
                                         <span
