@@ -32,11 +32,16 @@ interface PerIndicatorItem {
   status: { id: number; name: string; color: string };
   indicator: {
     name: string;
+    name_id?: string | null;
     description?: string | null;
+    description_en?: string | null;
     evidence?: string | null;
+    evidence_en?: string | null;
     verification_method?: string | null;
+    verification_method_en?: string | null;
     regulation?: string | null;
-    principle: { name: string; outcome: { name: string; aspect: { name: string } } };
+    regulation_en?: string | null;
+    principle: { name: string; name_id?: string | null; outcome: { name: string; name_id?: string | null; aspect: { name: string; name_id?: string | null } } };
     questions: IndicatorQuestion[];
   };
 }
@@ -65,7 +70,7 @@ export default function AdminSubmissionDetailPage() {
   const [showScoringGuide, setShowScoringGuide] = useState(false);
   const [surveyForm, setSurveyForm] = useState({ scheduled_at: "", location_link: "", notes: "" });
   const [certForm, setCertForm] = useState({ certificate_id: "10", becdex_category_id: "3", published_at: "", mmic: "", direktur: "" });
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
 
   const { data, isLoading, refetch } = useQuery<{ data: SubmissionData }>({
     queryKey: ["admin-submission", id],
@@ -502,17 +507,17 @@ export default function AdminSubmissionDetailPage() {
                             <span className="shrink-0 text-[10px] font-extrabold text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded-md font-mono uppercase tracking-widest">
                               {t.dash_admin_sub_id_indicator || "Indikator"} {indicatorNumberMap.get(pi.indicator_id) ?? "—"}
                             </span>
-                            <span className="truncate">{pi.indicator.name}</span>
+                            <span className="truncate">{locale === 'id' ? (pi.indicator.name_id || pi.indicator.name) : pi.indicator.name}</span>
                             {(pi.indicator.description || pi.indicator.evidence || pi.indicator.regulation) && (
                               <span
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   setInfoModalIndicator({
-                                    name: pi.indicator.name,
-                                    description: pi.indicator.description,
-                                    evidence: pi.indicator.evidence,
-                                    verification_method: pi.indicator.verification_method,
-                                    regulation: pi.indicator.regulation,
+                                    name: locale === 'id' ? (pi.indicator.name_id || pi.indicator.name) : pi.indicator.name,
+                                    description: locale === 'en' ? (pi.indicator.description_en || pi.indicator.description) : (pi.indicator.description || pi.indicator.description_en),
+                                    evidence: locale === 'en' ? (pi.indicator.evidence_en || pi.indicator.evidence) : (pi.indicator.evidence || pi.indicator.evidence_en),
+                                    verification_method: locale === 'en' ? (pi.indicator.verification_method_en || pi.indicator.verification_method) : (pi.indicator.verification_method || pi.indicator.verification_method_en),
+                                    regulation: locale === 'en' ? (pi.indicator.regulation_en || pi.indicator.regulation) : (pi.indicator.regulation || pi.indicator.regulation_en),
                                   });
                                 }}
                                 className="inline-flex items-center gap-1.5 text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors px-2.5 py-1 rounded-full cursor-pointer shrink-0"

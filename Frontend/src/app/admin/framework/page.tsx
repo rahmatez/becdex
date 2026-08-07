@@ -110,7 +110,7 @@ function CrudModal({ title, onClose, onSave, isPending, fields, initial = {} }: 
 }
 
 export default function AdminFrameworkPage() {
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
   
   const TABS: { key: FrameworkTab; label: string; countLabel: string }[] = [
     { key: "aspects",    label: t.dash_admin_fw_tab_aspect || "Aspek BECdex",        countLabel: t.dash_admin_fw_lbl_aspect || "Aspek" },
@@ -194,11 +194,11 @@ export default function AdminFrameworkPage() {
   };
 
   const getRows = (): { id: number; main: string; sub?: string; count?: string }[] => {
-    if (tab === "aspects")    return (aspects    ?? []).map(i => ({ id: i.id, main: i.name, count: `${i.outcomes_count ?? 0} ${t.dash_admin_fw_lbl_outcome || "Outcome"}` }));
-    if (tab === "outcomes")   return (outcomes   ?? []).map(i => ({ id: i.id, main: i.name, sub: `${t.dash_admin_fw_lbl_aspect || "Aspek"}: ${i.aspect?.name ?? "—"}`, count: `${i.principles_count ?? 0} ${t.dash_admin_fw_lbl_principle || "Prinsip"}` }));
-    if (tab === "principles") return (principles ?? []).map(i => ({ id: i.id, main: i.name, sub: `${t.dash_admin_fw_lbl_outcome || "Outcome"}: ${i.outcome?.name ?? "—"}`, count: `${i.indicators_count ?? 0} ${t.dash_admin_fw_lbl_indicator || "Indikator"}` }));
-    if (tab === "indicators") return (indicators ?? []).map(i => ({ id: i.id, main: i.name, sub: `${t.dash_admin_fw_lbl_principle || "Prinsip"}: ${i.principle?.name ?? "—"}`, count: `${i.questions_count ?? 0} ${t.dash_admin_fw_lbl_question || "Pertanyaan"}`, hasAuditData: !!(i.evidence && i.verification_method && i.regulation) }));
-    if (tab === "questions")  return (questions  ?? []).map(i => ({ id: i.id, main: i.text, sub: `${t.dash_admin_fw_lbl_indicator || "Indikator"}: ${i.indicator?.name ?? "—"}`, count: t.dash_admin_fw_weight?.replace("{weight}", String(i.weight ?? 1)) || `Bobot: ${i.weight ?? 1}` }));
+    if (tab === "aspects")    return (aspects    ?? []).map(i => ({ id: i.id, main: (locale === 'id' ? (i.name_id || i.name) : i.name) ?? "", count: `${i.outcomes_count ?? 0} ${t.dash_admin_fw_lbl_outcome || "Outcome"}` }));
+    if (tab === "outcomes")   return (outcomes   ?? []).map(i => ({ id: i.id, main: (locale === 'id' ? (i.name_id || i.name) : i.name) ?? "", sub: `${t.dash_admin_fw_lbl_aspect || "Aspek"}: ${locale === 'id' ? (i.aspect?.name_id || i.aspect?.name) : i.aspect?.name ?? "—"}`, count: `${i.principles_count ?? 0} ${t.dash_admin_fw_lbl_principle || "Prinsip"}` }));
+    if (tab === "principles") return (principles ?? []).map(i => ({ id: i.id, main: (locale === 'id' ? (i.name_id || i.name) : i.name) ?? "", sub: `${t.dash_admin_fw_lbl_outcome || "Outcome"}: ${locale === 'id' ? (i.outcome?.name_id || i.outcome?.name) : i.outcome?.name ?? "—"}`, count: `${i.indicators_count ?? 0} ${t.dash_admin_fw_lbl_indicator || "Indikator"}` }));
+    if (tab === "indicators") return (indicators ?? []).map(i => ({ id: i.id, main: (locale === 'id' ? (i.name_id || i.name) : i.name) ?? "", sub: `${t.dash_admin_fw_lbl_principle || "Prinsip"}: ${locale === 'id' ? (i.principle?.name_id || i.principle?.name) : i.principle?.name ?? "—"}`, count: `${i.questions_count ?? 0} ${t.dash_admin_fw_lbl_question || "Pertanyaan"}`, hasAuditData: !!(i.evidence && i.verification_method && i.regulation) }));
+    if (tab === "questions")  return (questions  ?? []).map(i => ({ id: i.id, main: (locale === 'en' ? (i.text_en || i.text) : (i.text || i.text_en)) ?? "", sub: `${t.dash_admin_fw_lbl_indicator || "Indikator"}: ${locale === 'id' ? (i.indicator?.name_id || i.indicator?.name) : i.indicator?.name ?? "—"}`, count: t.dash_admin_fw_weight?.replace("{weight}", String(i.weight ?? 1)) || `Bobot: ${i.weight ?? 1}` }));
     return [];
   };
 
