@@ -10,11 +10,11 @@ import { cn } from "@/lib/utils";
 import { Plus, Pencil, Trash2, Loader2, GitBranch, ShieldCheck, Layers } from "lucide-react";
 import { useTranslation } from "@/store/lang";
 
-interface Aspect { id: number; name: string; outcomes_count?: number }
-interface Outcome { id: number; aspect_id: number; name: string; aspect?: Aspect; principles_count?: number }
-interface Principle { id: number; outcome_id: number; name: string; outcome?: Outcome; indicators_count?: number }
-interface Indicator { id: number; principle_id: number; name: string; description?: string | null; evidence?: string | null; verification_method?: string | null; regulation?: string | null; principle?: Principle; questions_count?: number }
-interface Question { id: number; indicator_id: number; text: string; weight?: number; indicator?: Indicator }
+interface Aspect { id: number; name: string; name_id?: string | null; outcomes_count?: number }
+interface Outcome { id: number; aspect_id: number; name: string; name_id?: string | null; aspect?: Aspect; principles_count?: number }
+interface Principle { id: number; outcome_id: number; name: string; name_id?: string | null; outcome?: Outcome; indicators_count?: number }
+interface Indicator { id: number; principle_id: number; name: string; name_id?: string | null; description?: string | null; description_en?: string | null; evidence?: string | null; evidence_en?: string | null; verification_method?: string | null; verification_method_en?: string | null; regulation?: string | null; regulation_en?: string | null; principle?: Principle; questions_count?: number }
+interface Question { id: number; indicator_id: number; text: string; text_en?: string | null; weight?: number; indicator?: Indicator }
 
 type FrameworkTab = "aspects" | "outcomes" | "principles" | "indicators" | "questions";
 
@@ -158,18 +158,39 @@ export default function AdminFrameworkPage() {
   });
 
   const fieldConfig: Record<FrameworkTab, CrudModalProps["fields"]> = {
-    aspects:    [{ key: "name", label: t.dash_admin_fw_fld_aspect || "Nama Aspek" }],
-    outcomes:   [{ key: "aspect_id", label: t.dash_admin_fw_fld_parent_aspect || "Aspek Induk", options: aspects?.map(a => ({ id: a.id, name: a.name })) ?? [] }, { key: "name", label: t.dash_admin_fw_fld_outcome || "Nama Outcome" }],
-    principles: [{ key: "outcome_id", label: t.dash_admin_fw_fld_parent_outcome || "Outcome Induk", options: outcomes?.map(o => ({ id: o.id, name: o.name })) ?? [] }, { key: "name", label: t.dash_admin_fw_fld_principle || "Nama Prinsip" }],
-    indicators: [
-      { key: "principle_id",        label: t.dash_admin_fw_fld_parent_principle || "Prinsip Induk",           options: principles?.map(p => ({ id: p.id, name: p.name })) ?? [] },
-      { key: "name",                label: t.dash_admin_fw_fld_indicator || "Nama Indikator" },
-      { key: "description",         label: (t as unknown as Record<string, string>).dash_admin_fw_fld_desc || "Penjelasan Indikator",         type: "textarea" },
-      { key: "evidence",            label: (t as unknown as Record<string, string>).admin_fw_fld_evidence || "Bukti yang Diperlukan",                                                                             type: "textarea" },
-      { key: "verification_method", label: (t as unknown as Record<string, string>).admin_fw_fld_verification || "Metode Verifikasi",                                                                                  type: "textarea" },
-      { key: "regulation",          label: (t as unknown as Record<string, string>).admin_fw_fld_regulation || "Dasar Hukum & Regulasi Indonesia",                                                                  type: "textarea" },
+    aspects: [
+      { key: "name", label: "Nama Aspek (English)" },
+      { key: "name_id", label: "Nama Aspek (Bahasa Indonesia)" },
     ],
-    questions:  [{ key: "indicator_id", label: t.dash_admin_fw_fld_parent_indicator || "Indikator Induk", options: indicators?.map(i => ({ id: i.id, name: i.name })) ?? [] }, { key: "text", label: t.dash_admin_fw_fld_question || "Teks Pertanyaan", type: "textarea" }, { key: "weight", label: t.dash_admin_fw_fld_weight || "Bobot Nilai (0–1)", type: "number" }],
+    outcomes: [
+      { key: "aspect_id", label: t.dash_admin_fw_fld_parent_aspect || "Aspek Induk", options: aspects?.map(a => ({ id: a.id, name: a.name })) ?? [] },
+      { key: "name", label: "Nama Outcome (English)" },
+      { key: "name_id", label: "Nama Outcome (Bahasa Indonesia)" },
+    ],
+    principles: [
+      { key: "outcome_id", label: t.dash_admin_fw_fld_parent_outcome || "Outcome Induk", options: outcomes?.map(o => ({ id: o.id, name: o.name })) ?? [] },
+      { key: "name", label: "Nama Prinsip (English)" },
+      { key: "name_id", label: "Nama Prinsip (Bahasa Indonesia)" },
+    ],
+    indicators: [
+      { key: "principle_id",        label: t.dash_admin_fw_fld_parent_principle || "Prinsip Induk", options: principles?.map(p => ({ id: p.id, name: p.name })) ?? [] },
+      { key: "name",                label: "Nama Indikator (English)" },
+      { key: "name_id",             label: "Nama Indikator (Bahasa Indonesia)" },
+      { key: "description",         label: "Deskripsi Indikator (Bahasa Indonesia)", type: "textarea" },
+      { key: "description_en",      label: "Deskripsi Indikator (English)",          type: "textarea" },
+      { key: "evidence",            label: "Bukti yang Diperlukan (Bahasa Indonesia)", type: "textarea" },
+      { key: "evidence_en",         label: "Bukti yang Diperlukan (English)",          type: "textarea" },
+      { key: "verification_method", label: "Metode Verifikasi (Bahasa Indonesia)",    type: "textarea" },
+      { key: "verification_method_en", label: "Metode Verifikasi (English)",          type: "textarea" },
+      { key: "regulation",          label: "Dasar Hukum & Regulasi (Bahasa Indonesia)", type: "textarea" },
+      { key: "regulation_en",       label: "Dasar Hukum & Regulasi (English)",          type: "textarea" },
+    ],
+    questions: [
+      { key: "indicator_id", label: t.dash_admin_fw_fld_parent_indicator || "Indikator Induk", options: indicators?.map(i => ({ id: i.id, name: i.name })) ?? [] },
+      { key: "text",    label: "Teks Pertanyaan (Bahasa Indonesia)", type: "textarea" },
+      { key: "text_en", label: "Teks Pertanyaan (English)",          type: "textarea" },
+      { key: "weight",  label: t.dash_admin_fw_fld_weight || "Bobot Nilai (0–1)", type: "number" },
+    ],
   };
 
   const getRows = (): { id: number; main: string; sub?: string; count?: string }[] => {

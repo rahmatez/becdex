@@ -23,14 +23,20 @@ class FrameworkAdminController extends Controller
     }
     public function storeAspect(Request $request): JsonResponse
     {
-        $validated = $request->validate(['name' => 'required|string|max:255|unique:aspects,name']);
+        $validated = $request->validate([
+            'name'    => 'required|string|max:255|unique:aspects,name',
+            'name_id' => 'nullable|string|max:255',
+        ]);
         Cache::forget('catalog_indicators');
         return response()->json(['data' => Aspect::create($validated)], 201);
     }
     public function updateAspect(Request $request, int $id): JsonResponse
     {
         $aspect = Aspect::findOrFail($id);
-        $validated = $request->validate(['name' => "required|string|max:255|unique:aspects,name,{$id}"]);
+        $validated = $request->validate([
+            'name'    => "required|string|max:255|unique:aspects,name,{$id}",
+            'name_id' => 'nullable|string|max:255',
+        ]);
         $aspect->update($validated);
         Cache::forget('catalog_indicators');
         return response()->json(['data' => $aspect]);
@@ -52,6 +58,7 @@ class FrameworkAdminController extends Controller
         $validated = $request->validate([
             'aspect_id' => 'required|exists:aspects,id',
             'name'      => 'required|string|max:255',
+            'name_id'   => 'nullable|string|max:255',
         ]);
         return response()->json(['data' => Outcome::create($validated)], 201);
     }
@@ -61,6 +68,7 @@ class FrameworkAdminController extends Controller
         $validated = $request->validate([
             'aspect_id' => 'required|exists:aspects,id',
             'name'      => 'required|string|max:255',
+            'name_id'   => 'nullable|string|max:255',
         ]);
         $outcome->update($validated);
         return response()->json(['data' => $outcome->fresh('aspect')]);
@@ -81,6 +89,7 @@ class FrameworkAdminController extends Controller
         $validated = $request->validate([
             'outcome_id' => 'required|exists:outcomes,id',
             'name'       => 'required|string|max:255',
+            'name_id'    => 'nullable|string|max:255',
         ]);
         return response()->json(['data' => Principle::create($validated)], 201);
     }
@@ -90,6 +99,7 @@ class FrameworkAdminController extends Controller
         $validated = $request->validate([
             'outcome_id' => 'required|exists:outcomes,id',
             'name'       => 'required|string|max:255',
+            'name_id'    => 'nullable|string|max:255',
         ]);
         $principle->update($validated);
         return response()->json(['data' => $principle->fresh('outcome')]);
@@ -108,12 +118,17 @@ class FrameworkAdminController extends Controller
     public function storeIndicator(Request $request): JsonResponse
     {
         $validated = $request->validate([
-            'principle_id'        => 'required|exists:principles,id',
-            'name'                => 'required|string|max:255',
-            'description'         => 'nullable|string',
-            'evidence'            => 'nullable|string',
-            'verification_method' => 'nullable|string',
-            'regulation'          => 'nullable|string',
+            'principle_id'           => 'required|exists:principles,id',
+            'name'                   => 'required|string|max:255',
+            'name_id'                => 'nullable|string|max:255',
+            'description'            => 'nullable|string',
+            'description_en'         => 'nullable|string',
+            'evidence'               => 'nullable|string',
+            'evidence_en'            => 'nullable|string',
+            'verification_method'    => 'nullable|string',
+            'verification_method_en' => 'nullable|string',
+            'regulation'             => 'nullable|string',
+            'regulation_en'          => 'nullable|string',
         ]);
         Cache::forget('catalog_indicators');
         return response()->json(['data' => Indicator::create($validated)], 201);
@@ -122,12 +137,17 @@ class FrameworkAdminController extends Controller
     {
         $indicator = Indicator::findOrFail($id);
         $validated = $request->validate([
-            'principle_id'        => 'required|exists:principles,id',
-            'name'                => 'required|string|max:255',
-            'description'         => 'nullable|string',
-            'evidence'            => 'nullable|string',
-            'verification_method' => 'nullable|string',
-            'regulation'          => 'nullable|string',
+            'principle_id'           => 'required|exists:principles,id',
+            'name'                   => 'required|string|max:255',
+            'name_id'                => 'nullable|string|max:255',
+            'description'            => 'nullable|string',
+            'description_en'         => 'nullable|string',
+            'evidence'               => 'nullable|string',
+            'evidence_en'            => 'nullable|string',
+            'verification_method'    => 'nullable|string',
+            'verification_method_en' => 'nullable|string',
+            'regulation'             => 'nullable|string',
+            'regulation_en'          => 'nullable|string',
         ]);
         $indicator->update($validated);
         Cache::forget('catalog_indicators');
@@ -150,6 +170,7 @@ class FrameworkAdminController extends Controller
         $validated = $request->validate([
             'indicator_id' => 'required|exists:indicators,id',
             'text'         => 'required|string',
+            'text_en'      => 'nullable|string',
             'weight'       => 'nullable|numeric|min:0|max:1',
         ]);
         Cache::forget('catalog_indicators');
@@ -161,6 +182,7 @@ class FrameworkAdminController extends Controller
         $validated = $request->validate([
             'indicator_id' => 'required|exists:indicators,id',
             'text'         => 'required|string',
+            'text_en'      => 'nullable|string',
             'weight'       => 'nullable|numeric|min:0|max:1',
         ]);
         $question->update($validated);
