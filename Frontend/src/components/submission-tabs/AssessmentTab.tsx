@@ -629,7 +629,7 @@ export function AssessmentTab({ submission, onUpdate }: Props) {
                                               <div className="flex-1">
                                                 <p
                                                   className="text-xs md:text-sm text-slate-700 dark:text-slate-200 font-medium whitespace-pre-line leading-relaxed mb-1"
-                                                  dangerouslySetInnerHTML={{ __html: locale === 'en' ? (question.text_en || question.text) : (question.text || question.text_en) }}
+                                                  dangerouslySetInnerHTML={{ __html: (locale === 'en' ? (question.text_en || question.text) : (question.text || question.text_en)) ?? "" }}
                                                 />
                                                 {!ENABLE_SCORE_SELECTION && (
                                                   <p className="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1">
