@@ -75,19 +75,27 @@ export interface PerIndicator {
   indicator: {
     id: number;
     name: string;
+    name_id: string | null;
     description: string | null;
+    description_en: string | null;
     evidence: string | null;
+    evidence_en: string | null;
     verification_method: string | null;
+    verification_method_en: string | null;
     regulation: string | null;
+    regulation_en: string | null;
     principle: {
       id: number;
       name: string;
+      name_id: string | null;
       outcome: {
         id: number;
         name: string;
+        name_id: string | null;
         aspect: {
           id: number;
           name: string;
+          name_id: string | null;
         };
       };
     };
@@ -99,6 +107,7 @@ export interface Question {
   id: number;
   indicator_id: number;
   text: string;
+  text_en: string | null;
 }
 
 export interface Answer {

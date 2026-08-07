@@ -119,7 +119,7 @@ function DocumentUploadZone({
 }
 
 export function AssessmentTab({ submission, onUpdate }: Props) {
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
   // Jawaban yang sudah tersimpan di server (nilai numerik: 0, 0.5, 1, 2)
   const [answers, setAnswers] = useState<Record<number, number>>(() => {
     const initial: Record<number, number> = {};
@@ -562,17 +562,17 @@ export function AssessmentTab({ submission, onUpdate }: Props) {
                                       <span className="shrink-0 text-[10px] font-extrabold text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded-md font-mono uppercase tracking-widest">
                                         Indicator {indicatorNumberMap.get(pi.indicator_id) ?? "—"}
                                       </span>
-                                      {pi.indicator.name}
-                                      {(pi.indicator.description || pi.indicator.evidence || pi.indicator.regulation) && (
+                                      {locale === 'id' ? (pi.indicator.name_id || pi.indicator.name) : pi.indicator.name}
+                                      {(pi.indicator.description || pi.indicator.description_en || pi.indicator.evidence || pi.indicator.regulation) && (
                                         <span
                                           onClick={(e) => {
                                             e.stopPropagation();
                                             setInfoModalIndicator({
-                                              name: pi.indicator.name,
-                                              description: pi.indicator.description,
-                                              evidence: pi.indicator.evidence,
-                                              verification_method: pi.indicator.verification_method,
-                                              regulation: pi.indicator.regulation,
+                                              name: locale === 'id' ? (pi.indicator.name_id || pi.indicator.name) : pi.indicator.name,
+                                              description: locale === 'en' ? (pi.indicator.description_en || pi.indicator.description) : (pi.indicator.description || pi.indicator.description_en),
+                                              evidence: locale === 'en' ? (pi.indicator.evidence_en || pi.indicator.evidence) : (pi.indicator.evidence || pi.indicator.evidence_en),
+                                              verification_method: locale === 'en' ? (pi.indicator.verification_method_en || pi.indicator.verification_method) : (pi.indicator.verification_method || pi.indicator.verification_method_en),
+                                              regulation: locale === 'en' ? (pi.indicator.regulation_en || pi.indicator.regulation) : (pi.indicator.regulation || pi.indicator.regulation_en),
                                             });
                                           }}
                                           className="inline-flex items-center gap-1.5 text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors px-2.5 py-1 rounded-full cursor-pointer shrink-0"
@@ -629,7 +629,7 @@ export function AssessmentTab({ submission, onUpdate }: Props) {
                                               <div className="flex-1">
                                                 <p
                                                   className="text-xs md:text-sm text-slate-700 dark:text-slate-200 font-medium whitespace-pre-line leading-relaxed mb-1"
-                                                  dangerouslySetInnerHTML={{ __html: question.text }}
+                                                  dangerouslySetInnerHTML={{ __html: locale === 'en' ? (question.text_en || question.text) : (question.text || question.text_en) }}
                                                 />
                                                 {!ENABLE_SCORE_SELECTION && (
                                                   <p className="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1">

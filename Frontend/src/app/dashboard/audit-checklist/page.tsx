@@ -26,26 +26,35 @@ import { useTranslation } from "@/store/lang";
 interface Question {
   id: number;
   text: string;
+  text_en?: string | null;
 }
 
 interface Indicator {
   id: number;
   name: string;
+  name_id?: string | null;
   description: string | null;
+  description_en?: string | null;
   evidence: string | null;
+  evidence_en?: string | null;
   verification_method: string | null;
+  verification_method_en?: string | null;
   regulation: string | null;
+  regulation_en?: string | null;
   sort_order: number;
   questions: Question[];
   principle?: {
     id: number;
     name: string;
+    name_id?: string | null;
     outcome?: {
       id: number;
       name: string;
+      name_id?: string | null;
       aspect?: {
         id: number;
         name: string;
+        name_id?: string | null;
       };
     };
   };
@@ -87,7 +96,15 @@ function IndicatorRow({
   number: number;
   aspectConfig: (typeof ASPECT_CONFIG)[string];
 }) {
+  const { t, locale } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
+
+  const name = locale === 'id' ? (indicator.name_id || indicator.name) : indicator.name;
+  const description = locale === 'en' ? (indicator.description_en || indicator.description) : (indicator.description || indicator.description_en);
+  const evidence = locale === 'en' ? (indicator.evidence_en || indicator.evidence) : (indicator.evidence || indicator.evidence_en);
+  const verificationMethod = locale === 'en' ? (indicator.verification_method_en || indicator.verification_method) : (indicator.verification_method || indicator.verification_method_en);
+  const regulation = locale === 'en' ? (indicator.regulation_en || indicator.regulation) : (indicator.regulation || indicator.regulation_en);
+  const principleName = locale === 'id' ? (indicator.principle?.name_id || indicator.principle?.name) : indicator.principle?.name;
 
   return (
     <div className={cn("border rounded-xl overflow-hidden transition-all duration-200", aspectConfig.border)}>
@@ -108,10 +125,10 @@ function IndicatorRow({
           {number}
         </span>
         <div className="flex-1 min-w-0">
-          <p className={cn("font-semibold text-sm", aspectConfig.color)}>{indicator.name}</p>
+          <p className={cn("font-semibold text-sm", aspectConfig.color)}>{name}</p>
           {indicator.principle && (
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-              {indicator.principle.name}
+              {principleName}
             </p>
           )}
         </div>
@@ -126,55 +143,55 @@ function IndicatorRow({
       {isOpen && (
         <div className="p-4 border-t border-inherit bg-white dark:bg-slate-900 space-y-4">
           {/* Description */}
-          {indicator.description && (
+          {description && (
             <div>
               <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1 flex items-center gap-1.5">
                 <BookOpen size={12} />
-                Deskripsi
+                {t.assessment_modal_desc || "Deskripsi"}
               </p>
               <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
-                {indicator.description}
+                {description}
               </p>
             </div>
           )}
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Evidence */}
-            {indicator.evidence && (
+            {evidence && (
               <div className={cn("p-3 rounded-lg border", aspectConfig.bg, aspectConfig.border)}>
                 <p className={cn("text-xs font-bold uppercase tracking-wider mb-2 flex items-center gap-1.5", aspectConfig.color)}>
                   <FileText size={12} />
-                  Bukti yang Diperlukan
+                  {t.assessment_modal_evidence || "Bukti yang Diperlukan"}
                 </p>
                 <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                  {indicator.evidence}
+                  {evidence}
                 </p>
               </div>
             )}
 
             {/* Verification Method */}
-            {indicator.verification_method && (
+            {verificationMethod && (
               <div className="p-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800">
                 <p className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
                   <CheckCircle2 size={12} />
-                  Metode Verifikasi
+                  {t.assessment_modal_verification || "Metode Verifikasi"}
                 </p>
                 <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                  {indicator.verification_method}
+                  {verificationMethod}
                 </p>
               </div>
             )}
           </div>
 
           {/* Regulation */}
-          {indicator.regulation && (
+          {regulation && (
             <div className="p-3 rounded-lg border border-purple-200 dark:border-purple-800 bg-purple-50 dark:bg-purple-950/30">
               <p className="text-xs font-bold text-purple-700 dark:text-purple-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
                 <Scale size={12} />
-                Dasar Hukum / Regulasi Indonesia
+                {t.assessment_modal_regulation || "Dasar Hukum / Regulasi"}
               </p>
               <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                {indicator.regulation}
+                {regulation}
               </p>
             </div>
           )}
@@ -184,7 +201,7 @@ function IndicatorRow({
             <div>
               <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
                 <ClipboardList size={12} />
-                Pertanyaan Penilaian Mandiri
+                {t.audit_checklist_questions || "Pertanyaan Penilaian Mandiri"}
               </p>
               <ul className="space-y-1.5">
                 {indicator.questions.map((q, idx) => (
@@ -192,7 +209,7 @@ function IndicatorRow({
                     <span className="shrink-0 w-5 h-5 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-500 flex items-center justify-center text-[10px] font-bold mt-0.5">
                       {idx + 1}
                     </span>
-                    {q.text}
+                    {locale === 'en' ? (q.text_en || q.text) : (q.text || q.text_en)}
                   </li>
                 ))}
               </ul>
