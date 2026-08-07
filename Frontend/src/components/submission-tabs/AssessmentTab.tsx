@@ -634,7 +634,7 @@ export function AssessmentTab({ submission, onUpdate }: Props) {
                                                 {!ENABLE_SCORE_SELECTION && (
                                                   <p className="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1">
                                                     <Info size={10} />
-                                                    (Ketika &quot;Ya&quot;, otomatis bernilai Skor 2)
+                                                    {locale === 'en' ? '(When "Yes", automatically Score 2)' : '(Ketika "Ya", otomatis bernilai Skor 2)'}
                                                   </p>
                                                 )}
                                               </div>
