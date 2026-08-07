@@ -763,6 +763,7 @@ const id = {
     audit_checklist_alert: "Siapkan semua dokumen bukti sesuai indikator sebelum mengajukan submission. Klik pada setiap indikator untuk melihat detail bukti dan regulasi yang diperlukan.",
     audit_checklist_btn_submissions: "Lihat Submission Saya",
     audit_checklist_btn_new_submission: "Mulai Submission Baru",
+    audit_checklist_questions: "Pertanyaan Penilaian Mandiri",
 
     // --- ASSESSMENT STANDARDS (Halaman Utama) ---
     assess_title: "Standar Penilaian BECdex Berdasarkan Prinsip Blue Economy Internasional",

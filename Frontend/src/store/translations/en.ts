@@ -762,6 +762,7 @@ const en = {
     audit_checklist_alert: "Prepare all evidence documents according to the indicators before submitting. Click on each indicator to view the required evidence and regulations.",
     audit_checklist_btn_submissions: "View My Submissions",
     audit_checklist_btn_new_submission: "Start New Submission",
+    audit_checklist_questions: "Self-Assessment Questions",
 
     // --- ASSESSMENT STANDARDS (Homepage) ---
     assess_title: "BECdex Assessment Standards Based on International Blue Economy Principles",
