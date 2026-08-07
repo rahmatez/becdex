@@ -27,9 +27,9 @@ export default function AboutPage() {
         <section className="grid lg:grid-cols-2 gap-10 items-center">
           <div className="space-y-4">
             <h3 className="text-[#012970] text-3xl font-extrabold">{t.about_what_is_title}</h3>
-            <div 
+            <div
               className="text-[#444444] text-[16px] leading-6"
-              dangerouslySetInnerHTML={{ __html: t.about_what_is_p1 || '' }} 
+              dangerouslySetInnerHTML={{ __html: t.about_what_is_p1 || '' }}
             />
             <p className="text-gray-600 text-sm md:text-base leading-relaxed text-justify">
               {t.about_what_is_p2}
@@ -43,7 +43,7 @@ export default function AboutPage() {
               <a href="https://maritimmuda.id" target="_blank" className="text-[#4154f1] font-semibold hover:underline">
                 {t.about_what_is_mmn}
               </a>{" "}
-              {t.about_what_is_mmn_desc} , dan{" "}
+              {t.about_what_is_mmn_desc} {t.label_and || "and"}{" "}
               <a href="https://maritim.go.id/" target="_blank" className="text-[#4154f1] font-semibold hover:underline">
                 {t.about_what_is_kemenko}
               </a>.
@@ -68,9 +68,9 @@ export default function AboutPage() {
           <div className="space-y-6 order-1 lg:order-2">
             <div className="space-y-4">
               <h3 className="text-[#012970] text-3xl font-extrabold">{t.about_how_certified}</h3>
-              <div 
+              <div
                 className="text-[#444444] text-[16px] leading-6"
-                dangerouslySetInnerHTML={{ __html: t.about_how_certified_desc || '' }} 
+                dangerouslySetInnerHTML={{ __html: t.about_how_certified_desc || '' }}
               />
               <div className="bg-blue-50 border-l-4 border-[#4154f1] p-4 rounded-r-xl">
                 <span className="text-gray-800 text-sm md:text-base font-bold">

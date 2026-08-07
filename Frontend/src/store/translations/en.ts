@@ -655,6 +655,7 @@ const en = {
     about_what_is_mmn: "Maritim Muda Nusantara",
     about_what_is_mmn_desc: "is an Indonesian youth maritime organization",
     about_what_is_kemenko: "Coordinating Ministry for Maritime Affairs and Investment",
+    label_and: "and",
 
     about_how_certified: "How to get certified as a Blue Economy Company?",
     about_how_certified_desc: "The BECdex certification procedure consists of registration, self-assessment, independent assessment by assessors, and verification by verifiers. Companies that meet the criteria will receive a Blue Economy Company e-certificate with a valid period of 2 (two) years.",

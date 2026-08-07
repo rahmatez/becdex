@@ -655,6 +655,7 @@ const id = {
     about_what_is_mmn: "Maritim Muda Nusantara",
     about_what_is_mmn_desc: "adalah organisasi kemaritiman pemuda Indonesia",
     about_what_is_kemenko: "Kementerian Koordinator Bidang Kemaritiman dan Investasi",
+    label_and: "dan",
 
     about_how_certified: "Bagaimana cara mendapatkan sertifikasi sebagai Perusahaan Ekonomi Biru?",
     about_how_certified_desc: "Prosedur sertifikasi BECdex terdiri dari registrasi, penilaian mandiri, penilaian independen oleh asesor, dan verifikasi oleh verifikator. Perusahaan yang memenuhi kriteria akan mendapatkan e-certificate Blue Economy Company dengan masa berlaku selama 2 (dua) tahun.",
