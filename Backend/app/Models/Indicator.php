@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Indicator extends Model
 {
     use HasFactory;
-    protected $fillable = ['principle_id', 'name', 'description', 'evidence', 'verification_method', 'regulation', 'sort_order'];
+    protected $fillable = ['principle_id', 'name', 'name_id', 'description', 'description_en', 'evidence', 'evidence_en', 'verification_method', 'verification_method_en', 'regulation', 'regulation_en', 'sort_order'];
     protected $casts = ['sort_order' => 'integer'];
     public function principle(): BelongsTo { return $this->belongsTo(Principle::class); }
     public function questions(): HasMany { return $this->hasMany(Question::class)->orderBy('sort_order'); }

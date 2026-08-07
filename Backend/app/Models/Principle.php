@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Principle extends Model
 {
     use HasFactory;
-    protected $fillable = ['outcome_id', 'name'];
+    protected $fillable = ['outcome_id', 'name', 'name_id'];
     public function outcome(): BelongsTo { return $this->belongsTo(Outcome::class); }
     public function indicators(): HasMany { return $this->hasMany(Indicator::class); }
 }

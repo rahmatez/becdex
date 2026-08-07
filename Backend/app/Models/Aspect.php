@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 class Aspect extends Model
 {
     use HasFactory;
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'name_id'];
     public function outcomes(): HasMany { return $this->hasMany(Outcome::class); }
     public function principles(): HasManyThrough { return $this->hasManyThrough(Principle::class, Outcome::class); }
 }
