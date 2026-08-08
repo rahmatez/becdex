@@ -47,9 +47,11 @@ class DocumentController extends Controller
             'file_size'     => $file->getSize(),
         ]);
 
-        // Update per-indicator status ke 1 (Uploaded)
+        // Update per-indicator status ke Uploaded (2), KECUALI yang sudah Verified (4)
+        // Jika sudah Verified, upload dokumen tambahan tidak boleh mengganggu status verifikasi
         SubmissionPerIndicator::where('submission_id', $submission->id)
             ->where('indicator_id', $request->indicator_id)
+            ->where('per_indicator_status_id', '!=', 4) // Jangan timpa yang sudah Verified
             ->update(['per_indicator_status_id' => 2]); // Uploaded
 
         return response()->json([
