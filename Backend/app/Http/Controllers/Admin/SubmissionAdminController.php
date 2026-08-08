@@ -471,14 +471,23 @@ class SubmissionAdminController extends Controller
             return response()->json(['message' => 'Skor atau kelengkapan dokumen belum memenuhi syarat lolos (Minimal skor 70 dan 35 indikator memiliki bukti).'], 400);
         }
 
-        // Pastikan tidak ada indikator yang masih berstatus "Uploaded" (belum diperiksa admin)
-        $uncheckedCount = \App\Models\SubmissionPerIndicator::where('submission_id', $id)
-            ->where('per_indicator_status_id', 2) // 2 = Uploaded (menunggu review admin)
-            ->count();
+        // Pastikan tidak ada indikator yang masih berstatus "Uploaded" (2) atau "Need Revision" (5)
+        // Jika ada yang Need Revision (5), Admin seharusnya mengklik "Kembalikan untuk Revisi", bukan meluluskan.
+        $unresolvedIndicators = \App\Models\SubmissionPerIndicator::where('submission_id', $id)
+            ->whereIn('per_indicator_status_id', [2, 5]) 
+            ->get();
 
-        if ($uncheckedCount > 0) {
+        if ($unresolvedIndicators->count() > 0) {
+            $hasUploaded = $unresolvedIndicators->where('per_indicator_status_id', 2)->count() > 0;
+            $hasRevision = $unresolvedIndicators->where('per_indicator_status_id', 5)->count() > 0;
+            
+            $messages = [];
+            if ($hasUploaded) $messages[] = "indikator yang belum diperiksa (berstatus Uploaded)";
+            if ($hasRevision) $messages[] = "indikator yang ditandai butuh revisi";
+            
+            $msgString = implode(" dan ", $messages);
             return response()->json([
-                'message' => "Tidak dapat meluluskan pengajuan. Masih ada {$uncheckedCount} indikator yang belum Anda periksa (masih berstatus Uploaded). Selesaikan pemeriksaan semua indikator terlebih dahulu."
+                'message' => "Tidak dapat meluluskan pengajuan. Masih ada {$msgString}. Selesaikan pemeriksaan atau kembalikan ke perusahaan untuk direvisi."
             ], 422);
         }
 
