@@ -33,7 +33,7 @@ import { useTranslation } from "@/store/lang";
 
 const TABS = [
   { id: "assessment", labelKey: "dash_sub_tab_assessment", defaultLabel: "Assessment Kuesioner", icon: ClipboardList },
-  { id: "documents", labelKey: "dash_sub_tab_documents", defaultLabel: "Unggahan Dokumen", icon: FolderOpen },
+  { id: "documents", labelKey: "dash_sub_tab_documents", defaultLabel: "Dokumen Terunggah", icon: FolderOpen },
   { id: "score", labelKey: "dash_sub_tab_score", defaultLabel: "Skor & Pembayaran", icon: CreditCard },
   { id: "status", labelKey: "dash_sub_tab_status", defaultLabel: "Riwayat Status", icon: History },
   { id: "certificate", labelKey: "dash_sub_tab_certificate", defaultLabel: "Sertifikat Resmi", icon: Award },
@@ -181,7 +181,7 @@ export default function SubmissionDetailPage() {
                 {t.dash_sub_rev_title || "Pengajuan Memerlukan Perbaikan / Revisi Dokumen (2nd Attempt)"}
               </h4>
               <p className="text-xs text-amber-700 dark:text-amber-300 mt-1 leading-relaxed">
-                {t.dash_sub_rev_desc || "Tim verifikator auditor BECdex telah meninjau pengajuan Anda dan meminta beberapa penyesuaian. Silakan periksa Catatan Revisi Auditor di tab Unggahan Dokumen untuk memperbaiki berkas yang perlu disempurnakan."}
+                {t.dash_sub_rev_desc || "Tim verifikator auditor BECdex telah meninjau pengajuan Anda dan meminta beberapa penyesuaian. Silakan periksa Catatan Revisi Auditor di tab Dokumen Terunggah untuk memperbaiki berkas yang perlu disempurnakan."}
               </p>
             </div>
           </div>
