@@ -269,7 +269,7 @@ export default function AdminSubmissionDetailPage() {
       </Link>
 
       {/* Warning Revision Limit */}
-      {submission.revision_count && submission.revision_count >= 1 ? (
+      {(submission.revision_count ?? 0) >= 1 ? (
         <div className="mb-6 flex items-start gap-3.5 bg-rose-50/80 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-800/80 rounded-2xl p-5 shadow-2xs">
           <XCircle size={22} className="text-rose-600 dark:text-rose-400 shrink-0 mt-0.5" />
           <div>
@@ -379,7 +379,7 @@ export default function AdminSubmissionDetailPage() {
                         <span className="hidden sm:inline">Luluskan</span>
                       </button>
                     )}
-                    {submission.revision_count && submission.revision_count >= 1 ? (
+                    {(submission.revision_count ?? 0) >= 1 ? (
                       <button
                         onClick={() => setShowRejectModal(true)}
                         className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl border border-rose-600/80 bg-rose-50 text-rose-700 dark:bg-rose-950/40 dark:text-rose-400 hover:bg-rose-600 hover:text-white font-bold text-[10px] sm:text-xs transition-all cursor-pointer"
@@ -419,7 +419,7 @@ export default function AdminSubmissionDetailPage() {
                       <Award size={14} />
                       <span>{t.dash_admin_sub_id_btn_cert || "Terbitkan Sertifikat"}</span>
                     </button>
-                    {submission.revision_count && submission.revision_count >= 1 ? (
+                    {(submission.revision_count ?? 0) >= 1 ? (
                       <button
                         onClick={() => setShowRejectModal(true)}
                         className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl border border-rose-600/80 bg-rose-50 text-rose-700 dark:bg-rose-950/40 dark:text-rose-400 hover:bg-rose-600 hover:text-white font-bold text-[10px] sm:text-xs transition-all cursor-pointer"
