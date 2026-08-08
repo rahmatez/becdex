@@ -466,7 +466,10 @@ class SubmissionAdminController extends Controller
             return response()->json(['message' => 'Skor atau kelengkapan dokumen belum memenuhi syarat lolos (Minimal skor 70 dan 35 indikator memiliki bukti).'], 400);
         }
 
-        $submission->update(['submission_status_id' => 8]); // Approved — Ready for Survey
+        $submission->update([
+            'submission_status_id' => 8,   // Approved — Ready for Survey
+            'revision_count'       => 0,   // Reset revision quota untuk tahap survei
+        ]);
 
         ActivityLog::create([
             'submission_id' => $submission->id,

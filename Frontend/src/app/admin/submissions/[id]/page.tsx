@@ -268,16 +268,16 @@ export default function AdminSubmissionDetailPage() {
         <span>{t.dash_admin_sub_id_back || "Kembali ke Daftar Submission"}</span>
       </Link>
 
-      {/* Warning Revision Limit */}
-      {(submission.revision_count ?? 0) >= 1 ? (
+      {/* Warning Revision Limit — only show during active verification/survey */}
+      {[3, 7].includes(submission.status.id) && (submission.revision_count ?? 0) >= 1 ? (
         <div className="mb-6 flex items-start gap-3.5 bg-rose-50/80 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-800/80 rounded-2xl p-5 shadow-2xs">
           <XCircle size={22} className="text-rose-600 dark:text-rose-400 shrink-0 mt-0.5" />
           <div>
             <p className="text-sm font-extrabold text-rose-900 dark:text-rose-200">
-              Batas Revisi Habis (Maksimal 1x)
+              Batas Revisi Habis (Maksimal 1x {submission.status.id === 7 ? 'Pasca Survei' : 'Tahap Verifikasi'})
             </p>
             <p className="text-xs text-rose-700 dark:text-rose-300 mt-1 leading-relaxed font-medium">
-              Pengajuan ini telah mencapai batas maksimal revisi. Jika masih terdapat dokumen yang tidak sesuai, Anda harus menolak pengajuan ini secara permanen.
+              Pengajuan ini telah mencapai batas maksimal revisi pada tahap ini. Jika masih terdapat dokumen yang tidak sesuai, Anda harus menolak pengajuan ini secara permanen.
             </p>
           </div>
         </div>
