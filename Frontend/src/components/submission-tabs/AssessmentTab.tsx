@@ -4,7 +4,21 @@ import { useState, useMemo, useCallback } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useDropzone } from "react-dropzone";
 import { toast } from "sonner";
-import { ChevronDown, ChevronRight, Loader2, Upload, Trash2, FileText, AlertTriangle, MessageSquare, Info, X, BookOpen, Scale, CheckCircle2, Send } from "lucide-react";
+import {
+  ChevronDown,
+  ChevronRight,
+  Loader2,
+  Upload,
+  Trash2,
+  FileText,
+  AlertTriangle,
+  MessageSquare,
+  Info,
+  X,
+  BookOpen,
+  Scale,
+  CheckCircle2,
+} from "lucide-react";
 import { MdCheckCircle, MdSearch, MdWarning } from "react-icons/md";
 import { SubmissionDetail, PerIndicator } from "@/types";
 import api from "@/lib/api";
@@ -51,7 +65,7 @@ function DocumentUploadZone({
   onSuccess: () => void;
 }) {
   const { t } = useTranslation();
-  
+
   const mutation = useMutation({
     mutationFn: async (file: File) => {
       const form = new FormData();
@@ -77,7 +91,7 @@ function DocumentUploadZone({
         mutation.mutate(acceptedFiles[0]);
       }
     },
-    [mutation]
+    [mutation],
   );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -97,22 +111,27 @@ function DocumentUploadZone({
         "border-2 border-dashed rounded-xl p-4 text-center cursor-pointer transition-all duration-200 mt-3",
         isDragActive
           ? "border-blue-500 bg-blue-50/50"
-          : "border-slate-200 hover:border-slate-300 hover:bg-slate-50"
-      )}
-    >
+          : "border-slate-200 hover:border-slate-300 hover:bg-slate-50",
+      )}>
       <input {...getInputProps()} />
       {mutation.isPending ? (
         <div className="flex items-center justify-center gap-2 text-blue-500">
           <Loader2 size={16} className="animate-spin" />
-          <span className="text-sm font-semibold">{t.tab_assessment_uploading || "Mengunggah berkas..."}</span>
+          <span className="text-sm font-semibold">
+            {t.tab_assessment_uploading || "Mengunggah berkas..."}
+          </span>
         </div>
       ) : (
         <div className="flex flex-col items-center gap-1.5 text-slate-400">
           <Upload size={18} className="text-slate-300" />
           <span className="text-xs font-semibold text-slate-500">
-            {isDragActive ? "Lepas file di sini..." : "Klik atau seret dokumen pendukung di sini"}
+            {isDragActive
+              ? "Lepas file di sini..."
+              : "Klik atau seret dokumen pendukung di sini"}
           </span>
-          <span className="text-[10px] text-slate-400">{t.tab_assessment_format || "Format PDF/JPG/PNG (maks. 10MB)"}</span>
+          <span className="text-[10px] text-slate-400">
+            {t.tab_assessment_format || "Format PDF/JPG/PNG (maks. 10MB)"}
+          </span>
         </div>
       )}
     </div>
@@ -136,8 +155,12 @@ export function AssessmentTab({ submission, onUpdate, onGoToScore }: Props) {
   // This prevents double-save and distinguishes "pending yes" from "has score"
   const [pendingYes, setPendingYes] = useState<Set<number>>(new Set());
 
-  const [expandedAspects, setExpandedAspects] = useState<Set<string>>(new Set());
-  const [expandedIndicators, setExpandedIndicators] = useState<Set<number>>(new Set());
+  const [expandedAspects, setExpandedAspects] = useState<Set<string>>(
+    new Set(),
+  );
+  const [expandedIndicators, setExpandedIndicators] = useState<Set<number>>(
+    new Set(),
+  );
   const [infoModalIndicator, setInfoModalIndicator] = useState<{
     name: string;
     description: string | null;
@@ -149,7 +172,7 @@ export function AssessmentTab({ submission, onUpdate, onGoToScore }: Props) {
 
   const grouped = useMemo(
     () => groupByAspect(submission.per_indicators ?? []),
-    [submission.per_indicators]
+    [submission.per_indicators],
   );
 
   // Build sequential number map (indicator_id → number 1..N) preserving aspect grouping order
@@ -186,7 +209,13 @@ export function AssessmentTab({ submission, onUpdate, onGoToScore }: Props) {
 
   // Fix Bug #1: Mutation sends actual numeric value (not boolean)
   const saveSingleAnswerMutation = useMutation({
-    mutationFn: async ({ questionId, value }: { questionId: number; value: number }) => {
+    mutationFn: async ({
+      questionId,
+      value,
+    }: {
+      questionId: number;
+      value: number;
+    }) => {
       await api.put(`/submissions/${submission.id}/answers`, {
         answers: [{ question_id: questionId, value: value }], // Numeric: 0, 0.5, 1, or 2
       });
@@ -203,7 +232,7 @@ export function AssessmentTab({ submission, onUpdate, onGoToScore }: Props) {
   const handleYesClick = (questionId: number) => {
     // If already answered with a real score (> 0), no-op (already "Yes")
     if ((answers[questionId] ?? 0) > 0) return;
-    
+
     if (ENABLE_SCORE_SELECTION) {
       setPendingYes((prev) => new Set([...prev, questionId]));
     } else {
@@ -213,7 +242,11 @@ export function AssessmentTab({ submission, onUpdate, onGoToScore }: Props) {
   };
 
   // Fix Bug #3: Warn user if they answer "Tidak" when indicator has documents
-  const handleNoClick = (questionId: number, pi: PerIndicator, uploadedDocsByIndicator: Map<number, typeof submission.documents>) => {
+  const handleNoClick = (
+    questionId: number,
+    pi: PerIndicator,
+    uploadedDocsByIndicator: Map<number, typeof submission.documents>,
+  ) => {
     const docsForIndicator = uploadedDocsByIndicator.get(pi.indicator_id) ?? [];
 
     if (docsForIndicator.length > 0) {
@@ -224,7 +257,7 @@ export function AssessmentTab({ submission, onUpdate, onGoToScore }: Props) {
 
       if (!hasOtherYesInIndicator) {
         const confirmed = window.confirm(
-          `Perhatian!\n\nAnda sudah mengupload ${docsForIndicator.length} dokumen untuk indikator "${pi.indicator.name}".\n\nJika Anda menjawab "Tidak", dokumen tersebut tidak akan otomatis terhapus. Anda perlu menghapusnya secara manual di tab Dokumen.\n\nLanjutkan?`
+          `Perhatian!\n\nAnda sudah mengupload ${docsForIndicator.length} dokumen untuk indikator "${pi.indicator.name}".\n\nJika Anda menjawab "Tidak", dokumen tersebut tidak akan otomatis terhapus. Anda perlu menghapusnya secara manual di tab Dokumen.\n\nLanjutkan?`,
         );
         if (!confirmed) return;
       }
@@ -284,7 +317,11 @@ export function AssessmentTab({ submission, onUpdate, onGoToScore }: Props) {
   const toggleAspect = (name: string) => {
     setExpandedAspects((prev) => {
       const next = new Set(prev);
-      if (next.has(name)) { next.delete(name); } else { next.add(name); }
+      if (next.has(name)) {
+        next.delete(name);
+      } else {
+        next.add(name);
+      }
       return next;
     });
   };
@@ -292,24 +329,35 @@ export function AssessmentTab({ submission, onUpdate, onGoToScore }: Props) {
   const toggleIndicator = (id: number) => {
     setExpandedIndicators((prev) => {
       const next = new Set(prev);
-      if (next.has(id)) { next.delete(id); } else { next.add(id); }
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
       return next;
     });
   };
 
-  const canEdit = [2, 4].includes(submission.status.id);
+  const canEdit   = [2, 4].includes(submission.status.id);
+  const canDelete  = submission.status.id === 2; // Hapus dokumen hanya boleh di status Draft (2)
 
   let totalQuestions = 0;
   let answeredQuestions = 0;
   for (const pi of submission.per_indicators ?? []) {
     for (const q of pi.indicator.questions) {
       totalQuestions++;
-      if ((answers[q.id] ?? null) !== null && (answers[q.id] ?? undefined) !== undefined) {
+      if (
+        (answers[q.id] ?? null) !== null &&
+        (answers[q.id] ?? undefined) !== undefined
+      ) {
         answeredQuestions++;
       }
     }
   }
-  const progressPercent = totalQuestions > 0 ? Math.round((answeredQuestions / totalQuestions) * 100) : 0;
+  const progressPercent =
+    totalQuestions > 0
+      ? Math.round((answeredQuestions / totalQuestions) * 100)
+      : 0;
 
   const [showUnansweredOnly, setShowUnansweredOnly] = useState(false);
 
@@ -381,7 +429,10 @@ export function AssessmentTab({ submission, onUpdate, onGoToScore }: Props) {
             <span className="text-2xl md:text-3xl font-extrabold text-[#0c2340] dark:text-blue-300 tracking-tight">
               {submission.initial_score.toFixed(1)}%
             </span>
-            <span className="text-slate-400 dark:text-slate-500 text-xs font-bold"> / 100%</span>
+            <span className="text-slate-400 dark:text-slate-500 text-xs font-bold">
+              {" "}
+              / 100%
+            </span>
           </div>
         </div>
 
@@ -400,12 +451,14 @@ export function AssessmentTab({ submission, onUpdate, onGoToScore }: Props) {
                 "text-2xl md:text-3xl font-extrabold tracking-tight",
                 (submission.documents_uploaded ?? 0) >= 35
                   ? "text-emerald-600 dark:text-emerald-400"
-                  : "text-[#0c2340] dark:text-white"
-              )}
-            >
+                  : "text-[#0c2340] dark:text-white",
+              )}>
               {submission.documents_uploaded ?? 0}
             </span>
-            <span className="text-slate-400 dark:text-slate-500 text-xs font-bold"> / 35</span>
+            <span className="text-slate-400 dark:text-slate-500 text-xs font-bold">
+              {" "}
+              / 35
+            </span>
           </div>
         </div>
       </div>
@@ -416,19 +469,18 @@ export function AssessmentTab({ submission, onUpdate, onGoToScore }: Props) {
             Kuesioner Assessment Blue Economy
           </h3>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-            Isi semua pertanyaan sesuai kondisi aktual operasional perusahaan Anda
+            Isi semua pertanyaan sesuai kondisi aktual operasional perusahaan
+            Anda
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
           {/* Scoring Guide Button */}
           <button
             onClick={() => setShowScoringGuide(true)}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300 hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors"
-          >
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300 hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors">
             <Info size={14} />
             <span>Panduan Skoring</span>
           </button>
-
 
           {/* Unanswered Filter Toggle Button */}
           <button
@@ -438,7 +490,10 @@ export function AssessmentTab({ submission, onUpdate, onGoToScore }: Props) {
               if (nextVal) {
                 // Auto expand aspects with unanswered questions
                 const newAspects = new Set<string>();
-                for (const [aspectName, count] of aspectUnansweredCounts.entries()) {
+                for (const [
+                  aspectName,
+                  count,
+                ] of aspectUnansweredCounts.entries()) {
                   if (count > 0) newAspects.add(aspectName);
                 }
                 setExpandedAspects(newAspects);
@@ -448,18 +503,22 @@ export function AssessmentTab({ submission, onUpdate, onGoToScore }: Props) {
               "px-3 py-1.5 rounded-xl text-xs font-extrabold transition-all border shadow-2xs flex items-center gap-1.5 cursor-pointer",
               showUnansweredOnly
                 ? "bg-amber-500 border-amber-600 text-white dark:bg-amber-600 dark:border-amber-500"
-                : "bg-white dark:bg-slate-900 border-slate-200/80 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/80"
-            )}
-          >
+                : "bg-white dark:bg-slate-900 border-slate-200/80 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/80",
+            )}>
             {showUnansweredOnly ? (
               <>
                 <MdCheckCircle className="w-4 h-4" />
-                <span>{t.tab_assessment_show_all || "Tampilkan Semua Pertanyaan"}</span>
+                <span>
+                  {t.tab_assessment_show_all || "Tampilkan Semua Pertanyaan"}
+                </span>
               </>
             ) : (
               <>
                 <MdSearch className="w-4 h-4" />
-                <span>{t.tab_assessment_filter_unanswered || "Filter: Belum Terjawab"}</span>
+                <span>
+                  {t.tab_assessment_filter_unanswered ||
+                    "Filter: Belum Terjawab"}
+                </span>
               </>
             )}
           </button>
@@ -469,12 +528,16 @@ export function AssessmentTab({ submission, onUpdate, onGoToScore }: Props) {
               {saveSingleAnswerMutation.isPending ? (
                 <>
                   <Loader2 size={13} className="animate-spin text-blue-500" />
-                  <span className="text-blue-500 font-bold">{t.tab_assessment_saving || "Menyimpan..."}</span>
+                  <span className="text-blue-500 font-bold">
+                    {t.tab_assessment_saving || "Menyimpan..."}
+                  </span>
                 </>
               ) : (
                 <>
                   <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
-                  <span className="text-slate-600 dark:text-slate-300 font-bold">Auto-Saved</span>
+                  <span className="text-slate-600 dark:text-slate-300 font-bold">
+                    Auto-Saved
+                  </span>
                 </>
               )}
             </div>
@@ -488,12 +551,13 @@ export function AssessmentTab({ submission, onUpdate, onGoToScore }: Props) {
           if (showUnansweredOnly && aspectUnanswered === 0) return null;
 
           return (
-            <div key={aspectName} className="border border-slate-200/80 dark:border-slate-800 rounded-2xl overflow-hidden shadow-2xs bg-white dark:bg-slate-900 transition-colors">
+            <div
+              key={aspectName}
+              className="border border-slate-200/80 dark:border-slate-800 rounded-2xl overflow-hidden shadow-2xs bg-white dark:bg-slate-900 transition-colors">
               {/* Aspect Header */}
               <button
                 onClick={() => toggleAspect(aspectName)}
-                className="w-full flex items-center justify-between px-5 py-4 bg-slate-50/80 dark:bg-slate-800/60 hover:bg-blue-50/50 dark:hover:bg-slate-800 transition-colors text-left cursor-pointer border-b border-slate-100 dark:border-slate-800/80"
-              >
+                className="w-full flex items-center justify-between px-5 py-4 bg-slate-50/80 dark:bg-slate-800/60 hover:bg-blue-50/50 dark:hover:bg-slate-800 transition-colors text-left cursor-pointer border-b border-slate-100 dark:border-slate-800/80">
                 <div className="flex items-center gap-3">
                   <span className="font-extrabold text-[#0c2340] dark:text-white text-sm tracking-tight">
                     {aspectName}
@@ -501,7 +565,10 @@ export function AssessmentTab({ submission, onUpdate, onGoToScore }: Props) {
                   {aspectUnanswered > 0 ? (
                     <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-amber-100 text-amber-800 dark:bg-amber-950/80 dark:text-amber-300 border border-amber-200 dark:border-amber-800">
                       <MdWarning className="w-3.5 h-3.5" />
-                      <span>{aspectUnanswered} {t.tab_assessment_unanswered || "Belum Terjawab"}</span>
+                      <span>
+                        {aspectUnanswered}{" "}
+                        {t.tab_assessment_unanswered || "Belum Terjawab"}
+                      </span>
                     </span>
                   ) : (
                     <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-emerald-100 text-emerald-800 dark:bg-emerald-950/80 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
@@ -511,7 +578,10 @@ export function AssessmentTab({ submission, onUpdate, onGoToScore }: Props) {
                   )}
                 </div>
                 {expandedAspects.has(aspectName) ? (
-                  <ChevronDown size={18} className="text-blue-600 dark:text-blue-400 shrink-0" />
+                  <ChevronDown
+                    size={18}
+                    className="text-blue-600 dark:text-blue-400 shrink-0"
+                  />
                 ) : (
                   <ChevronRight size={18} className="text-slate-400 shrink-0" />
                 )}
@@ -519,308 +589,497 @@ export function AssessmentTab({ submission, onUpdate, onGoToScore }: Props) {
 
               {expandedAspects.has(aspectName) && (
                 <div className="p-4 space-y-4">
-                  {Array.from(outcomeMap.entries()).map(([outcomeName, principleMap]) => (
-                    <div key={outcomeName} className="space-y-3">
-                      <div className="flex items-center gap-2 text-xs font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-wider px-1 pt-2">
-                        <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
-                        <span>{outcomeName}</span>
-                      </div>
+                  {Array.from(outcomeMap.entries()).map(
+                    ([outcomeName, principleMap]) => (
+                      <div key={outcomeName} className="space-y-3">
+                        <div className="flex items-center gap-2 text-xs font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-wider px-1 pt-2">
+                          <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
+                          <span>{outcomeName}</span>
+                        </div>
 
-                      {Array.from(principleMap.entries()).map(([principleName, perIndicators]) => (
-                        <div key={principleName} className="pl-2 space-y-2.5">
-                          <p className="text-xs text-blue-600 dark:text-blue-400 font-bold px-1 flex items-center gap-1.5">
-                            <span>&bull;</span>
-                            <span>Principle {principleNumberMap.get(principleName)}: {principleName}</span>
-                          </p>
+                        {Array.from(principleMap.entries()).map(
+                          ([principleName, perIndicators]) => (
+                            <div
+                              key={principleName}
+                              className="pl-2 space-y-2.5">
+                              <p className="text-xs text-blue-600 dark:text-blue-400 font-bold px-1 flex items-center gap-1.5">
+                                <span>&bull;</span>
+                                <span>
+                                  Principle{" "}
+                                  {principleNumberMap.get(principleName)}:{" "}
+                                  {principleName}
+                                </span>
+                              </p>
 
-                          {perIndicators.map((pi) => {
-                            // Check if indicator has any unanswered questions
-                            const indUnanswered = pi.indicator.questions.filter(
-                              (q) => answers[q.id] === undefined && !pendingYes.has(q.id)
-                            ).length;
-                            if (showUnansweredOnly && indUnanswered === 0) return null;
+                              {perIndicators.map((pi) => {
+                                // Check if indicator has any unanswered questions
+                                const indUnanswered =
+                                  pi.indicator.questions.filter(
+                                    (q) =>
+                                      answers[q.id] === undefined &&
+                                      !pendingYes.has(q.id),
+                                  ).length;
+                                if (showUnansweredOnly && indUnanswered === 0)
+                                  return null;
 
-                            // Lock indicators that are already valid (status 3) during revision phase (status 4)
-                            const isIndicatorEditable = canEdit && !(submission.status.id === 4 && pi.status?.id === 3);
+                                // Lock indicators that are already valid (status 3) during revision phase (status 4)
+                                const isIndicatorEditable =
+                                  canEdit &&
+                                  !(
+                                    submission.status.id === 4 &&
+                                    pi.status?.id === 3
+                                  );
 
-                            return (
-                              <div
-                                key={pi.id}
-                                className="border border-slate-200/60 dark:border-slate-800/80 rounded-xl overflow-hidden bg-white dark:bg-slate-900 shadow-2xs transition-colors"
-                              >
-                                {/* Indicator Header */}
-                                <button
-                                  onClick={() => toggleIndicator(pi.indicator_id)}
-                                  className="w-full flex items-center justify-between px-4 py-3 hover:bg-blue-50/40 dark:hover:bg-slate-800/50 transition-colors text-left cursor-pointer"
-                                >
-                                  <div className="flex items-center gap-2.5 flex-1 min-w-0">
-                                    <span
-                                      className={cn(
-                                        "w-2.5 h-2.5 rounded-full shrink-0 shadow-2xs",
-                                        indUnanswered > 0 ? "bg-amber-500 animate-pulse" : "bg-emerald-500"
-                                      )}
-                                    />
-                                    <span className="text-xs md:text-sm font-bold text-slate-800 dark:text-slate-100 tracking-tight flex items-center gap-2">
-                                      <span className="shrink-0 text-[10px] font-extrabold text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded-md font-mono uppercase tracking-widest">
-                                        Indicator {indicatorNumberMap.get(pi.indicator_id) ?? "—"}
-                                      </span>
-                                      {locale === 'id' ? (pi.indicator.name_id || pi.indicator.name) : pi.indicator.name}
-                                      {(pi.indicator.description || pi.indicator.description_en || pi.indicator.evidence || pi.indicator.regulation) && (
+                                return (
+                                  <div
+                                    key={pi.id}
+                                    className="border border-slate-200/60 dark:border-slate-800/80 rounded-xl overflow-hidden bg-white dark:bg-slate-900 shadow-2xs transition-colors">
+                                    {/* Indicator Header */}
+                                    <button
+                                      onClick={() =>
+                                        toggleIndicator(pi.indicator_id)
+                                      }
+                                      className="w-full flex items-center justify-between px-4 py-3 hover:bg-blue-50/40 dark:hover:bg-slate-800/50 transition-colors text-left cursor-pointer">
+                                      <div className="flex items-center gap-2.5 flex-1 min-w-0">
                                         <span
-                                          onClick={(e) => {
-                                            e.stopPropagation();
-                                            setInfoModalIndicator({
-                                              name: locale === 'id' ? (pi.indicator.name_id || pi.indicator.name) : pi.indicator.name,
-                                              description: locale === 'en' ? (pi.indicator.description_en || pi.indicator.description) : (pi.indicator.description || pi.indicator.description_en),
-                                              evidence: locale === 'en' ? (pi.indicator.evidence_en || pi.indicator.evidence) : (pi.indicator.evidence || pi.indicator.evidence_en),
-                                              verification_method: locale === 'en' ? (pi.indicator.verification_method_en || pi.indicator.verification_method) : (pi.indicator.verification_method || pi.indicator.verification_method_en),
-                                              regulation: locale === 'en' ? (pi.indicator.regulation_en || pi.indicator.regulation) : (pi.indicator.regulation || pi.indicator.regulation_en),
-                                            });
-                                          }}
-                                          className="inline-flex items-center gap-1.5 text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors px-2.5 py-1 rounded-full cursor-pointer shrink-0"
-                                          title="Lihat Syarat & Bukti Indikator"
-                                        >
-                                          <Info size={14} />
-                                          <span className="text-[10px] font-bold uppercase tracking-wider hidden sm:inline-block">
-                                            {t.indicator_detail_btn || "Detail Syarat"}
+                                          className={cn(
+                                            "w-2.5 h-2.5 rounded-full shrink-0 shadow-2xs",
+                                            indUnanswered > 0
+                                              ? "bg-amber-500 animate-pulse"
+                                              : "bg-emerald-500",
+                                          )}
+                                        />
+                                        <span className="text-xs md:text-sm font-bold text-slate-800 dark:text-slate-100 tracking-tight flex items-center gap-2">
+                                          <span className="shrink-0 text-[10px] font-extrabold text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded-md font-mono uppercase tracking-widest">
+                                            Indicator{" "}
+                                            {indicatorNumberMap.get(
+                                              pi.indicator_id,
+                                            ) ?? "—"}
                                           </span>
-                                        </span>
-                                      )}
-                                    </span>
-                                    {indUnanswered > 0 && (
-                                      <span className="text-[10px] font-bold text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/60 px-2 py-0.5 rounded-md border border-amber-200/60 dark:border-amber-800 shrink-0">
-                                        {indUnanswered} pertanyaan
-                                      </span>
-                                    )}
-                                    {!isIndicatorEditable && submission.status.id === 4 && pi.status?.id === 3 && (
-                                      <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded-md border border-emerald-200/60 dark:border-emerald-800 shrink-0">
-                                        <MdCheckCircle className="inline w-3 h-3 mr-1 mb-0.5" />{t.tab_assessment_done || "Lolos Verifikasi"}
-                                      </span>
-                                    )}
-                                    {!isIndicatorEditable && submission.status.id === 4 && pi.status?.id === 4 && (
-                                      <span className="text-[10px] font-bold text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/60 px-2 py-0.5 rounded-md border border-rose-200/60 dark:border-rose-800 shrink-0 animate-pulse">
-                                        <MdWarning className="inline w-3 h-3 mr-1 mb-0.5" />Butuh Revisi
-                                      </span>
-                                    )}
-                                  </div>
-                                    {expandedIndicators.has(pi.indicator_id) ? (
-                                      <ChevronDown size={16} className="text-blue-600 dark:text-blue-400 shrink-0 ml-2" />
-                                    ) : (
-                                      <ChevronRight size={16} className="text-slate-400 shrink-0 ml-2" />
-                                    )}
-                                  </button>
-
-                                  {/* Questions & Documents */}
-                                  {expandedIndicators.has(pi.indicator_id) && (
-                                    <div className="bg-slate-50/50 dark:bg-slate-900/60 border-t border-slate-100 dark:border-slate-800 px-4 py-4 space-y-4">
-                                      <div className="space-y-3">
-                                        {pi.indicator.questions.map((question) => {
-                                          // Fix Bug #2: isYes checks pendingYes OR stored score > 0
-                                          const storedValue = answers[question.id];
-                                          const hasSavedScore = storedValue !== undefined && storedValue > 0;
-                                          const isPendingYes = pendingYes.has(question.id);
-                                          const isYes = isPendingYes || hasSavedScore;
-                                          // Fix Bug #4: Clearly distinguish unanswered vs answered "Tidak"
-                                          const isExplicitlyNo = storedValue === 0;
-
-                                          return (
-                                            <div
-                                              key={question.id}
-                                              className="flex items-start justify-between gap-4"
-                                            >
-                                              <div className="flex-1">
-                                                <p
-                                                  className="text-xs md:text-sm text-slate-700 dark:text-slate-200 font-medium whitespace-pre-line leading-relaxed mb-1"
-                                                  dangerouslySetInnerHTML={{ __html: (locale === 'en' ? (question.text_en || question.text) : (question.text || question.text_en)) ?? "" }}
-                                                />
-                                                {!ENABLE_SCORE_SELECTION && (
-                                                  <p className="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1">
-                                                    <Info size={10} />
-                                                    {locale === 'en' ? '(When "Yes", automatically Score 2)' : '(Ketika "Ya", otomatis bernilai Skor 2)'}
-                                                  </p>
-                                                )}
-                                              </div>
-                                              {isIndicatorEditable ? (
-                                                <div className="flex items-center gap-1.5 shrink-0">
-                                                  {/* Ya Button */}
-                                                  <button
-                                                    onClick={() => handleYesClick(question.id)}
-                                                    className={cn(
-                                                      "px-3 py-1 rounded-full text-xs font-semibold transition-colors cursor-pointer",
-                                                      isYes
-                                                        ? "bg-green-500 text-white"
-                                                        : "bg-gray-100 text-gray-500 hover:bg-green-50"
-                                                    )}
-                                                  >
-                                              Ya
-                                            </button>
-                                            {/* Tidak Button */}
-                                            <button
-                                              onClick={() => handleNoClick(question.id, pi, uploadedDocsByIndicator)}
-                                              className={cn(
-                                                "px-3 py-1 rounded-full text-xs font-semibold transition-colors cursor-pointer",
-                                                isExplicitlyNo
-                                                  ? "bg-red-500 text-white"
-                                                  : "bg-gray-100 text-gray-500 hover:bg-red-50"
-                                              )}
-                                            >
-                                              Tidak
-                                            </button>
-
-                                            {/* Fix Bug #2: Score dropdown — only show when "Ya", and require selection */}
-                                            {ENABLE_SCORE_SELECTION && isYes && (
-                                              <select
-                                                value={hasSavedScore ? storedValue : ""}
-                                                onChange={(e) => {
-                                                  const val = e.target.value === "" ? null : Number(e.target.value);
-                                                  if (val !== null) {
-                                                    handleScoreSelect(question.id, val);
-                                                  }
-                                                }}
-                                                className={cn(
-                                                  "px-2 py-1 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-[#4e73df] cursor-pointer",
-                                                  isPendingYes && !hasSavedScore
-                                                    ? "border-amber-400 bg-amber-50 text-amber-700" // Highlight: score not yet selected
-                                                    : "border-slate-200 bg-white"
-                                                )}
-                                              >
-                                                <option value="">
-                                                  {isPendingYes && !hasSavedScore ? "Pilih Skor" : "Skor"}
-                                                </option>
-                                                <option value="0.5">0.5</option>
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                              </select>
-                                            )}
-
-                                            {/* Bug #3: Warning icon when pendingYes but no score */}
-                                            {ENABLE_SCORE_SELECTION && isPendingYes && !hasSavedScore && (
-                                              <span title="Pilih skor terlebih dahulu">
-                                                <AlertTriangle size={14} className="text-amber-500 shrink-0" />
-                                              </span>
-                                            )}
-                                          </div>
-                                        ) : (
-                                          // Fix Bug #4: View mode — clear badge for unanswered / Tidak / Ya
-                                          <div className="flex items-center gap-2 shrink-0">
+                                          {locale === "id"
+                                            ? pi.indicator.name_id ||
+                                              pi.indicator.name
+                                            : pi.indicator.name}
+                                          {(pi.indicator.description ||
+                                            pi.indicator.description_en ||
+                                            pi.indicator.evidence ||
+                                            pi.indicator.regulation) && (
                                             <span
-                                              className={cn(
-                                                "px-2 py-0.5 rounded-full text-xs font-semibold",
-                                                isYes
-                                                  ? "bg-green-100 text-green-700"
-                                                  : isExplicitlyNo
-                                                  ? "bg-red-100 text-red-700"
-                                                  : "bg-gray-100 text-gray-400 italic"
-                                              )}
-                                            >
-                                              {isYes ? "Ya" : isExplicitlyNo ? "Tidak" : "Belum Diisi"}
-                                            </span>
-                                            {isYes && storedValue !== undefined && (
-                                              <span className="text-xs font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-lg">
-                                                Skor: {storedValue}
+                                              onClick={(e) => {
+                                                e.stopPropagation();
+                                                setInfoModalIndicator({
+                                                  name:
+                                                    locale === "id"
+                                                      ? pi.indicator.name_id ||
+                                                        pi.indicator.name
+                                                      : pi.indicator.name,
+                                                  description:
+                                                    locale === "en"
+                                                      ? pi.indicator
+                                                          .description_en ||
+                                                        pi.indicator.description
+                                                      : pi.indicator
+                                                          .description ||
+                                                        pi.indicator
+                                                          .description_en,
+                                                  evidence:
+                                                    locale === "en"
+                                                      ? pi.indicator
+                                                          .evidence_en ||
+                                                        pi.indicator.evidence
+                                                      : pi.indicator.evidence ||
+                                                        pi.indicator
+                                                          .evidence_en,
+                                                  verification_method:
+                                                    locale === "en"
+                                                      ? pi.indicator
+                                                          .verification_method_en ||
+                                                        pi.indicator
+                                                          .verification_method
+                                                      : pi.indicator
+                                                          .verification_method ||
+                                                        pi.indicator
+                                                          .verification_method_en,
+                                                  regulation:
+                                                    locale === "en"
+                                                      ? pi.indicator
+                                                          .regulation_en ||
+                                                        pi.indicator.regulation
+                                                      : pi.indicator
+                                                          .regulation ||
+                                                        pi.indicator
+                                                          .regulation_en,
+                                                });
+                                              }}
+                                              className="inline-flex items-center gap-1.5 text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors px-2.5 py-1 rounded-full cursor-pointer shrink-0"
+                                              title="Lihat Syarat & Bukti Indikator">
+                                              <Info size={14} />
+                                              <span className="text-[10px] font-bold uppercase tracking-wider hidden sm:inline-block">
+                                                {t.indicator_detail_btn ||
+                                                  "Detail Syarat"}
                                               </span>
+                                            </span>
+                                          )}
+                                        </span>
+                                        {indUnanswered > 0 && (
+                                          <span className="text-[10px] font-bold text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/60 px-2 py-0.5 rounded-md border border-amber-200/60 dark:border-amber-800 shrink-0">
+                                            {indUnanswered} pertanyaan
+                                          </span>
+                                        )}
+                                        {!isIndicatorEditable &&
+                                          submission.status.id === 4 &&
+                                          pi.status?.id === 3 && (
+                                            <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded-md border border-emerald-200/60 dark:border-emerald-800 shrink-0">
+                                              <MdCheckCircle className="inline w-3 h-3 mr-1 mb-0.5" />
+                                              {t.tab_assessment_done ||
+                                                "Lolos Verifikasi"}
+                                            </span>
+                                          )}
+                                        {!isIndicatorEditable &&
+                                          submission.status.id === 4 &&
+                                          pi.status?.id === 4 && (
+                                            <span className="text-[10px] font-bold text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/60 px-2 py-0.5 rounded-md border border-rose-200/60 dark:border-rose-800 shrink-0 animate-pulse">
+                                              <MdWarning className="inline w-3 h-3 mr-1 mb-0.5" />
+                                              Butuh Revisi
+                                            </span>
+                                          )}
+                                      </div>
+                                      {expandedIndicators.has(
+                                        pi.indicator_id,
+                                      ) ? (
+                                        <ChevronDown
+                                          size={16}
+                                          className="text-blue-600 dark:text-blue-400 shrink-0 ml-2"
+                                        />
+                                      ) : (
+                                        <ChevronRight
+                                          size={16}
+                                          className="text-slate-400 shrink-0 ml-2"
+                                        />
+                                      )}
+                                    </button>
+
+                                    {/* Questions & Documents */}
+                                    {expandedIndicators.has(
+                                      pi.indicator_id,
+                                    ) && (
+                                      <div className="bg-slate-50/50 dark:bg-slate-900/60 border-t border-slate-100 dark:border-slate-800 px-4 py-4 space-y-4">
+                                        <div className="space-y-3">
+                                          {pi.indicator.questions.map(
+                                            (question) => {
+                                              // Fix Bug #2: isYes checks pendingYes OR stored score > 0
+                                              const storedValue =
+                                                answers[question.id];
+                                              const hasSavedScore =
+                                                storedValue !== undefined &&
+                                                storedValue > 0;
+                                              const isPendingYes =
+                                                pendingYes.has(question.id);
+                                              const isYes =
+                                                isPendingYes || hasSavedScore;
+                                              // Fix Bug #4: Clearly distinguish unanswered vs answered "Tidak"
+                                              const isExplicitlyNo =
+                                                storedValue === 0;
+
+                                              return (
+                                                <div
+                                                  key={question.id}
+                                                  className="flex items-start justify-between gap-4">
+                                                  <div className="flex-1">
+                                                    <p
+                                                      className="text-xs md:text-sm text-slate-700 dark:text-slate-200 font-medium whitespace-pre-line leading-relaxed mb-1"
+                                                      dangerouslySetInnerHTML={{
+                                                        __html:
+                                                          (locale === "en"
+                                                            ? question.text_en ||
+                                                              question.text
+                                                            : question.text ||
+                                                              question.text_en) ??
+                                                          "",
+                                                      }}
+                                                    />
+                                                    {!ENABLE_SCORE_SELECTION && (
+                                                      <p className="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1">
+                                                        <Info size={10} />
+                                                        {locale === "en"
+                                                          ? '(When "Yes", automatically Score 2)'
+                                                          : '(Ketika "Ya", otomatis bernilai Skor 2)'}
+                                                      </p>
+                                                    )}
+                                                  </div>
+                                                  {isIndicatorEditable ? (
+                                                    <div className="flex items-center gap-1.5 shrink-0">
+                                                      {/* Ya Button */}
+                                                      <button
+                                                        onClick={() =>
+                                                          handleYesClick(
+                                                            question.id,
+                                                          )
+                                                        }
+                                                        className={cn(
+                                                          "px-3 py-1 rounded-full text-xs font-semibold transition-colors cursor-pointer",
+                                                          isYes
+                                                            ? "bg-green-500 text-white"
+                                                            : "bg-gray-100 text-gray-500 hover:bg-green-50",
+                                                        )}>
+                                                        Ya
+                                                      </button>
+                                                      {/* Tidak Button */}
+                                                      <button
+                                                        onClick={() =>
+                                                          handleNoClick(
+                                                            question.id,
+                                                            pi,
+                                                            uploadedDocsByIndicator,
+                                                          )
+                                                        }
+                                                        className={cn(
+                                                          "px-3 py-1 rounded-full text-xs font-semibold transition-colors cursor-pointer",
+                                                          isExplicitlyNo
+                                                            ? "bg-red-500 text-white"
+                                                            : "bg-gray-100 text-gray-500 hover:bg-red-50",
+                                                        )}>
+                                                        Tidak
+                                                      </button>
+
+                                                      {/* Fix Bug #2: Score dropdown — only show when "Ya", and require selection */}
+                                                      {ENABLE_SCORE_SELECTION &&
+                                                        isYes && (
+                                                          <select
+                                                            value={
+                                                              hasSavedScore
+                                                                ? storedValue
+                                                                : ""
+                                                            }
+                                                            onChange={(e) => {
+                                                              const val =
+                                                                e.target
+                                                                  .value === ""
+                                                                  ? null
+                                                                  : Number(
+                                                                      e.target
+                                                                        .value,
+                                                                    );
+                                                              if (
+                                                                val !== null
+                                                              ) {
+                                                                handleScoreSelect(
+                                                                  question.id,
+                                                                  val,
+                                                                );
+                                                              }
+                                                            }}
+                                                            className={cn(
+                                                              "px-2 py-1 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-[#4e73df] cursor-pointer",
+                                                              isPendingYes &&
+                                                                !hasSavedScore
+                                                                ? "border-amber-400 bg-amber-50 text-amber-700" // Highlight: score not yet selected
+                                                                : "border-slate-200 bg-white",
+                                                            )}>
+                                                            <option value="">
+                                                              {isPendingYes &&
+                                                              !hasSavedScore
+                                                                ? "Pilih Skor"
+                                                                : "Skor"}
+                                                            </option>
+                                                            <option value="0.5">
+                                                              0.5
+                                                            </option>
+                                                            <option value="1">
+                                                              1
+                                                            </option>
+                                                            <option value="2">
+                                                              2
+                                                            </option>
+                                                          </select>
+                                                        )}
+
+                                                      {/* Bug #3: Warning icon when pendingYes but no score */}
+                                                      {ENABLE_SCORE_SELECTION &&
+                                                        isPendingYes &&
+                                                        !hasSavedScore && (
+                                                          <span title="Pilih skor terlebih dahulu">
+                                                            <AlertTriangle
+                                                              size={14}
+                                                              className="text-amber-500 shrink-0"
+                                                            />
+                                                          </span>
+                                                        )}
+                                                    </div>
+                                                  ) : (
+                                                    // Fix Bug #4: View mode — clear badge for unanswered / Tidak / Ya
+                                                    <div className="flex items-center gap-2 shrink-0">
+                                                      <span
+                                                        className={cn(
+                                                          "px-2 py-0.5 rounded-full text-xs font-semibold",
+                                                          isYes
+                                                            ? "bg-green-100 text-green-700"
+                                                            : isExplicitlyNo
+                                                              ? "bg-red-100 text-red-700"
+                                                              : "bg-gray-100 text-gray-400 italic",
+                                                        )}>
+                                                        {isYes
+                                                          ? "Ya"
+                                                          : isExplicitlyNo
+                                                            ? "Tidak"
+                                                            : "Belum Diisi"}
+                                                      </span>
+                                                      {isYes &&
+                                                        storedValue !==
+                                                          undefined && (
+                                                          <span className="text-xs font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-lg">
+                                                            Skor: {storedValue}
+                                                          </span>
+                                                        )}
+                                                    </div>
+                                                  )}
+                                                </div>
+                                              );
+                                            },
+                                          )}
+                                        </div>
+
+                                        {/* Dynamic Document Upload Section — only show if any question answered "Ya" */}
+                                        {pi.indicator.questions.some(
+                                          (q) =>
+                                            pendingYes.has(q.id) ||
+                                            (answers[q.id] ?? 0) > 0,
+                                        ) && (
+                                          <div className="border-t border-slate-200/60 pt-4 mt-2">
+                                            <h4 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
+                                              Dokumen Pendukung Indikator
+                                            </h4>
+
+                                            {/* Warning if any question is in pendingYes (score not yet selected) */}
+                                            {ENABLE_SCORE_SELECTION &&
+                                              pi.indicator.questions.some((q) =>
+                                                pendingYes.has(q.id),
+                                              ) && (
+                                                <div className="flex items-center gap-2 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 mb-3">
+                                                  <AlertTriangle
+                                                    size={13}
+                                                    className="text-amber-500 shrink-0"
+                                                  />
+                                                  <p className="text-xs text-amber-700">
+                                                    Pilih skor untuk jawaban
+                                                    &quot;Ya&quot; sebelum
+                                                    mengupload dokumen.
+                                                  </p>
+                                                </div>
+                                              )}
+
+                                            {/* Uploaded Documents List */}
+                                            {(() => {
+                                              const docs =
+                                                uploadedDocsByIndicator.get(
+                                                  pi.indicator_id,
+                                                ) ?? [];
+                                              return (
+                                                <>
+                                                  {docs.length > 0 && (
+                                                    <div className="space-y-1.5 mb-3">
+                                                      {docs.map((doc) => (
+                                                        <div
+                                                          key={doc.id}
+                                                          className="flex items-center justify-between bg-white rounded-xl px-3 py-2 border border-slate-100 shadow-xs">
+                                                          <div className="flex items-center gap-2 min-w-0">
+                                                            <FileText
+                                                              size={14}
+                                                              className="text-blue-500 shrink-0"
+                                                            />
+                                                            <a
+                                                              href={
+                                                                doc.file_url
+                                                              }
+                                                              target="_blank"
+                                                              rel="noopener noreferrer"
+                                                              className="text-xs text-slate-700 hover:text-blue-600 truncate font-medium">
+                                                              {
+                                                                doc.original_name
+                                                              }
+                                                            </a>
+                                                          </div>
+                                                          {canDelete && (
+                                                            <button
+                                                              onClick={() =>
+                                                                deleteMutation.mutate(
+                                                                  doc.id,
+                                                                )
+                                                              }
+                                                              disabled={
+                                                                deleteMutation.isPending
+                                                              }
+                                                              className="text-slate-400 hover:text-red-500 transition-colors p-1 cursor-pointer"
+                                                              title="Hapus dokumen"
+                                                            >
+                                                              <Trash2
+                                                                size={13}
+                                                              />
+                                                            </button>
+                                                          )}
+                                                        </div>
+                                                      ))}
+                                                    </div>
+                                                  )}
+
+                                                  {/* Upload Zone */}
+                                                  {isIndicatorEditable && (
+                                                    <DocumentUploadZone
+                                                      submissionId={
+                                                        submission.id
+                                                      }
+                                                      indicatorId={
+                                                        pi.indicator_id
+                                                      }
+                                                      indicatorName={
+                                                        pi.indicator.name
+                                                      }
+                                                      onSuccess={onUpdate}
+                                                    />
+                                                  )}
+
+                                                  {!isIndicatorEditable &&
+                                                    docs.length === 0 && (
+                                                      <span className="text-[10px] text-slate-400 italic mt-1 truncate max-w-50 block">
+                                                        {t.tab_assessment_no_doc ||
+                                                          "Belum ada dokumen pendukung"}
+                                                      </span>
+                                                    )}
+                                                </>
+                                              );
+                                            })()}
+
+                                            {/* Indicator Chat Component */}
+                                            {(!isIndicatorEditable ||
+                                              pi.status?.id === 4 ||
+                                              pi.status?.id === 3) && (
+                                              <div className="mt-6 border-t border-slate-200/60 dark:border-slate-800 pt-5">
+                                                <h4 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                                                  <MessageSquare
+                                                    size={14}
+                                                    className="text-blue-500"
+                                                  />
+                                                  Diskusi & Catatan Asesor
+                                                </h4>
+                                                <IndicatorChat
+                                                  submissionId={submission.id}
+                                                  indicatorId={pi.indicator_id}
+                                                />
+                                              </div>
                                             )}
                                           </div>
                                         )}
                                       </div>
-                                    );
-                                  })}
-                                </div>
-
-                                {/* Dynamic Document Upload Section — only show if any question answered "Ya" */}
-                                {pi.indicator.questions.some(
-                                  (q) => pendingYes.has(q.id) || (answers[q.id] ?? 0) > 0
-                                ) && (
-                                  <div className="border-t border-slate-200/60 pt-4 mt-2">
-                                    <h4 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
-                                      Dokumen Pendukung Indikator
-                                    </h4>
-
-                                    {/* Warning if any question is in pendingYes (score not yet selected) */}
-                                    {ENABLE_SCORE_SELECTION && pi.indicator.questions.some((q) => pendingYes.has(q.id)) && (
-                                      <div className="flex items-center gap-2 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 mb-3">
-                                        <AlertTriangle size={13} className="text-amber-500 shrink-0" />
-                                        <p className="text-xs text-amber-700">
-                                          Pilih skor untuk jawaban &quot;Ya&quot; sebelum mengupload dokumen.
-                                        </p>
-                                      </div>
-                                    )}
-
-                                    {/* Uploaded Documents List */}
-                                    {(() => {
-                                      const docs = uploadedDocsByIndicator.get(pi.indicator_id) ?? [];
-                                      return (
-                                        <>
-                                          {docs.length > 0 && (
-                                            <div className="space-y-1.5 mb-3">
-                                              {docs.map((doc) => (
-                                                <div
-                                                  key={doc.id}
-                                                  className="flex items-center justify-between bg-white rounded-xl px-3 py-2 border border-slate-100 shadow-xs"
-                                                >
-                                                  <div className="flex items-center gap-2 min-w-0">
-                                                    <FileText size={14} className="text-blue-500 shrink-0" />
-                                                    <a
-                                                      href={doc.file_url}
-                                                      target="_blank"
-                                                      rel="noopener noreferrer"
-                                                      className="text-xs text-slate-700 hover:text-blue-600 truncate font-medium"
-                                                    >
-                                                      {doc.original_name}
-                                                    </a>
-                                                  </div>
-                                                  {isIndicatorEditable && (
-                                                    <button
-                                                      onClick={() => deleteMutation.mutate(doc.id)}
-                                                      disabled={deleteMutation.isPending}
-                                                      className="text-slate-400 hover:text-red-500 transition-colors p-1 cursor-pointer"
-                                                    >
-                                                      <Trash2 size={13} />
-                                                    </button>
-                                                  )}
-                                                </div>
-                                              ))}
-                                            </div>
-                                          )}
-
-                                          {/* Upload Zone */}
-                                          {isIndicatorEditable && (
-                                            <DocumentUploadZone
-                                              submissionId={submission.id}
-                                              indicatorId={pi.indicator_id}
-                                              indicatorName={pi.indicator.name}
-                                              onSuccess={onUpdate}
-                                            />
-                                          )}
-
-                                          {!isIndicatorEditable && docs.length === 0 && (
-                                            <span className="text-[10px] text-slate-400 italic mt-1 truncate max-w-50 block">{t.tab_assessment_no_doc || "Belum ada dokumen pendukung"}</span>
-                                          )}
-                                        </>
-                                      );
-                                    })()}
-
-                                    {/* Indicator Chat Component */}
-                                    {(!isIndicatorEditable || pi.status?.id === 4 || pi.status?.id === 3) && (
-                                      <div className="mt-6 border-t border-slate-200/60 dark:border-slate-800 pt-5">
-                                        <h4 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                                          <MessageSquare size={14} className="text-blue-500" />
-                                          Diskusi & Catatan Asesor
-                                        </h4>
-                                        <IndicatorChat submissionId={submission.id} indicatorId={pi.indicator_id} />
-                                      </div>
                                     )}
                                   </div>
-                                )}
-                              </div>
-                            )}
-                          </div>
-                        );
-                          })}
-                        </div>
-                      ))}
-                    </div>
-                  ))}
+                                );
+                              })}
+                            </div>
+                          ),
+                        )}
+                      </div>
+                    ),
+                  )}
                 </div>
               )}
             </div>
@@ -830,26 +1089,12 @@ export function AssessmentTab({ submission, onUpdate, onGoToScore }: Props) {
 
       {/* Bottom Submit & Pay Action */}
       {onGoToScore && (
-        <div className="mt-10 mb-8 max-w-3xl mx-auto flex flex-col gap-4">
-          <div className="bg-[#f2f8ff] border border-[#d1e6ff] rounded-2xl p-6 flex gap-4">
-            <div className="text-blue-600 shrink-0">
-              <Send size={24} />
-            </div>
-            <div>
-              <h4 className="text-[#012970] font-extrabold text-base mb-2">
-                Kunci & Lanjutkan ke Pembayaran
-              </h4>
-              <p className="text-[#444444] text-sm leading-relaxed">
-                Jika Anda sudah melengkapi kuesioner dan dokumen, klik tombol di bawah untuk mengunci pengajuan. Anda akan diarahkan ke tahap pembayaran biaya sertifikasi. Pengajuan tidak dapat diubah setelah dikunci.
-              </p>
-            </div>
-          </div>
+        <div className="mt-8 mb-4 flex justify-end">
           <button
             onClick={onGoToScore}
-            className="w-full bg-[#8292a2] hover:bg-[#728292] text-white rounded-xl py-4 flex items-center justify-center gap-2 font-bold transition-colors"
-          >
-            <Send size={18} />
-            <span>Kunci & Lanjut ke Pembayaran</span>
+            className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl text-sm font-extrabold bg-blue-600 text-white hover:bg-blue-700 hover:-translate-y-0.5 transition-all shadow-lg shadow-blue-500/30">
+            <span>Submit & Bayar</span>
+            <ChevronRight size={18} strokeWidth={2.5} />
           </button>
         </div>
       )}
@@ -879,8 +1124,7 @@ export function AssessmentTab({ submission, onUpdate, onGoToScore }: Props) {
               </div>
               <button
                 onClick={() => setInfoModalIndicator(null)}
-                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer shrink-0"
-              >
+                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer shrink-0">
                 <X size={20} />
               </button>
             </div>
@@ -891,7 +1135,8 @@ export function AssessmentTab({ submission, onUpdate, onGoToScore }: Props) {
               {infoModalIndicator.description && (
                 <div>
                   <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 flex items-center gap-1.5">
-                    <BookOpen size={11} /> {t.assessment_modal_desc || "Deskripsi Indikator"}
+                    <BookOpen size={11} />{" "}
+                    {t.assessment_modal_desc || "Deskripsi Indikator"}
                   </p>
                   <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
                     {infoModalIndicator.description}
@@ -903,7 +1148,8 @@ export function AssessmentTab({ submission, onUpdate, onGoToScore }: Props) {
               {infoModalIndicator.evidence && (
                 <div className="p-3.5 rounded-xl border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/30">
                   <p className="text-[10px] font-bold text-amber-700 dark:amber-400 uppercase tracking-widest mb-1.5 flex items-center gap-1.5">
-                    <FileText size={11} /> {t.assessment_modal_evidence || "Bukti yang Diperlukan"}
+                    <FileText size={11} />{" "}
+                    {t.assessment_modal_evidence || "Bukti yang Diperlukan"}
                   </p>
                   <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
                     {infoModalIndicator.evidence}
@@ -915,7 +1161,8 @@ export function AssessmentTab({ submission, onUpdate, onGoToScore }: Props) {
               {infoModalIndicator.verification_method && (
                 <div className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800">
                   <p className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1.5 flex items-center gap-1.5">
-                    <CheckCircle2 size={11} /> {t.assessment_modal_verification || "Metode Verifikasi"}
+                    <CheckCircle2 size={11} />{" "}
+                    {t.assessment_modal_verification || "Metode Verifikasi"}
                   </p>
                   <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
                     {infoModalIndicator.verification_method}
@@ -927,7 +1174,8 @@ export function AssessmentTab({ submission, onUpdate, onGoToScore }: Props) {
               {infoModalIndicator.regulation && (
                 <div className="p-3.5 rounded-xl border border-purple-200 dark:border-purple-800 bg-purple-50 dark:bg-purple-950/30">
                   <p className="text-[10px] font-bold text-purple-700 dark:text-purple-400 uppercase tracking-widest mb-1.5 flex items-center gap-1.5">
-                    <Scale size={11} /> {t.assessment_modal_regulation || "Dasar Hukum & Regulasi"}
+                    <Scale size={11} />{" "}
+                    {t.assessment_modal_regulation || "Dasar Hukum & Regulasi"}
                   </p>
                   <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
                     {infoModalIndicator.regulation}
@@ -939,12 +1187,12 @@ export function AssessmentTab({ submission, onUpdate, onGoToScore }: Props) {
             {/* Modal Footer */}
             <div className="p-4 border-t border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/60 flex items-center justify-between">
               <p className="text-xs text-slate-400 dark:text-slate-500">
-                {t.assessment_modal_footer_text || "Siapkan semua dokumen sebelum mengupload"}
+                {t.assessment_modal_footer_text ||
+                  "Siapkan semua dokumen sebelum mengupload"}
               </p>
               <button
                 onClick={() => setInfoModalIndicator(null)}
-                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold transition-all shadow-sm cursor-pointer text-sm"
-              >
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold transition-all shadow-sm cursor-pointer text-sm">
                 {t.assessment_modal_btn_understand || "Mengerti"}
               </button>
             </div>
@@ -969,39 +1217,66 @@ export function AssessmentTab({ submission, onUpdate, onGoToScore }: Props) {
               </div>
               <button
                 onClick={() => setShowScoringGuide(false)}
-                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-              >
+                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
                 <X size={20} />
               </button>
             </div>
             <div className="p-5 md:p-6 space-y-4">
               <div className="bg-slate-50 dark:bg-slate-800/50 rounded-xl p-4 border border-slate-100 dark:border-slate-700/50">
                 <div className="flex gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center font-extrabold text-slate-700 dark:text-slate-300 shrink-0">0</div>
+                  <div className="w-10 h-10 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center font-extrabold text-slate-700 dark:text-slate-300 shrink-0">
+                    0
+                  </div>
                   <div>
-                    <h4 className="font-bold text-slate-700 dark:text-slate-300 mb-1">{t.score_0_title || "Tidak Ada Bukti"}</h4>
-                    <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">{t.score_0_desc || "Tidak ada komitmen tertulis, kebijakan, SOP, maupun bukti implementasi sama sekali."}</p>
+                    <h4 className="font-bold text-slate-700 dark:text-slate-300 mb-1">
+                      {t.score_0_title || "Tidak Ada Bukti"}
+                    </h4>
+                    <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                      {t.score_0_desc ||
+                        "Tidak ada komitmen tertulis, kebijakan, SOP, maupun bukti implementasi sama sekali."}
+                    </p>
                   </div>
                 </div>
                 <div className="flex gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-full bg-amber-100 dark:bg-amber-900/40 flex items-center justify-center font-extrabold text-amber-700 dark:text-amber-400 shrink-0">0.5</div>
+                  <div className="w-10 h-10 rounded-full bg-amber-100 dark:bg-amber-900/40 flex items-center justify-center font-extrabold text-amber-700 dark:text-amber-400 shrink-0">
+                    0.5
+                  </div>
                   <div>
-                    <h4 className="font-bold text-slate-700 dark:text-slate-300 mb-1">{t.score_1_title || "Ada Komitmen"}</h4>
-                    <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">{t.score_1_desc || "Terdapat bukti berupa komitmen, kebijakan, atau SOP tertulis, namun belum terbukti diimplementasikan di lapangan."}</p>
+                    <h4 className="font-bold text-slate-700 dark:text-slate-300 mb-1">
+                      {t.score_1_title || "Ada Komitmen"}
+                    </h4>
+                    <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                      {t.score_1_desc ||
+                        "Terdapat bukti berupa komitmen, kebijakan, atau SOP tertulis, namun belum terbukti diimplementasikan di lapangan."}
+                    </p>
                   </div>
                 </div>
                 <div className="flex gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center font-extrabold text-blue-700 dark:text-blue-400 shrink-0">1</div>
+                  <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center font-extrabold text-blue-700 dark:text-blue-400 shrink-0">
+                    1
+                  </div>
                   <div>
-                    <h4 className="font-bold text-slate-700 dark:text-slate-300 mb-1">{t.score_2_title || "Implementasi Sebagian"}</h4>
-                    <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">{t.score_2_desc || "Kebijakan sudah mulai diimplementasikan sebagian, namun bukti lapangan/rekam jejak belum komprehensif."}</p>
+                    <h4 className="font-bold text-slate-700 dark:text-slate-300 mb-1">
+                      {t.score_2_title || "Implementasi Sebagian"}
+                    </h4>
+                    <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                      {t.score_2_desc ||
+                        "Kebijakan sudah mulai diimplementasikan sebagian, namun bukti lapangan/rekam jejak belum komprehensif."}
+                    </p>
                   </div>
                 </div>
                 <div className="flex gap-3">
-                  <div className="w-10 h-10 rounded-full bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center font-extrabold text-emerald-700 dark:text-emerald-400 shrink-0">2</div>
+                  <div className="w-10 h-10 rounded-full bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center font-extrabold text-emerald-700 dark:text-emerald-400 shrink-0">
+                    2
+                  </div>
                   <div>
-                    <h4 className="font-bold text-slate-700 dark:text-slate-300 mb-1">{t.score_3_title || "Implementasi Penuh"}</h4>
-                    <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">{t.score_3_desc || "Implementasi penuh secara menyeluruh. Dibuktikan dengan data pendukung yang valid, terukur, dapat dilacak, dan konsisten."}</p>
+                    <h4 className="font-bold text-slate-700 dark:text-slate-300 mb-1">
+                      {t.score_3_title || "Implementasi Penuh"}
+                    </h4>
+                    <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                      {t.score_3_desc ||
+                        "Implementasi penuh secara menyeluruh. Dibuktikan dengan data pendukung yang valid, terukur, dapat dilacak, dan konsisten."}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -1009,7 +1284,6 @@ export function AssessmentTab({ submission, onUpdate, onGoToScore }: Props) {
           </div>
         </div>
       )}
-
     </div>
   );
 }

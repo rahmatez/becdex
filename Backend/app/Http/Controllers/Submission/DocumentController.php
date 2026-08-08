@@ -86,7 +86,7 @@ class DocumentController extends Controller
     {
         $submission = $request->user()
             ->submissions()
-            ->whereIn('submission_status_id', [2, 4])
+            ->where('submission_status_id', 2) // Hanya boleh hapus dokumen saat status Draft (2)
             ->findOrFail($id);
 
         $document = $submission->documents()->findOrFail($docId);
