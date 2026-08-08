@@ -314,6 +314,20 @@ export function AssessmentTab({ submission, onUpdate, onGoToScore }: Props) {
     return map;
   }, [submission]);
 
+  // Dokumen fase saat ini saja — untuk cek kuota 10 per fase
+  const currentPhase = submission.current_upload_phase ?? 1;
+  const currentPhaseDocsByIndicator = useMemo(() => {
+    const map = new Map<number, typeof submission.documents>();
+    for (const doc of submission.documents ?? []) {
+      if ((doc.upload_phase ?? 1) !== currentPhase) continue;
+      if (!map.has(doc.indicator_id)) {
+        map.set(doc.indicator_id, []);
+      }
+      map.get(doc.indicator_id)!.push(doc);
+    }
+    return map;
+  }, [submission, currentPhase]);
+
   const toggleAspect = (name: string) => {
     setExpandedAspects((prev) => {
       const next = new Set(prev);
@@ -1023,20 +1037,26 @@ export function AssessmentTab({ submission, onUpdate, onGoToScore }: Props) {
                                                   )}
 
                                                   {/* Upload Zone */}
-                                                  {isIndicatorEditable && (
-                                                    <DocumentUploadZone
-                                                      submissionId={
-                                                        submission.id
-                                                      }
-                                                      indicatorId={
-                                                        pi.indicator_id
-                                                      }
-                                                      indicatorName={
-                                                        pi.indicator.name
-                                                      }
-                                                      onSuccess={onUpdate}
-                                                    />
-                                                  )}
+                                                  {isIndicatorEditable && (() => {
+                                                    const phaseDocs = currentPhaseDocsByIndicator.get(pi.indicator_id) ?? [];
+                                                    const phaseQuotaFull = phaseDocs.length >= 10;
+                                                    if (phaseQuotaFull) {
+                                                      return (
+                                                        <div className="flex items-center gap-2 text-xs text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/60 rounded-xl px-3 py-2.5">
+                                                          <span className="font-bold">Kuota fase ini penuh</span>
+                                                          <span className="text-amber-600 dark:text-amber-400">({phaseDocs.length}/10 dokumen)</span>
+                                                        </div>
+                                                      );
+                                                    }
+                                                    return (
+                                                      <DocumentUploadZone
+                                                        submissionId={submission.id}
+                                                        indicatorId={pi.indicator_id}
+                                                        indicatorName={pi.indicator.name}
+                                                        onSuccess={onUpdate}
+                                                      />
+                                                    );
+                                                  })()}
 
                                                   {!isIndicatorEditable &&
                                                     docs.length === 0 && (

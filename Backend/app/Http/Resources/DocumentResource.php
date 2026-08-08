@@ -15,6 +15,7 @@ class DocumentResource extends JsonResource
             'original_name' => $this->original_name,
             'mime_type'     => $this->mime_type,
             'file_size'     => $this->file_size,
+            'upload_phase'  => $this->upload_phase ?? 1,
             'uploaded_at'   => $this->created_at->toISOString(),
         ];
     }

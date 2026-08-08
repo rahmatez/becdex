@@ -129,6 +129,7 @@ export interface Document {
   original_name: string;
   mime_type: string;
   file_size: number;
+  upload_phase?: number;
   uploaded_at: string;
 }
 
