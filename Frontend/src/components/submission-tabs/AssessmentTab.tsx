@@ -353,7 +353,15 @@ export function AssessmentTab({ submission, onUpdate, onGoToScore }: Props) {
   };
 
   const canEdit   = [2, 4].includes(submission.status.id);
-  const canDelete  = submission.status.id === 2; // Hapus dokumen hanya boleh di status Draft (2)
+  // Status 2 (Draft): bebas hapus semua dokumen
+  // Status 4 (Revisi): hanya boleh hapus dokumen dari fase saat ini
+  const canDeleteDoc = (doc: { upload_phase?: number }) => {
+    if (submission.status.id === 2) return true;
+    if (submission.status.id === 4) {
+      return (doc.upload_phase ?? 1) === currentPhase;
+    }
+    return false;
+  };
 
   let totalQuestions = 0;
   let answeredQuestions = 0;
@@ -1013,7 +1021,7 @@ export function AssessmentTab({ submission, onUpdate, onGoToScore }: Props) {
                                                               }
                                                             </a>
                                                           </div>
-                                                          {canDelete && (
+                                                          {canDeleteDoc(doc) && (
                                                             <button
                                                               onClick={() =>
                                                                 deleteMutation.mutate(

@@ -86,20 +86,33 @@ class DocumentController extends Controller
 
     /**
      * DELETE /api/submissions/{id}/documents/{docId}
-     * Hapus dokumen
+     * Hapus dokumen:
+     * - Status 2 (Draft)   → bebas hapus semua dokumen
+     * - Status 4 (Revisi)  → hanya boleh hapus dokumen yang upload_phase-nya sama dengan fase saat ini
      */
     public function destroy(Request $request, string $id, int $docId): JsonResponse
     {
         $submission = $request->user()
             ->submissions()
-            ->where('submission_status_id', 2) // Hanya boleh hapus dokumen saat status Draft (2)
+            ->whereIn('submission_status_id', [2, 4]) // Izinkan draft DAN revisi
             ->findOrFail($id);
 
         $document = $submission->documents()->findOrFail($docId);
+
+        // Saat revisi (Status 4), hanya boleh hapus dokumen dari fase saat ini
+        if ($submission->submission_status_id === 4) {
+            $currentPhase = $submission->current_upload_phase ?? 1;
+            if (($document->upload_phase ?? 1) !== $currentPhase) {
+                return response()->json([
+                    'message' => 'Dokumen dari fase sebelumnya tidak dapat dihapus.',
+                ], 403);
+            }
+        }
+
         Storage::disk('public')->delete($document->file_path);
         $document->delete();
 
-        // Jika tidak ada dokumen lain untuk indikator ini, reset status
+        // Jika tidak ada dokumen lain untuk indikator ini, reset status ke Not Uploaded
         $remaining = $submission->documents()
             ->where('indicator_id', $document->indicator_id)
             ->count();

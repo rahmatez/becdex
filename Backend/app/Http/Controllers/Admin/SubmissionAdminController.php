@@ -471,6 +471,17 @@ class SubmissionAdminController extends Controller
             return response()->json(['message' => 'Skor atau kelengkapan dokumen belum memenuhi syarat lolos (Minimal skor 70 dan 35 indikator memiliki bukti).'], 400);
         }
 
+        // Pastikan tidak ada indikator yang masih berstatus "Uploaded" (belum diperiksa admin)
+        $uncheckedCount = \App\Models\SubmissionPerIndicator::where('submission_id', $id)
+            ->where('per_indicator_status_id', 2) // 2 = Uploaded (menunggu review admin)
+            ->count();
+
+        if ($uncheckedCount > 0) {
+            return response()->json([
+                'message' => "Tidak dapat meluluskan pengajuan. Masih ada {$uncheckedCount} indikator yang belum Anda periksa (masih berstatus Uploaded). Selesaikan pemeriksaan semua indikator terlebih dahulu."
+            ], 422);
+        }
+
         $submission->update([
             'submission_status_id' => 8,   // Approved — Ready for Survey
             'revision_count'       => 0,   // Reset revision quota untuk tahap survei
