@@ -56,6 +56,7 @@ interface SubmissionData {
   per_indicators?: PerIndicatorItem[];
   documents?: (IndicatorDoc & { indicator_id: number })[];
   answers?: AnswerItem[];
+  revision_count?: number;
   survey?: { scheduled_at: string; location_link?: string; notes?: string };
 }
 
@@ -267,6 +268,21 @@ export default function AdminSubmissionDetailPage() {
         <span>{t.dash_admin_sub_id_back || "Kembali ke Daftar Submission"}</span>
       </Link>
 
+      {/* Warning Revision Limit */}
+      {submission.revision_count && submission.revision_count >= 1 ? (
+        <div className="mb-6 flex items-start gap-3.5 bg-rose-50/80 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-800/80 rounded-2xl p-5 shadow-2xs">
+          <XCircle size={22} className="text-rose-600 dark:text-rose-400 shrink-0 mt-0.5" />
+          <div>
+            <p className="text-sm font-extrabold text-rose-900 dark:text-rose-200">
+              Batas Revisi Habis (Maksimal 1x)
+            </p>
+            <p className="text-xs text-rose-700 dark:text-rose-300 mt-1 leading-relaxed font-medium">
+              Pengajuan ini telah mencapai batas maksimal revisi. Jika masih terdapat dokumen yang tidak sesuai, Anda harus menolak pengajuan ini secara permanen.
+            </p>
+          </div>
+        </div>
+      ) : null}
+
       {/* Top Header Card */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
         {/* Company Profile Box */}
@@ -363,15 +379,26 @@ export default function AdminSubmissionDetailPage() {
                         <span className="hidden sm:inline">Luluskan</span>
                       </button>
                     )}
-                    <button
-                      onClick={() => setShowReturnModal(true)}
-                      disabled={returnMutation.isPending}
-                      className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl border border-amber-500/80 bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-400 hover:bg-amber-500 hover:text-white font-bold text-[10px] sm:text-xs transition-all cursor-pointer disabled:opacity-50"
-                      title="Kembalikan untuk Revisi"
-                    >
-                      <AlertTriangle size={14} />
-                      <span className="hidden sm:inline">{t.admin_sub_badge_revision || "Revisi"}</span>
-                    </button>
+                    {submission.revision_count && submission.revision_count >= 1 ? (
+                      <button
+                        onClick={() => setShowRejectModal(true)}
+                        className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl border border-rose-600/80 bg-rose-50 text-rose-700 dark:bg-rose-950/40 dark:text-rose-400 hover:bg-rose-600 hover:text-white font-bold text-[10px] sm:text-xs transition-all cursor-pointer"
+                        title="Tolak Permanen (Batas Revisi Habis)"
+                      >
+                        <XCircle size={14} />
+                        <span className="hidden sm:inline">Tolak Permanen</span>
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => setShowReturnModal(true)}
+                        disabled={returnMutation.isPending}
+                        className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl border border-amber-500/80 bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-400 hover:bg-amber-500 hover:text-white font-bold text-[10px] sm:text-xs transition-all cursor-pointer disabled:opacity-50"
+                        title="Kembalikan untuk Revisi"
+                      >
+                        <AlertTriangle size={14} />
+                        <span className="hidden sm:inline">{t.admin_sub_badge_revision || "Revisi"}</span>
+                      </button>
+                    )}
                   </div>
                 )}
                 {submission.status.id === 8 && (
@@ -392,15 +419,26 @@ export default function AdminSubmissionDetailPage() {
                       <Award size={14} />
                       <span>{t.dash_admin_sub_id_btn_cert || "Terbitkan Sertifikat"}</span>
                     </button>
-                    <button
-                      onClick={() => setShowReturnModal(true)}
-                      disabled={returnMutation.isPending}
-                      className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl border border-amber-500/80 bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-400 hover:bg-amber-500 hover:text-white font-bold text-[10px] sm:text-xs transition-all cursor-pointer disabled:opacity-50"
-                      title="Kembalikan untuk Revisi Pasca Survei"
-                    >
-                      <AlertTriangle size={14} />
-                      <span className="hidden sm:inline">{t.admin_sub_badge_revision || "Revisi"}</span>
-                    </button>
+                    {submission.revision_count && submission.revision_count >= 1 ? (
+                      <button
+                        onClick={() => setShowRejectModal(true)}
+                        className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl border border-rose-600/80 bg-rose-50 text-rose-700 dark:bg-rose-950/40 dark:text-rose-400 hover:bg-rose-600 hover:text-white font-bold text-[10px] sm:text-xs transition-all cursor-pointer"
+                        title="Tolak Permanen (Batas Revisi Habis)"
+                      >
+                        <XCircle size={14} />
+                        <span className="hidden sm:inline">Tolak Permanen</span>
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => setShowReturnModal(true)}
+                        disabled={returnMutation.isPending}
+                        className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl border border-amber-500/80 bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-400 hover:bg-amber-500 hover:text-white font-bold text-[10px] sm:text-xs transition-all cursor-pointer disabled:opacity-50"
+                        title="Kembalikan untuk Revisi Pasca Survei"
+                      >
+                        <AlertTriangle size={14} />
+                        <span className="hidden sm:inline">{t.admin_sub_badge_revision || "Revisi"}</span>
+                      </button>
+                    )}
                   </div>
                 )}
               </>

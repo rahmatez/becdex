@@ -141,9 +141,24 @@ export function ScorePaymentTab({ submission, onUpdate }: Props) {
   const isOnVerification   = submission.status.id === 3;             // Paid, admin verifying
   const isSurvey           = submission.status.id === 7;             // Survey stage
   const isCertified        = submission.status.id === 5;             // Certified
+  const isRejectedPermanently = submission.status.id === 9;          // Rejected Permanently
 
   return (
     <div className="max-w-xl mx-auto space-y-6">
+      {/* === STATUS 9: Rejected Permanently === */}
+      {isRejectedPermanently && (
+        <div className="flex items-start gap-3.5 bg-rose-50/80 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-800/80 rounded-2xl p-5 shadow-2xs">
+          <AlertCircle size={22} className="text-rose-600 dark:text-rose-400 shrink-0 mt-0.5" />
+          <div>
+            <p className="text-sm font-extrabold text-rose-900 dark:text-rose-200">
+              Sertifikasi Ditolak Permanen
+            </p>
+            <p className="text-xs text-rose-700 dark:text-rose-300 mt-1 leading-relaxed font-medium">
+              Mohon maaf, pengajuan Anda telah ditolak secara permanen setelah mencapai batas maksimal revisi. Tidak ada pengembalian dana (*refund*). Anda harus membuat pengajuan sertifikasi baru melalui Dashboard.
+            </p>
+          </div>
+        </div>
+      )}
       {/* === STATUS 2/4: Draft — User masih mengisi, belum submit === */}
       {isDraftOrRevision && (
         <div className="space-y-4">

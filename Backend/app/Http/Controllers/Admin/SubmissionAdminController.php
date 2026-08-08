@@ -373,7 +373,16 @@ class SubmissionAdminController extends Controller
             ], 422);
         }
 
-        $submission->update(['submission_status_id' => 4]); // Document Submission (2nd Attempt)
+        if ($submission->revision_count >= 1) {
+            return response()->json([
+                'message' => 'Batas revisi maksimal 1 kali telah habis. Silakan Tolak Permanen pengajuan ini.'
+            ], 422);
+        }
+
+        $submission->update([
+            'submission_status_id' => 4, // Document Submission (2nd Attempt)
+            'revision_count'       => $submission->revision_count + 1
+        ]);
 
         $actionLabel = $fromSurvey ? 'admin_return_from_survey' : 'admin_return_submission';
         $actionDesc  = $fromSurvey

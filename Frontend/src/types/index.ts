@@ -49,6 +49,7 @@ export interface Submission {
   reason: string | null;
   created_at: string;
   updated_at: string;
+  revision_count?: number;
   radar_data?: { subject: string; A: number; B: number; fullMark: number }[];
   user?: User;
   payment?: PaymentTransaction | null;

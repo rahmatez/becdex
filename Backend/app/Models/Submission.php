@@ -22,6 +22,7 @@ class Submission extends Model
         'survey_score',
         'reason',
         'qr_code_path',
+        'revision_count',
     ];
 
     protected function casts(): array
