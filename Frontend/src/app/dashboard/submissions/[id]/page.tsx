@@ -340,7 +340,7 @@ export default function SubmissionDetailPage() {
         {/* Tab Content Section */}
         <div className="p-5 md:p-8">
           {activeTab === "assessment" && (
-            <AssessmentTab submission={submission} onUpdate={refetch} />
+            <AssessmentTab submission={submission} onUpdate={refetch} onGoToScore={() => setActiveTab("score")} />
           )}
           {activeTab === "documents" && (
             <DocumentsTab submission={submission} onUpdate={refetch} />

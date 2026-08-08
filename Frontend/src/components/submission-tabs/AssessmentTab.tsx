@@ -17,6 +17,7 @@ const ENABLE_SCORE_SELECTION = false;
 interface Props {
   submission: SubmissionDetail;
   onUpdate: () => void;
+  onGoToScore?: () => void;
 }
 
 // Group per_indicators by aspect → outcome → principle
@@ -118,7 +119,7 @@ function DocumentUploadZone({
   );
 }
 
-export function AssessmentTab({ submission, onUpdate }: Props) {
+export function AssessmentTab({ submission, onUpdate, onGoToScore }: Props) {
   const { t, locale } = useTranslation();
   // Jawaban yang sudah tersimpan di server (nilai numerik: 0, 0.5, 1, 2)
   const [answers, setAnswers] = useState<Record<number, number>>(() => {
@@ -427,6 +428,16 @@ export function AssessmentTab({ submission, onUpdate }: Props) {
             <Info size={14} />
             <span>Panduan Skoring</span>
           </button>
+          
+          {/* Go to Score & Payment Button */}
+          {onGoToScore && (
+            <button
+              onClick={onGoToScore}
+              className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-bold bg-blue-600 text-white hover:bg-blue-700 transition-all shadow-md shadow-blue-500/20"
+            >
+              <span>Submit & Bayar</span>
+            </button>
+          )}
 
           {/* Unanswered Filter Toggle Button */}
           <button
