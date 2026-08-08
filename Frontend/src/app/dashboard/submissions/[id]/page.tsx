@@ -343,7 +343,7 @@ export default function SubmissionDetailPage() {
             <AssessmentTab submission={submission} onUpdate={refetch} onGoToScore={() => setActiveTab("score")} />
           )}
           {activeTab === "documents" && (
-            <DocumentsTab submission={submission} onUpdate={refetch} />
+            <DocumentsTab submission={submission} />
           )}
           {activeTab === "score" && (
             <ScorePaymentTab submission={submission} onUpdate={refetch} />

@@ -9,7 +9,6 @@ import { useTranslation } from "@/store/lang";
 
 interface Props {
   submission: SubmissionDetail;
-  onUpdate: () => void;
 }
 
 export function DocumentsTab({ submission }: Props) {
