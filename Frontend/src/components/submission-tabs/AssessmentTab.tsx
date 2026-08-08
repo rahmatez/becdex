@@ -4,7 +4,7 @@ import { useState, useMemo, useCallback } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useDropzone } from "react-dropzone";
 import { toast } from "sonner";
-import { ChevronDown, ChevronRight, Loader2, Upload, Trash2, FileText, AlertTriangle, MessageSquare, Info, X, BookOpen, Scale, CheckCircle2 } from "lucide-react";
+import { ChevronDown, ChevronRight, Loader2, Upload, Trash2, FileText, AlertTriangle, MessageSquare, Info, X, BookOpen, Scale, CheckCircle2, Send } from "lucide-react";
 import { MdCheckCircle, MdSearch, MdWarning } from "react-icons/md";
 import { SubmissionDetail, PerIndicator } from "@/types";
 import api from "@/lib/api";
@@ -830,13 +830,26 @@ export function AssessmentTab({ submission, onUpdate, onGoToScore }: Props) {
 
       {/* Bottom Submit & Pay Action */}
       {onGoToScore && (
-        <div className="mt-8 mb-4 flex justify-end">
+        <div className="mt-10 mb-8 max-w-3xl mx-auto flex flex-col gap-4">
+          <div className="bg-[#f2f8ff] border border-[#d1e6ff] rounded-2xl p-6 flex gap-4">
+            <div className="text-blue-600 shrink-0">
+              <Send size={24} />
+            </div>
+            <div>
+              <h4 className="text-[#012970] font-extrabold text-base mb-2">
+                Kunci & Lanjutkan ke Pembayaran
+              </h4>
+              <p className="text-[#444444] text-sm leading-relaxed">
+                Jika Anda sudah melengkapi kuesioner dan dokumen, klik tombol di bawah untuk mengunci pengajuan. Anda akan diarahkan ke tahap pembayaran biaya sertifikasi. Pengajuan tidak dapat diubah setelah dikunci.
+              </p>
+            </div>
+          </div>
           <button
             onClick={onGoToScore}
-            className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl text-sm font-extrabold bg-blue-600 text-white hover:bg-blue-700 hover:-translate-y-0.5 transition-all shadow-lg shadow-blue-500/30"
+            className="w-full bg-[#8292a2] hover:bg-[#728292] text-white rounded-xl py-4 flex items-center justify-center gap-2 font-bold transition-colors"
           >
-            <span>Submit & Bayar</span>
-            <ChevronRight size={18} strokeWidth={2.5} />
+            <Send size={18} />
+            <span>Kunci & Lanjut ke Pembayaran</span>
           </button>
         </div>
       )}
