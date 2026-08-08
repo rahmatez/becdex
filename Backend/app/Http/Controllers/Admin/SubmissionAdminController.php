@@ -351,6 +351,10 @@ class SubmissionAdminController extends Controller
      */
     public function returnToUser(Request $request, string $id): JsonResponse
     {
+        $request->validate([
+            'reason' => 'required|string|max:1000',
+        ]);
+
         $submission = Submission::with('user')->findOrFail($id);
 
         // Bisa dikembalikan dari Status 3 (verifikasi) ATAU Status 7 (survei lapangan)

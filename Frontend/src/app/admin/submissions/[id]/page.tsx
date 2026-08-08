@@ -68,6 +68,7 @@ export default function AdminSubmissionDetailPage() {
   const [showSurveyModal, setShowSurveyModal] = useState(false);
   const [showCertModal, setShowCertModal] = useState(false);
   const [showReturnModal, setShowReturnModal] = useState(false);
+  const [returnReason, setReturnReason] = useState("");
   const [showScoringGuide, setShowScoringGuide] = useState(false);
   const [surveyForm, setSurveyForm] = useState({ scheduled_at: "", location_link: "", notes: "" });
   const [certForm, setCertForm] = useState({ certificate_id: "10", becdex_category_id: "3", published_at: "", mmic: "", direktur: "" });
@@ -139,11 +140,12 @@ export default function AdminSubmissionDetailPage() {
 
   const returnMutation = useMutation({
     mutationFn: async () => {
-      await api.post(`/admin/submissions/${id}/return`);
+      await api.post(`/admin/submissions/${id}/return`, { reason: returnReason });
     },
     onSuccess: () => {
       toast.success(t.dash_admin_sub_id_msg_return_success || "Pengajuan berhasil dikembalikan ke perusahaan untuk direvisi.");
       setShowReturnModal(false);
+      setReturnReason("");
       refetch();
     },
     onError: (error: unknown) => {
@@ -782,10 +784,23 @@ export default function AdminSubmissionDetailPage() {
                 <AlertTriangle className="text-rose-600 dark:text-rose-400" size={32} />
               </div>
               <h3 className="text-xl font-extrabold text-slate-800 dark:text-white mb-2">{t.admin_sub_modal_confirm_return || "Konfirmasi Pengembalian"}</h3>
-              <p className="text-sm text-slate-500 dark:text-slate-400 mb-6 leading-relaxed">
+              <p className="text-sm text-slate-500 dark:text-slate-400 mb-4 leading-relaxed">
                 {t.dash_admin_sub_id_return_confirm || "Kembalikan dokumen ini ke perusahaan untuk direvisi? Pastikan Anda telah menandai indikator yang bermasalah dengan status 'Revisi'."}
               </p>
-              
+
+              <div className="mb-6 text-left">
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+                  Alasan Pengembalian <span className="text-rose-500">*</span>
+                </label>
+                <textarea
+                  value={returnReason}
+                  onChange={(e) => setReturnReason(e.target.value)}
+                  className="w-full p-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:ring-2 focus:ring-amber-500 outline-hidden transition-all resize-none"
+                  rows={3}
+                  placeholder="Jelaskan dokumen mana yang perlu diperbaiki dan alasannya..."
+                />
+              </div>
+
               <div className="flex gap-3">
                 <button
                   onClick={() => setShowReturnModal(false)}
@@ -796,7 +811,7 @@ export default function AdminSubmissionDetailPage() {
                 </button>
                 <button
                   onClick={() => returnMutation.mutate()}
-                  disabled={returnMutation.isPending}
+                  disabled={returnMutation.isPending || !returnReason.trim()}
                   className="flex-1 px-4 py-3 rounded-xl font-bold text-sm text-white bg-rose-600 hover:bg-rose-700 shadow-md shadow-rose-600/20 transition-colors flex justify-center items-center gap-2 disabled:opacity-50 cursor-pointer"
                 >
                   {returnMutation.isPending ? <Loader2 size={16} className="animate-spin" /> : "Ya, Kembalikan"}
