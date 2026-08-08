@@ -144,14 +144,23 @@ export function DocumentsTab({ submission }: Props) {
                         className="flex items-center gap-3 bg-slate-50/80 dark:bg-slate-800/80 rounded-xl px-3.5 py-2.5 border border-slate-200/60 dark:border-slate-700/80 shadow-xs"
                       >
                         <FileText size={15} className="text-blue-600 dark:text-blue-400 shrink-0" />
-                        <a
-                          href={doc.file_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-xs md:text-sm text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-blue-300 truncate font-semibold transition-colors"
-                        >
-                          {doc.original_name}
-                        </a>
+                        <div className="min-w-0 flex-1">
+                          <a
+                            href={doc.file_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-xs md:text-sm text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-blue-300 truncate font-semibold transition-colors block"
+                          >
+                            {doc.original_name}
+                          </a>
+                          <span className="text-[10px] text-slate-400 dark:text-slate-500 font-medium">
+                            {doc.upload_phase === 3
+                              ? "Diunggah saat revisi survei"
+                              : doc.upload_phase === 2
+                              ? "Diunggah saat revisi"
+                              : "Diunggah saat pengajuan awal"}
+                          </span>
+                        </div>
                       </div>
                     ))}
                   </div>

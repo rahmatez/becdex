@@ -22,7 +22,7 @@ import FieldSurveyTab from "@/components/admin-tabs/FieldSurveyTab";
 import { IndicatorChat } from "@/components/submission-tabs/IndicatorChat";
 import { useTranslation } from "@/store/lang";
 
-interface IndicatorDoc { id: number; file_url: string; original_name: string; }
+interface IndicatorDoc { id: number; file_url: string; original_name: string; upload_phase?: number; }
 interface IndicatorQuestion { id: number; text: string; text_en?: string | null; }
 
 interface PerIndicatorItem {
@@ -658,9 +658,25 @@ export default function AdminSubmissionDetailPage() {
                                       <div className="w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0 font-bold">
                                         <FileText size={15} />
                                       </div>
-                                      <span className="text-xs font-bold text-slate-700 dark:text-slate-200 truncate group-hover:text-blue-600">
-                                        {doc.original_name}
-                                      </span>
+                                      <div className="min-w-0">
+                                        <span className="text-xs font-bold text-slate-700 dark:text-slate-200 truncate group-hover:text-blue-600 block">
+                                          {doc.original_name}
+                                        </span>
+                                        <span className={[
+                                          "inline-block text-[10px] font-bold px-1.5 py-0.5 rounded-md mt-0.5",
+                                          doc.upload_phase === 3
+                                            ? "bg-orange-100 text-orange-700 dark:bg-orange-950/60 dark:text-orange-400"
+                                            : doc.upload_phase === 2
+                                            ? "bg-amber-100 text-amber-700 dark:bg-amber-950/60 dark:text-amber-400"
+                                            : "bg-blue-100 text-blue-700 dark:bg-blue-950/60 dark:text-blue-400"
+                                        ].join(" ")}>
+                                          {doc.upload_phase === 3
+                                            ? "Fase 3 · Revisi Survei"
+                                            : doc.upload_phase === 2
+                                            ? "Fase 2 · Revisi Verifikasi"
+                                            : "Fase 1 · Pengajuan Awal"}
+                                        </span>
+                                      </div>
                                     </div>
                                     <ExternalLink size={14} className="text-slate-400 group-hover:text-blue-600 shrink-0" />
                                   </a>
