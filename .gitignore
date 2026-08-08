@@ -11,6 +11,8 @@ TODO_FEATURES.md
 PROJECT_ONBOARDING.md
 TESTING_MIGRATION_GUIDE.md
 deployment.md
+becdex_local_export.sql
+becdexco_db_becdexlaravel.sql
 
 # ─── OS & Editor ──────────────────────────────────────────────────────────────
 
@@ -45,6 +47,7 @@ Backend/bootstrap/cache/*.php
 Backend/public/storage
 Backend/public/hot
 Backend/cookies.txt
+Backend/test_xendit.php
 
 # ─── Frontend (Next.js) ───────────────────────────────────────────────────────
 
