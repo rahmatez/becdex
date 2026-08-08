@@ -144,6 +144,41 @@ export function ScorePaymentTab({ submission, onUpdate }: Props) {
 
   return (
     <div className="max-w-xl mx-auto space-y-6">
+      {/* === STATUS 2/4: Draft — User masih mengisi, belum submit === */}
+      {isDraftOrRevision && (
+        <div className="space-y-4">
+          <div className="flex items-start gap-3.5 bg-blue-50/80 dark:bg-blue-950/50 border border-blue-200 dark:border-blue-800/80 rounded-2xl p-5 shadow-2xs">
+            <SendHorizonal size={22} className="text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
+            <div>
+              <p className="text-sm font-extrabold text-[#0c2340] dark:text-white">
+                Kunci & Lanjutkan ke Pembayaran
+              </p>
+              <p className="text-xs text-slate-600 dark:text-slate-300 mt-1 leading-relaxed font-medium">
+                Jika Anda sudah melengkapi kuesioner dan dokumen, klik tombol di bawah untuk mengunci pengajuan. Anda akan diarahkan ke tahap pembayaran biaya sertifikasi. Pengajuan tidak dapat diubah setelah dikunci.
+              </p>
+            </div>
+          </div>
+
+          <button
+            id="btn-submit-verification"
+            onClick={() => submitVerificationMutation.mutate()}
+            disabled={submitVerificationMutation.isPending || !score.requirements.score_met || !score.requirements.documents_met}
+            className="w-full flex items-center justify-center gap-2.5 bg-[#0c2340] hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-500 text-white py-4 rounded-xl font-extrabold text-sm transition-all shadow-md shadow-[#0c2340]/20 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+          >
+            {submitVerificationMutation.isPending ? (
+              <Loader2 size={18} className="animate-spin" />
+            ) : (
+              <SendHorizonal size={18} />
+            )}
+            <span>
+              {submitVerificationMutation.isPending
+                ? "Mengunci pengajuan..."
+                : "Kunci & Lanjut ke Pembayaran"}
+            </span>
+          </button>
+        </div>
+      )}
+
       {/* TailAdmin Score Cards Wrapper */}
       <div className="rounded-2xl border border-slate-200/80 bg-white dark:border-slate-800 dark:bg-slate-900 p-6 shadow-2xs space-y-5">
         <div className="flex items-center gap-2 pb-3 border-b border-slate-100 dark:border-slate-800">
@@ -252,40 +287,6 @@ export function ScorePaymentTab({ submission, onUpdate }: Props) {
         </div>
       </div>
 
-      {/* === STATUS 2/4: Draft — User masih mengisi, belum submit === */}
-      {isDraftOrRevision && (
-        <div className="space-y-4">
-          <div className="flex items-start gap-3.5 bg-blue-50/80 dark:bg-blue-950/50 border border-blue-200 dark:border-blue-800/80 rounded-2xl p-5 shadow-2xs">
-            <SendHorizonal size={22} className="text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
-            <div>
-              <p className="text-sm font-extrabold text-[#0c2340] dark:text-white">
-                Kunci & Lanjutkan ke Pembayaran
-              </p>
-              <p className="text-xs text-slate-600 dark:text-slate-300 mt-1 leading-relaxed font-medium">
-                Jika Anda sudah melengkapi kuesioner dan dokumen, klik tombol di bawah untuk mengunci pengajuan. Anda akan diarahkan ke tahap pembayaran biaya sertifikasi. Pengajuan tidak dapat diubah setelah dikunci.
-              </p>
-            </div>
-          </div>
-
-          <button
-            id="btn-submit-verification"
-            onClick={() => submitVerificationMutation.mutate()}
-            disabled={submitVerificationMutation.isPending || !score.requirements.score_met || !score.requirements.documents_met}
-            className="w-full flex items-center justify-center gap-2.5 bg-[#0c2340] hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-500 text-white py-4 rounded-xl font-extrabold text-sm transition-all shadow-md shadow-[#0c2340]/20 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
-          >
-            {submitVerificationMutation.isPending ? (
-              <Loader2 size={18} className="animate-spin" />
-            ) : (
-              <SendHorizonal size={18} />
-            )}
-            <span>
-              {submitVerificationMutation.isPending
-                ? "Mengunci pengajuan..."
-                : "Kunci & Lanjut ke Pembayaran"}
-            </span>
-          </button>
-        </div>
-      )}
 
       {/* === STATUS 1: Pending Payment — Menunggu pembayaran user === */}
       {isPendingPayment && !canPay && (
