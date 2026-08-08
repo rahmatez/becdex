@@ -384,8 +384,9 @@ class SubmissionAdminController extends Controller
         }
 
         $submission->update([
-            'submission_status_id' => 4, // Document Submission (2nd Attempt)
-            'revision_count'       => $submission->revision_count + 1
+            'submission_status_id'  => 4, // Document Submission (2nd/3rd Attempt)
+            'revision_count'        => $submission->revision_count + 1,
+            'current_upload_phase'  => ($submission->current_upload_phase ?? 1) + 1, // Buka kuota fase baru (max 10 per fase)
         ]);
 
         $actionLabel = $fromSurvey ? 'admin_return_from_survey' : 'admin_return_submission';

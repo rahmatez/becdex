@@ -25,13 +25,16 @@ class DocumentController extends Controller
             ->whereIn('submission_status_id', [2, 4])
             ->findOrFail($id);
 
+        // Hitung dokumen hanya untuk fase upload yang sedang berjalan (max 10 per fase)
+        $currentPhase = $submission->current_upload_phase ?? 1;
         $existingDocsCount = Document::where('submission_id', $submission->id)
             ->where('indicator_id', $request->indicator_id)
+            ->where('upload_phase', $currentPhase)
             ->count();
 
         if ($existingDocsCount >= 10) {
             return response()->json([
-                'message' => 'Anda telah mencapai batas maksimal 10 dokumen untuk indikator ini.'
+                'message' => 'Anda telah mencapai batas maksimal 10 dokumen untuk indikator ini pada tahap ini.'
             ], 422);
         }
 
@@ -45,6 +48,7 @@ class DocumentController extends Controller
             'original_name' => $file->getClientOriginalName(),
             'mime_type'     => $file->getMimeType(),
             'file_size'     => $file->getSize(),
+            'upload_phase'  => $currentPhase,
         ]);
 
         // Update per-indicator status ke Uploaded (2), KECUALI yang sudah Verified (4)

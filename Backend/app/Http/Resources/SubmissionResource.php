@@ -24,6 +24,7 @@ class SubmissionResource extends JsonResource
             'documents_uploaded'     => $this->documents_count ?? ($this->relationLoaded('documents') ? $this->documents->count() : 0),
             'reason'                 => $this->reason,
             'revision_count'         => (int) $this->revision_count,
+            'current_upload_phase'   => (int) ($this->current_upload_phase ?? 1),
             'created_at'             => $this->created_at->toISOString(),
             'updated_at'             => $this->updated_at->toISOString(),
             'radar_data'             => $this->getRadarChartData(),

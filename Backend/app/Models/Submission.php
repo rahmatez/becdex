@@ -23,6 +23,7 @@ class Submission extends Model
         'reason',
         'qr_code_path',
         'revision_count',
+        'current_upload_phase',
     ];
 
     protected function casts(): array

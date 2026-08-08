@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Storage;
 class Document extends Model
 {
     use HasFactory;
-    protected $fillable = ['submission_id', 'indicator_id', 'file_path', 'original_name', 'mime_type', 'file_size'];
+    protected $fillable = ['submission_id', 'indicator_id', 'file_path', 'original_name', 'mime_type', 'file_size', 'upload_phase'];
     protected $appends = ['file_url'];
 
     public function submission(): BelongsTo { return $this->belongsTo(Submission::class); }
