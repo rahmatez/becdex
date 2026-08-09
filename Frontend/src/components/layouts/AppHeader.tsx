@@ -37,7 +37,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ title }) => {
   const [showNotifications, setShowNotifications] = React.useState(false);
   const queryClient = useQueryClient();
 
-  const isAdmin = user?.role?.id && [1, 6, 7, 10].includes(user.role.id);
+  const isAdmin = user?.role?.id && [1, 6, 7, 10, 11].includes(user.role.id);
 
   // Fetch Notifications
   const { data: notificationsData } = useQuery({

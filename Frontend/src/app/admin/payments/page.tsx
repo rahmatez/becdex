@@ -13,6 +13,7 @@ import {
   ShieldCheck, Building2,
 } from "lucide-react";
 import { useTranslation } from "@/store/lang";
+import { useAdminRouteGuard } from "@/hooks/useAdminRouteGuard";
 
 interface PaymentRow {
   id: number;
@@ -52,6 +53,8 @@ export default function AdminPaymentsPage() {
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
   const { t } = useTranslation();
+  const { authorized } = useAdminRouteGuard({ guard: "finance_admin" });
+  if (!authorized) return null;
 
   const { data, isLoading, refetch, isFetching } = useQuery({
     queryKey: ["admin-payments", page, search, status, dateFrom, dateTo],

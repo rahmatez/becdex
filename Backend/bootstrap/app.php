@@ -5,6 +5,7 @@ use App\Http\Middleware\EnsureSuperAdmin;
 use App\Http\Middleware\EnsureFinanceAdmin;
 use App\Http\Middleware\EnsureAssessmentAdmin;
 use App\Http\Middleware\EnsureCertificateAdmin;
+use App\Http\Middleware\EnsureSubmissionReader;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -20,11 +21,12 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         // Register custom middleware aliases
         $middleware->alias([
-            'admin'           => EnsureAdmin::class,
-            'super_admin'     => EnsureSuperAdmin::class,
-            'finance_admin'   => EnsureFinanceAdmin::class,
-            'assessment_admin'=> EnsureAssessmentAdmin::class,
-            'cert_admin'      => EnsureCertificateAdmin::class,
+            'admin'              => EnsureAdmin::class,
+            'super_admin'        => EnsureSuperAdmin::class,
+            'finance_admin'      => EnsureFinanceAdmin::class,
+            'assessment_admin'   => EnsureAssessmentAdmin::class,
+            'cert_admin'         => EnsureCertificateAdmin::class,
+            'submission_reader'  => EnsureSubmissionReader::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

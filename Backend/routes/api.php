@@ -129,9 +129,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
         // ── ASSESSMENT: Super Admin + QC Admin + Assessment Admin ─────────
         Route::middleware('assessment_admin')->group(function () {
+
+            // ── READ SUBMISSIONS: juga diakses Certificate Admin (submission_reader handled separately below)
+            // Aksi verifikasi — hanya assessment role
             Route::get('submissions/export/csv',            [SubmissionController::class, 'exportCsv']);
-            Route::get('submissions',                       [SubmissionAdminController::class, 'index']);
-            Route::get('submissions/{id}',                  [SubmissionAdminController::class, 'show']);
             Route::put('submissions/{id}/indicators/{ind}', [SubmissionAdminController::class, 'updateIndicator']);
             Route::post('submissions/{id}/survey',          [SubmissionAdminController::class, 'addSurvey']);
             Route::post('submissions/{id}/start',           [SubmissionAdminController::class, 'startVerification']);
@@ -208,6 +209,13 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::get('cms',              [App\Http\Controllers\Admin\CmsController::class, 'index']);
             Route::put('cms',              [App\Http\Controllers\Admin\CmsController::class, 'update']);
             Route::post('cms/{id}/image',  [App\Http\Controllers\Admin\CmsController::class, 'uploadImage']);
+        });
+
+        // ── SUBMISSION READ: Super Admin + QC Admin + Assessment Admin + Certificate Admin ──
+        // Certificate Admin perlu READ submission untuk bisa menerbitkan sertifikat
+        Route::middleware('submission_reader')->group(function () {
+            Route::get('submissions',      [SubmissionAdminController::class, 'index']);
+            Route::get('submissions/{id}', [SubmissionAdminController::class, 'show']);
         });
 
         // ── CERTIFICATE: Super Admin + Certificate Admin ──────────────────

@@ -64,6 +64,21 @@ enum RoleId: int
     }
 
     /**
+     * Role yang bisa READ detail submission (list + show).
+     * Sama seperti assessment, tapi ditambah Certificate Admin —
+     * karena dia perlu baca submission untuk menerbitkan sertifikat.
+     */
+    public static function submissionReadRoleIds(): array
+    {
+        return [
+            self::SuperAdmin->value,
+            self::QcAdmin->value,
+            self::Reviewer->value,
+            self::Supervisor->value, // Certificate Admin — read only, untuk terbitkan sertifikat
+        ];
+    }
+
+    /**
      * Role yang berfungsi sebagai asesor (penilai indikator per submission).
      * Dipakai untuk daftar available assessors.
      */

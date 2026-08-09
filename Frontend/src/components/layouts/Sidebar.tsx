@@ -79,8 +79,8 @@ export function Sidebar() {
 
   const ADMIN_MAIN_MENU: NavItem[] = [
     { label: t.sidebar_admin_dash || "Overview Admin", href: "/admin", icon: LayoutDashboard },
-    // Submissions: Super Admin + QC Admin + Assessment Admin
-    { label: t.sidebar_admin_submissions || "Verifikasi Submission", href: "/admin/submissions", icon: FileCheck, badge: "New", badgeColor: "bg-blue-100 text-blue-700", roles: [1, 6, 11] },
+    // Submissions: Super Admin + QC Admin + Assessment Admin + Certificate Admin
+    { label: t.sidebar_admin_submissions || "Verifikasi Submission", href: "/admin/submissions", icon: FileCheck, badge: "New", badgeColor: "bg-blue-100 text-blue-700", roles: [1, 6, 7, 11] },
     // Users: hanya Super Admin
     { label: t.sidebar_admin_users || "Kelola Pengguna", href: "/admin/users", icon: Users, roles: [1] },
     // Payments: Super Admin + Finance Admin + QC Admin

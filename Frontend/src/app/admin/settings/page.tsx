@@ -10,6 +10,7 @@ import { useState } from "react";
 import { Loader2, Save, ShieldCheck, CreditCard, KeyRound, Eye, EyeOff } from "lucide-react";
 import { MdLightbulb } from "react-icons/md";
 import { useTranslation } from "@/store/lang";
+import { useAdminRouteGuard } from "@/hooks/useAdminRouteGuard";
 
 interface SettingsData {
   payment_amount: string;
@@ -20,6 +21,8 @@ interface SettingsData {
 export default function AdminSettingsPage() {
   const [showSecretKey, setShowSecretKey] = useState(false);
   const { t } = useTranslation();
+  const { authorized } = useAdminRouteGuard({ guard: "super_admin" });
+  if (!authorized) return null;
   const { data, isLoading } = useQuery({
     queryKey: ["admin-settings"],
     queryFn: async () => {

@@ -22,7 +22,7 @@ import FieldSurveyTab from "@/components/admin-tabs/FieldSurveyTab";
 import { IndicatorChat } from "@/components/submission-tabs/IndicatorChat";
 import { useTranslation } from "@/store/lang";
 import { useAuthStore } from "@/store/auth";
-import { canIssueCertificate } from "@/lib/roles";
+import { canIssueCertificate, canAccessSubmissions } from "@/lib/roles";
 
 interface IndicatorDoc { id: number; file_url: string; original_name: string; upload_phase?: number; }
 interface IndicatorQuestion { id: number; text: string; text_en?: string | null; }
@@ -375,7 +375,7 @@ export default function AdminSubmissionDetailPage() {
                         <span className="hidden sm:inline">{t.dash_admin_sub_id_btn_cert || "Terbitkan Sertifikat"}</span>
                       </button>
                     )}
-                    {!submission.survey && (
+                    {!submission.survey && canAccessSubmissions(user) && (
                       <button
                         onClick={() => approveMutation.mutate()}
                         disabled={approveMutation.isPending}

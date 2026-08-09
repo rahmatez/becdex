@@ -27,6 +27,7 @@ import {
 import { UserModal } from "@/components/admin-tabs/UserModal";
 import { DeleteUserModal } from "@/components/admin-tabs/DeleteUserModal";
 import { useTranslation } from "@/store/lang";
+import { useAdminRouteGuard } from "@/hooks/useAdminRouteGuard";
 
 interface UserRow {
   id: number;
@@ -55,6 +56,8 @@ export default function AdminUsersPage() {
   const [editUser, setEditUser] = useState<UserRow | undefined>(undefined);
   const [userToDelete, setUserToDelete] = useState<{id: number, name: string} | undefined>(undefined);
   const { t } = useTranslation();
+  const { authorized } = useAdminRouteGuard({ guard: "super_admin" });
+  if (!authorized) return null;
 
   const USER_STATUS_FILTERS = [
     { label: t.dash_admin_user_filter_all || "Semua Akun", value: "all" },

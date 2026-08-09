@@ -222,6 +222,11 @@ class SubmissionController extends Controller
             abort(404, 'Certificate not issued yet.');
         }
 
+        // Pastikan sertifikat sudah disetujui oleh Super Admin
+        if (!$certUser->is_approved) {
+            abort(403, 'Certificate has not been approved yet. Please wait for Super Admin approval.');
+        }
+
         // 1. Fetch active certificate template for layout and custom background
         $activeTemplate = \App\Models\CertificateTemplate::where('is_active', true)->first();
 
