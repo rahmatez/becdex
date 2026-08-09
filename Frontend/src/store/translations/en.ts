@@ -646,7 +646,7 @@ const en = {
 
     about_what_is_title: "What is Blue Economy Company Index (BECdex)?",
     about_what_is_p1: "Blue Economy Company Index (BECdex) is an international standard and toolkit for identifying and certifying maritime companies that are operating their businesses in accordance with the blue economy's guiding principles. BECdex assessment and verification procedure is administered by the Blue International Certification Center (BICC), which acts as a certification authority.",
-    about_what_is_p2: "BECdex contains 10 principles, 32 aspects, 47 indicators, and 56 questions. It is a tool for self-assessment, independent assessment, and third-party certification of maritime companies.",
+    about_what_is_p2: "BECdex contains 3 aspects, 8 outcomes, 10 principles, 50 indicators, and 50 questions. It is a tool for self-assessment, independent assessment, and third-party certification of maritime companies.",
     about_what_is_p3: "BECdex was initiated by the Indonesia Blue Economy Center of Sekolah Tinggi Ilmu Ekonomi (STIE) Indonesia Jakarta and Maritim Muda Nusantara, and was launched on November 15, 2021, by the Coordinating Ministry for Maritime Affairs and Investment of the Republic of Indonesia.",
     about_what_is_p4_link: "Designing and Mapping the Blue Economy Company Index (BECdex) to the Sustainable Development Goals (SDGs) for Maritime Companies in the Coastal States",
     about_what_is_p4: "is a scientific paper published in the International Journal of Innovative Science and Research Technology (IJISRT) that serves as the academic foundation for BECdex.",
