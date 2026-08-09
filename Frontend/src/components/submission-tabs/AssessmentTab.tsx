@@ -444,16 +444,16 @@ export function AssessmentTab({ submission, onUpdate, onGoToScore }: Props) {
               Skor Awal (Self-Assessment)
             </p>
             <p className="text-xs text-slate-600 dark:text-slate-300 font-medium mt-1">
-              Berdasarkan bobot jawaban saat ini
+              Pertanyaan terjawab saat ini
             </p>
           </div>
           <div className="text-right">
             <span className="text-2xl md:text-3xl font-extrabold text-[#0c2340] dark:text-blue-300 tracking-tight">
-              {submission.initial_score.toFixed(1)}%
+              {answeredQuestions}
             </span>
             <span className="text-slate-400 dark:text-slate-500 text-xs font-bold">
               {" "}
-              / 100%
+              / {totalQuestions}
             </span>
           </div>
         </div>
