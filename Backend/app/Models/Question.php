@@ -8,8 +8,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Question extends Model
 {
     use HasFactory;
-    protected $fillable = ['indicator_id', 'text', 'text_en', 'sort_order'];
-    protected $casts = ['sort_order' => 'integer'];
+    protected $fillable = ['indicator_id', 'text', 'text_en', 'sort_order', 'is_mandatory'];
+    protected $casts = ['sort_order' => 'integer', 'is_mandatory' => 'boolean'];
     public function indicator(): BelongsTo { return $this->belongsTo(Indicator::class); }
     public function answers(): HasMany { return $this->hasMany(Answer::class); }
 }

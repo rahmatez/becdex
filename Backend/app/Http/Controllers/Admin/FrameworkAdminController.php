@@ -172,6 +172,7 @@ class FrameworkAdminController extends Controller
             'text'         => 'required|string',
             'text_en'      => 'nullable|string',
             'weight'       => 'nullable|numeric|min:0|max:1',
+            'is_mandatory' => 'nullable|boolean',
         ]);
         Cache::forget('catalog_indicators');
         return response()->json(['data' => Question::create($validated)], 201);
@@ -184,6 +185,7 @@ class FrameworkAdminController extends Controller
             'text'         => 'required|string',
             'text_en'      => 'nullable|string',
             'weight'       => 'nullable|numeric|min:0|max:1',
+            'is_mandatory' => 'nullable|boolean',
         ]);
         $question->update($validated);
         Cache::forget('catalog_indicators');

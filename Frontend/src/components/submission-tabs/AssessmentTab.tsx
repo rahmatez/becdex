@@ -365,14 +365,18 @@ export function AssessmentTab({ submission, onUpdate, onGoToScore }: Props) {
 
   let totalQuestions = 0;
   let answeredQuestions = 0;
+  let mandatoryTotal = 0;
+  let mandatoryAnswered = 0;
   for (const pi of submission.per_indicators ?? []) {
     for (const q of pi.indicator.questions) {
       totalQuestions++;
-      if (
+      const isAnswered =
         (answers[q.id] ?? null) !== null &&
-        (answers[q.id] ?? undefined) !== undefined
-      ) {
-        answeredQuestions++;
+        (answers[q.id] ?? undefined) !== undefined;
+      if (isAnswered) answeredQuestions++;
+      if (q.is_mandatory) {
+        mandatoryTotal++;
+        if (isAnswered) mandatoryAnswered++;
       }
     }
   }
@@ -380,6 +384,7 @@ export function AssessmentTab({ submission, onUpdate, onGoToScore }: Props) {
     totalQuestions > 0
       ? Math.round((answeredQuestions / totalQuestions) * 100)
       : 0;
+  const mandatoryUnanswered = mandatoryTotal - mandatoryAnswered;
 
   const [showUnansweredOnly, setShowUnansweredOnly] = useState(false);
 
@@ -484,6 +489,28 @@ export function AssessmentTab({ submission, onUpdate, onGoToScore }: Props) {
           </div>
         </div>
       </div>
+
+      {/* Mandatory Warning Banner */}
+      {mandatoryUnanswered > 0 && canEdit && (
+        <div className="mb-5 flex items-start gap-3 rounded-xl border border-red-200 bg-red-50/80 dark:border-red-800 dark:bg-red-950/40 px-4 py-3 animate-in fade-in slide-in-from-top-1 duration-300">
+          <AlertTriangle size={16} className="text-red-500 shrink-0 mt-0.5" />
+          <div>
+            <p className="text-xs font-extrabold text-red-700 dark:text-red-300">
+              {locale === "en"
+                ? `${mandatoryUnanswered} mandatory question${mandatoryUnanswered > 1 ? "s" : ""} not yet answered`
+                : `${mandatoryUnanswered} pertanyaan wajib belum dijawab`}
+            </p>
+            <p className="text-[11px] text-red-500 dark:text-red-400 mt-0.5">
+              {locale === "en"
+                ? "Please answer all mandatory questions (marked ★ Mandatory) before submitting."
+                : "Harap jawab semua pertanyaan bertanda ★ Wajib sebelum mengajukan submission."}
+            </p>
+          </div>
+          <span className="ml-auto shrink-0 inline-flex items-center gap-1 bg-red-100 dark:bg-red-900/50 text-red-700 dark:text-red-300 text-xs font-extrabold px-2.5 py-1 rounded-lg border border-red-200 dark:border-red-800">
+            {mandatoryAnswered}/{mandatoryTotal} ★
+          </span>
+        </div>
+      )}
 
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5 pb-3 border-b border-slate-100 dark:border-slate-800">
         <div>
@@ -808,18 +835,25 @@ export function AssessmentTab({ submission, onUpdate, onGoToScore }: Props) {
                                                   key={question.id}
                                                   className="flex items-start justify-between gap-4">
                                                   <div className="flex-1">
-                                                    <p
-                                                      className="text-xs md:text-sm text-slate-700 dark:text-slate-200 font-medium whitespace-pre-line leading-relaxed mb-1"
-                                                      dangerouslySetInnerHTML={{
-                                                        __html:
-                                                          (locale === "en"
-                                                            ? question.text_en ||
-                                                              question.text
-                                                            : question.text ||
-                                                              question.text_en) ??
-                                                          "",
-                                                      }}
-                                                    />
+                                                    <div className="flex items-start gap-2 flex-wrap mb-1">
+                                                      {question.is_mandatory && (
+                                                        <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[10px] font-extrabold bg-red-100 text-red-700 dark:bg-red-900/50 dark:text-red-300 border border-red-200 dark:border-red-700 shrink-0 mt-0.5">
+                                                          ★ {locale === "en" ? "Mandatory" : "Wajib"}
+                                                        </span>
+                                                      )}
+                                                      <p
+                                                        className="text-xs md:text-sm text-slate-700 dark:text-slate-200 font-medium whitespace-pre-line leading-relaxed"
+                                                        dangerouslySetInnerHTML={{
+                                                          __html:
+                                                            (locale === "en"
+                                                              ? question.text_en ||
+                                                                question.text
+                                                              : question.text ||
+                                                                question.text_en) ??
+                                                            "",
+                                                        }}
+                                                      />
+                                                    </div>
                                                     {!ENABLE_SCORE_SELECTION && (
                                                       <p className="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1">
                                                         <Info size={10} />

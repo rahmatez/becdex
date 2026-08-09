@@ -110,6 +110,7 @@ export interface Question {
   indicator_id: number;
   text: string;
   text_en: string | null;
+  is_mandatory: boolean;
 }
 
 export interface Answer {

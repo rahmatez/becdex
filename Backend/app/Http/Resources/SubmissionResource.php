@@ -102,6 +102,7 @@ class SubmissionResource extends JsonResource
                         'indicator_id' => $q->indicator_id,
                         'text'         => $q->text,
                         'text_en'      => $q->text_en,
+                        'is_mandatory' => (bool) $q->is_mandatory,
                     ]) : [],
                 ] : null,
             ])),

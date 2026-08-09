@@ -14,7 +14,7 @@ interface Aspect { id: number; name: string; name_id?: string | null; outcomes_c
 interface Outcome { id: number; aspect_id: number; name: string; name_id?: string | null; aspect?: Aspect; principles_count?: number }
 interface Principle { id: number; outcome_id: number; name: string; name_id?: string | null; outcome?: Outcome; indicators_count?: number }
 interface Indicator { id: number; principle_id: number; name: string; name_id?: string | null; description?: string | null; description_en?: string | null; evidence?: string | null; evidence_en?: string | null; verification_method?: string | null; verification_method_en?: string | null; regulation?: string | null; regulation_en?: string | null; principle?: Principle; questions_count?: number }
-interface Question { id: number; indicator_id: number; text: string; text_en?: string | null; weight?: number; indicator?: Indicator }
+interface Question { id: number; indicator_id: number; text: string; text_en?: string | null; weight?: number; is_mandatory?: boolean; indicator?: Indicator }
 
 type FrameworkTab = "aspects" | "outcomes" | "principles" | "indicators" | "questions";
 
@@ -48,38 +48,68 @@ function CrudModal({ title, onClose, onSave, isPending, fields, initial = {} }: 
         <div className="overflow-y-auto flex-1 min-h-0 px-6 py-5 space-y-4">
           {fields.map((f) => (
             <div key={f.key}>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
-                {f.label}
-              </label>
-              {f.options ? (
-                <select
-                  value={form[f.key]}
-                  onChange={(e) => setForm((prev) => ({ ...prev, [f.key]: e.target.value }))}
-                  className="w-full border border-slate-200/80 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-xs font-medium text-slate-800 dark:text-white bg-slate-50/50 dark:bg-slate-800/80 focus:bg-white focus:border-blue-500 focus:outline-hidden transition-all shadow-2xs cursor-pointer"
-                >
-                  <option value="">{t.dash_admin_fw_modal_select?.replace("{label}", f.label) || `Pilih ${f.label}...`}</option>
-                  {f.options.map((opt) => (
-                    <option key={opt.id} value={String(opt.id)}>
-                      {opt.name}
-                    </option>
-                  ))}
-                </select>
-              ) : f.type === "textarea" ? (
-                <textarea
-                  value={form[f.key]}
-                  onChange={(e) => setForm((prev) => ({ ...prev, [f.key]: e.target.value }))}
-                  placeholder={t.dash_admin_fw_modal_placeholder?.replace("{label}", f.label.toLowerCase()) || `Masukkan ${f.label.toLowerCase()}...`}
-                  rows={3}
-                  className="w-full border border-slate-200/80 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-xs font-medium text-slate-800 dark:text-white bg-slate-50/50 dark:bg-slate-800/80 focus:bg-white focus:border-blue-500 focus:outline-hidden transition-all shadow-2xs resize-y"
-                />
+              {f.type === "checkbox" ? (
+                <label className="flex items-center gap-3 cursor-pointer group">
+                  <div className="relative">
+                    <input
+                      type="checkbox"
+                      checked={form[f.key] === "true"}
+                      onChange={(e) => setForm((prev) => ({ ...prev, [f.key]: e.target.checked ? "true" : "false" }))}
+                      className="sr-only"
+                    />
+                    <div className={cn(
+                      "w-10 h-6 rounded-full transition-all duration-200",
+                      form[f.key] === "true" ? "bg-red-500" : "bg-slate-200 dark:bg-slate-700"
+                    )}>
+                      <div className={cn(
+                        "absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white shadow-sm transition-all duration-200",
+                        form[f.key] === "true" ? "translate-x-4" : "translate-x-0"
+                      )} />
+                    </div>
+                  </div>
+                  <div>
+                    <span className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider block">{f.label}</span>
+                    <span className="text-[11px] text-slate-400">
+                      {form[f.key] === "true" ? "✓ Pertanyaan ini wajib dijawab user" : "Pertanyaan opsional (tidak wajib)"}
+                    </span>
+                  </div>
+                </label>
               ) : (
-                <input
-                  type={f.type ?? "text"}
-                  value={form[f.key]}
-                  onChange={(e) => setForm((prev) => ({ ...prev, [f.key]: e.target.value }))}
-                  placeholder={t.dash_admin_fw_modal_placeholder?.replace("{label}", f.label.toLowerCase()) || `Masukkan ${f.label.toLowerCase()}...`}
-                  className="w-full border border-slate-200/80 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-xs font-medium text-slate-800 dark:text-white bg-slate-50/50 dark:bg-slate-800/80 focus:bg-white focus:border-blue-500 focus:outline-hidden transition-all shadow-2xs"
-                />
+                <>
+                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
+                    {f.label}
+                  </label>
+                  {f.options ? (
+                    <select
+                      value={form[f.key]}
+                      onChange={(e) => setForm((prev) => ({ ...prev, [f.key]: e.target.value }))}
+                      className="w-full border border-slate-200/80 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-xs font-medium text-slate-800 dark:text-white bg-slate-50/50 dark:bg-slate-800/80 focus:bg-white focus:border-blue-500 focus:outline-hidden transition-all shadow-2xs cursor-pointer"
+                    >
+                      <option value="">{t.dash_admin_fw_modal_select?.replace("{label}", f.label) || `Pilih ${f.label}...`}</option>
+                      {f.options.map((opt) => (
+                        <option key={opt.id} value={String(opt.id)}>
+                          {opt.name}
+                        </option>
+                      ))}
+                    </select>
+                  ) : f.type === "textarea" ? (
+                    <textarea
+                      value={form[f.key]}
+                      onChange={(e) => setForm((prev) => ({ ...prev, [f.key]: e.target.value }))}
+                      placeholder={t.dash_admin_fw_modal_placeholder?.replace("{label}", f.label.toLowerCase()) || `Masukkan ${f.label.toLowerCase()}...`}
+                      rows={3}
+                      className="w-full border border-slate-200/80 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-xs font-medium text-slate-800 dark:text-white bg-slate-50/50 dark:bg-slate-800/80 focus:bg-white focus:border-blue-500 focus:outline-hidden transition-all shadow-2xs resize-y"
+                    />
+                  ) : (
+                    <input
+                      type={f.type ?? "text"}
+                      value={form[f.key]}
+                      onChange={(e) => setForm((prev) => ({ ...prev, [f.key]: e.target.value }))}
+                      placeholder={t.dash_admin_fw_modal_placeholder?.replace("{label}", f.label.toLowerCase()) || `Masukkan ${f.label.toLowerCase()}...`}
+                      className="w-full border border-slate-200/80 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-xs font-medium text-slate-800 dark:text-white bg-slate-50/50 dark:bg-slate-800/80 focus:bg-white focus:border-blue-500 focus:outline-hidden transition-all shadow-2xs"
+                    />
+                  )}
+                </>
               )}
             </div>
           ))}
@@ -187,9 +217,10 @@ export default function AdminFrameworkPage() {
     ],
     questions: [
       { key: "indicator_id", label: t.dash_admin_fw_fld_parent_indicator || "Indikator Induk", options: indicators?.map(i => ({ id: i.id, name: i.name })) ?? [] },
-      { key: "text",    label: "Teks Pertanyaan (Bahasa Indonesia)", type: "textarea" },
-      { key: "text_en", label: "Teks Pertanyaan (English)",          type: "textarea" },
-      { key: "weight",  label: t.dash_admin_fw_fld_weight || "Bobot Nilai (0–1)", type: "number" },
+      { key: "text",         label: "Teks Pertanyaan (Bahasa Indonesia)", type: "textarea" },
+      { key: "text_en",      label: "Teks Pertanyaan (English)",          type: "textarea" },
+      { key: "weight",       label: t.dash_admin_fw_fld_weight || "Bobot Nilai (0–1)", type: "number" },
+      { key: "is_mandatory", label: "Pertanyaan Wajib (Mandatory)", type: "checkbox" },
     ],
   };
 
@@ -198,7 +229,7 @@ export default function AdminFrameworkPage() {
     if (tab === "outcomes")   return (outcomes   ?? []).map(i => ({ id: i.id, main: (locale === 'id' ? (i.name_id || i.name) : i.name) ?? "", sub: `${t.dash_admin_fw_lbl_aspect || "Aspek"}: ${locale === 'id' ? (i.aspect?.name_id || i.aspect?.name) : i.aspect?.name ?? "—"}`, count: `${i.principles_count ?? 0} ${t.dash_admin_fw_lbl_principle || "Prinsip"}` }));
     if (tab === "principles") return (principles ?? []).map(i => ({ id: i.id, main: (locale === 'id' ? (i.name_id || i.name) : i.name) ?? "", sub: `${t.dash_admin_fw_lbl_outcome || "Outcome"}: ${locale === 'id' ? (i.outcome?.name_id || i.outcome?.name) : i.outcome?.name ?? "—"}`, count: `${i.indicators_count ?? 0} ${t.dash_admin_fw_lbl_indicator || "Indikator"}` }));
     if (tab === "indicators") return (indicators ?? []).map(i => ({ id: i.id, main: (locale === 'id' ? (i.name_id || i.name) : i.name) ?? "", sub: `${t.dash_admin_fw_lbl_principle || "Prinsip"}: ${locale === 'id' ? (i.principle?.name_id || i.principle?.name) : i.principle?.name ?? "—"}`, count: `${i.questions_count ?? 0} ${t.dash_admin_fw_lbl_question || "Pertanyaan"}`, hasAuditData: !!(i.evidence && i.verification_method && i.regulation) }));
-    if (tab === "questions")  return (questions  ?? []).map(i => ({ id: i.id, main: (locale === 'en' ? (i.text_en || i.text) : (i.text || i.text_en)) ?? "", sub: `${t.dash_admin_fw_lbl_indicator || "Indikator"}: ${locale === 'id' ? (i.indicator?.name_id || i.indicator?.name) : i.indicator?.name ?? "—"}`, count: t.dash_admin_fw_weight?.replace("{weight}", String(i.weight ?? 1)) || `Bobot: ${i.weight ?? 1}` }));
+    if (tab === "questions")  return (questions  ?? []).map(i => ({ id: i.id, main: (locale === 'en' ? (i.text_en || i.text) : (i.text || i.text_en)) ?? "", sub: `${t.dash_admin_fw_lbl_indicator || "Indikator"}: ${locale === 'id' ? (i.indicator?.name_id || i.indicator?.name) : i.indicator?.name ?? "—"}`, count: t.dash_admin_fw_weight?.replace("{weight}", String(i.weight ?? 1)) || `Bobot: ${i.weight ?? 1}`, isMandatory: !!i.is_mandatory }));
     return [];
   };
 
@@ -329,6 +360,11 @@ export default function AdminFrameworkPage() {
                               : "bg-amber-100 text-amber-700 dark:bg-amber-900/50 dark:text-amber-300"
                           )}>
                             {(row as { hasAuditData?: boolean }).hasAuditData ? ((t as unknown as Record<string, string>).admin_fw_badge_complete || "✓ Data Audit Lengkap") : ((t as unknown as Record<string, string>).admin_fw_badge_incomplete || "⚠ Audit Belum Lengkap")}
+                          </span>
+                        )}
+                        {tab === "questions" && (row as { isMandatory?: boolean }).isMandatory && (
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold w-fit bg-red-100 text-red-700 dark:bg-red-900/50 dark:text-red-300">
+                            ★ Wajib
                           </span>
                         )}
                       </div>
