@@ -22,13 +22,14 @@ export default function AdminSettingsPage() {
   const [showSecretKey, setShowSecretKey] = useState(false);
   const { t } = useTranslation();
   const { authorized } = useAdminRouteGuard({ guard: "super_admin" });
-  if (!authorized) return null;
+
   const { data, isLoading } = useQuery({
     queryKey: ["admin-settings"],
     queryFn: async () => {
       const res = await api.get("/admin/settings");
       return res.data;
     },
+    enabled: authorized,
   });
 
   const { register, handleSubmit, formState: { isSubmitting } } = useForm<SettingsData>({
@@ -46,6 +47,9 @@ export default function AdminSettingsPage() {
     onSuccess: () => toast.success(t.dash_admin_settings_toast_success || "Pengaturan sistem & payment gateway berhasil disimpan!"),
     onError: () => toast.error(t.dash_admin_settings_toast_error || "Gagal menyimpan pengaturan sistem."),
   });
+
+  // Early return setelah semua hooks — React Rules of Hooks
+  if (!authorized) return null;
 
   if (isLoading) {
     return (

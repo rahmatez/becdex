@@ -54,7 +54,6 @@ export default function AdminPaymentsPage() {
   const [dateTo, setDateTo] = useState("");
   const { t } = useTranslation();
   const { authorized } = useAdminRouteGuard({ guard: "finance_admin" });
-  if (!authorized) return null;
 
   const { data, isLoading, refetch, isFetching } = useQuery({
     queryKey: ["admin-payments", page, search, status, dateFrom, dateTo],
@@ -69,7 +68,11 @@ export default function AdminPaymentsPage() {
       const res = await api.get(`/admin/payments?${params}`);
       return res.data;
     },
+    enabled: authorized, // jangan fetch jika tidak authorized
   });
+
+  // Early return setelah semua hooks — React Rules of Hooks
+  if (!authorized) return null;
 
   const payments: PaymentRow[] = data?.data ?? [];
   const meta = data?.meta;

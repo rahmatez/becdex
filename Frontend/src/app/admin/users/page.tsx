@@ -57,7 +57,6 @@ export default function AdminUsersPage() {
   const [userToDelete, setUserToDelete] = useState<{id: number, name: string} | undefined>(undefined);
   const { t } = useTranslation();
   const { authorized } = useAdminRouteGuard({ guard: "super_admin" });
-  if (!authorized) return null;
 
   const USER_STATUS_FILTERS = [
     { label: t.dash_admin_user_filter_all || "Semua Akun", value: "all" },
@@ -72,6 +71,7 @@ export default function AdminUsersPage() {
       const res = await api.get(`/admin/users?page=${page}&role=${roleFilter}`);
       return res.data;
     },
+    enabled: authorized,
   });
 
   const statusMutation = useMutation({
@@ -93,10 +93,13 @@ export default function AdminUsersPage() {
       toast.success("Email pengguna berhasil diverifikasi secara manual!");
       refetch();
     },
-    onError: (error: any) => {
+    onError: (error: { response?: { data?: { message?: string } } }) => {
       toast.error(error.response?.data?.message || "Gagal memverifikasi email pengguna.");
     }
   });
+
+  // Early return setelah semua hooks — React Rules of Hooks
+  if (!authorized) return null;
 
   const users = data?.data ?? [];
   const meta = data?.meta;
