@@ -151,7 +151,7 @@ const id = {
     dash_sub_rev_btn: "Lihat Catatan & Perbaiki Dokumen",
     dash_sub_survey_title: "Jadwal Survei Lapangan & Wawancara Aktif",
     dash_sub_survey_desc: "Tim asesor lapangan BECdex dijadwalkan untuk melakukan verifikasi langsung ke fasilitas operasional perusahaan Anda sesuai konfirmasi yang dikirimkan. Pastikan seluruh dokumen asli tersedia untuk pengecekan.",
-    dash_sub_tab_assessment: "Assessment Kuesioner",
+    dash_sub_tab_assessment: "Form Assessment",
     dash_sub_tab_documents: "Dokumen Terunggah",
     dash_sub_tab_score: "Skor & Pembayaran",
     dash_sub_tab_status: "Riwayat Status",

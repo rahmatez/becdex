@@ -151,7 +151,7 @@ const en = {
     dash_sub_rev_btn: "View Notes & Fix Documents",
     dash_sub_survey_title: "Active Field Survey & Interview Schedule",
     dash_sub_survey_desc: "The BECdex field assessor team is scheduled to conduct an on-site verification at your company's operational facility according to the sent confirmation. Please ensure all original documents are available for inspection.",
-    dash_sub_tab_assessment: "Assessment Questionnaire",
+    dash_sub_tab_assessment: "Assessment Forms",
     dash_sub_tab_documents: "Uploaded Documents",
     dash_sub_tab_score: "Score & Payment",
     dash_sub_tab_status: "Status History",
