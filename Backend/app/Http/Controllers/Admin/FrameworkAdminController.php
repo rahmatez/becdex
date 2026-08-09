@@ -210,18 +210,22 @@ class FrameworkAdminController extends Controller
     public function storeCompanyField(Request $request): JsonResponse
     {
         $validated = $request->validate(['name' => 'required|string|max:255|unique:company_fields,name']);
-        return response()->json(['data' => CompanyField::create($validated)], 201);
+        $cf = CompanyField::create($validated);
+        Cache::forget('public_lookups');
+        return response()->json(['data' => $cf], 201);
     }
     public function updateCompanyField(Request $request, int $id): JsonResponse
     {
         $cf = CompanyField::findOrFail($id);
         $validated = $request->validate(['name' => "required|string|max:255|unique:company_fields,name,{$id}"]);
         $cf->update($validated);
+        Cache::forget('public_lookups');
         return response()->json(['data' => $cf]);
     }
     public function destroyCompanyField(int $id): JsonResponse
     {
         CompanyField::findOrFail($id)->delete();
+        Cache::forget('public_lookups');
         return response()->json(['message' => 'Bidang perusahaan berhasil dihapus.']);
     }
 
@@ -233,18 +237,22 @@ class FrameworkAdminController extends Controller
     public function storeCountry(Request $request): JsonResponse
     {
         $validated = $request->validate(['name' => 'required|string|max:255|unique:countries,name']);
-        return response()->json(['data' => Country::create($validated)], 201);
+        $country = Country::create($validated);
+        Cache::forget('public_lookups');
+        return response()->json(['data' => $country], 201);
     }
     public function updateCountry(Request $request, int $id): JsonResponse
     {
         $country = Country::findOrFail($id);
         $validated = $request->validate(['name' => "required|string|max:255|unique:countries,name,{$id}"]);
         $country->update($validated);
+        Cache::forget('public_lookups');
         return response()->json(['data' => $country]);
     }
     public function destroyCountry(int $id): JsonResponse
     {
         Country::findOrFail($id)->delete();
+        Cache::forget('public_lookups');
         return response()->json(['message' => 'Negara berhasil dihapus.']);
     }
 }
