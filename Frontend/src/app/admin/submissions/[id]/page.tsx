@@ -2,7 +2,6 @@
 
 import { useState, useMemo } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { useParams } from "next/navigation";
 import { toast } from "sonner";
 import { AppLayout } from "@/components/layouts/AppLayout";
 import { StatusBadge } from "@/components/ui/StatusBadge";
@@ -154,7 +153,7 @@ export default function AdminSubmissionDetailPage({ params }: { params: { id: st
       refetch();
     },
     onError: (error: unknown) => {
-      const err = error as any;
+      const err = error as { response?: { data?: { message?: string } } };
       toast.error(err.response?.data?.message || (t.dash_admin_sub_id_msg_return_error || "Gagal mengembalikan pengajuan."));
     },
   });
@@ -179,7 +178,7 @@ export default function AdminSubmissionDetailPage({ params }: { params: { id: st
       refetch();
     },
     onError: (error: unknown) => {
-      const err = error as any;
+      const err = error as { response?: { data?: { message?: string } } };
       toast.error(err.response?.data?.message || "Gagal meluluskan pengajuan.");
     },
   });
@@ -195,7 +194,7 @@ export default function AdminSubmissionDetailPage({ params }: { params: { id: st
       refetch();
     },
     onError: (error: unknown) => {
-      const err = error as any;
+      const err = error as { response?: { data?: { message?: string } } };
       toast.error(err.response?.data?.message || "Gagal menolak pengajuan.");
     },
   });
