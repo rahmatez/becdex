@@ -35,11 +35,12 @@ export function UserModal({
   });
 
   const roles = [
-    { id: 1, name: "admin" },
-    { id: 2, name: "company" },
-    { id: 6, name: "reviewer" },
-    { id: 7, name: "supervisor" },
-    { id: 10, name: "manager" },
+    { id: 1,  name: "Super Admin",        desc: "Director / IT Manager — Akses penuh" },
+    { id: 6,  name: "Assessment Admin",   desc: "Auditor — Verifikasi & luluskan submission" },
+    { id: 7,  name: "Certificate Admin",  desc: "Certification Manager — Terbitkan sertifikat" },
+    { id: 10, name: "Finance Admin",      desc: "HR & Finance Manager — Akses pembayaran" },
+    { id: 11, name: "QC Admin",           desc: "QC & Standardization Manager — Akses luas kecuali users" },
+    { id: 2,  name: "Company",            desc: "Perusahaan terdaftar (user biasa)" },
   ];
 
   useEffect(() => {
@@ -149,7 +150,7 @@ export function UserModal({
               >
                 {roles.map((r) => (
                   <option key={r.id} value={r.id}>
-                    {r.name.toUpperCase()}
+                    {r.name} — {r.desc}
                   </option>
                 ))}
               </select>
