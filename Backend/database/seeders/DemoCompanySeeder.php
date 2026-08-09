@@ -33,7 +33,7 @@ class DemoCompanySeeder extends Seeder
                 'name'             => 'Aqua Bio Fresh',
                 'email'            => 'aquabiofresh@gmail.com',
                 'company_phone'    => '081200000001',
-                'company_country'  => 'IDN',
+                'company_country'  => 'ID',
                 'company_field_id' => 1, // Marine Fisheries and Aquaculture
                 'pic_name'         => 'Budi Santoso',
                 'pic_position'     => 'CEO',
@@ -47,7 +47,7 @@ class DemoCompanySeeder extends Seeder
                 'name'             => 'Crustea',
                 'email'            => 'crustea@gmail.com',
                 'company_phone'    => '081200000002',
-                'company_country'  => 'IDN',
+                'company_country'  => 'ID',
                 'company_field_id' => 1, // Marine Fisheries and Aquaculture
                 'pic_name'         => 'Siti Rahayu',
                 'pic_position'     => 'Direktur',
@@ -61,7 +61,7 @@ class DemoCompanySeeder extends Seeder
                 'name'             => 'Ikan Segar Indonesia',
                 'email'            => 'ikansegarid@gmail.com',
                 'company_phone'    => '081200000003',
-                'company_country'  => 'IDN',
+                'company_country'  => 'ID',
                 'company_field_id' => 1, // Marine Fisheries and Aquaculture
                 'pic_name'         => 'Ahmad Fauzi',
                 'pic_position'     => 'Direktur Utama',
