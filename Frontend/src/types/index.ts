@@ -86,6 +86,7 @@ export interface PerIndicator {
     verification_method_en: string | null;
     regulation: string | null;
     regulation_en: string | null;
+    is_mandatory?: boolean;
     principle: {
       id: number;
       name: string;

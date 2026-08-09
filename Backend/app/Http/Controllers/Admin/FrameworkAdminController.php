@@ -129,6 +129,7 @@ class FrameworkAdminController extends Controller
             'verification_method_en' => 'nullable|string',
             'regulation'             => 'nullable|string',
             'regulation_en'          => 'nullable|string',
+            'is_mandatory'           => 'nullable|boolean',
         ]);
         Cache::forget('catalog_indicators');
         return response()->json(['data' => Indicator::create($validated)], 201);
@@ -148,6 +149,7 @@ class FrameworkAdminController extends Controller
             'verification_method_en' => 'nullable|string',
             'regulation'             => 'nullable|string',
             'regulation_en'          => 'nullable|string',
+            'is_mandatory'           => 'nullable|boolean',
         ]);
         $indicator->update($validated);
         Cache::forget('catalog_indicators');

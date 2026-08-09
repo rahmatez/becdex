@@ -13,7 +13,7 @@ import { useTranslation } from "@/store/lang";
 interface Aspect { id: number; name: string; name_id?: string | null; outcomes_count?: number }
 interface Outcome { id: number; aspect_id: number; name: string; name_id?: string | null; aspect?: Aspect; principles_count?: number }
 interface Principle { id: number; outcome_id: number; name: string; name_id?: string | null; outcome?: Outcome; indicators_count?: number }
-interface Indicator { id: number; principle_id: number; name: string; name_id?: string | null; description?: string | null; description_en?: string | null; evidence?: string | null; evidence_en?: string | null; verification_method?: string | null; verification_method_en?: string | null; regulation?: string | null; regulation_en?: string | null; principle?: Principle; questions_count?: number }
+interface Indicator { id: number; principle_id: number; name: string; name_id?: string | null; description?: string | null; description_en?: string | null; evidence?: string | null; evidence_en?: string | null; verification_method?: string | null; verification_method_en?: string | null; regulation?: string | null; regulation_en?: string | null; is_mandatory?: boolean; principle?: Principle; questions_count?: number }
 interface Question { id: number; indicator_id: number; text: string; text_en?: string | null; weight?: number; is_mandatory?: boolean; indicator?: Indicator }
 
 type FrameworkTab = "aspects" | "outcomes" | "principles" | "indicators" | "questions";
@@ -206,6 +206,7 @@ export default function AdminFrameworkPage() {
       { key: "principle_id",        label: t.dash_admin_fw_fld_parent_principle || "Prinsip Induk", options: principles?.map(p => ({ id: p.id, name: p.name })) ?? [] },
       { key: "name",                label: "Nama Indikator (English)" },
       { key: "name_id",             label: "Nama Indikator (Bahasa Indonesia)" },
+      { key: "is_mandatory",        label: "Indikator Wajib (Mandatory Indicator)", type: "checkbox" },
       { key: "description",         label: "Deskripsi Indikator (Bahasa Indonesia)", type: "textarea" },
       { key: "description_en",      label: "Deskripsi Indikator (English)",          type: "textarea" },
       { key: "evidence",            label: "Bukti yang Diperlukan (Bahasa Indonesia)", type: "textarea" },
@@ -220,7 +221,6 @@ export default function AdminFrameworkPage() {
       { key: "text",         label: "Teks Pertanyaan (Bahasa Indonesia)", type: "textarea" },
       { key: "text_en",      label: "Teks Pertanyaan (English)",          type: "textarea" },
       { key: "weight",       label: t.dash_admin_fw_fld_weight || "Bobot Nilai (0–1)", type: "number" },
-      { key: "is_mandatory", label: "Pertanyaan Wajib (Mandatory)", type: "checkbox" },
     ],
   };
 
@@ -228,8 +228,8 @@ export default function AdminFrameworkPage() {
     if (tab === "aspects")    return (aspects    ?? []).map(i => ({ id: i.id, main: (locale === 'id' ? (i.name_id || i.name) : i.name) ?? "", count: `${i.outcomes_count ?? 0} ${t.dash_admin_fw_lbl_outcome || "Outcome"}` }));
     if (tab === "outcomes")   return (outcomes   ?? []).map(i => ({ id: i.id, main: (locale === 'id' ? (i.name_id || i.name) : i.name) ?? "", sub: `${t.dash_admin_fw_lbl_aspect || "Aspek"}: ${locale === 'id' ? (i.aspect?.name_id || i.aspect?.name) : i.aspect?.name ?? "—"}`, count: `${i.principles_count ?? 0} ${t.dash_admin_fw_lbl_principle || "Prinsip"}` }));
     if (tab === "principles") return (principles ?? []).map(i => ({ id: i.id, main: (locale === 'id' ? (i.name_id || i.name) : i.name) ?? "", sub: `${t.dash_admin_fw_lbl_outcome || "Outcome"}: ${locale === 'id' ? (i.outcome?.name_id || i.outcome?.name) : i.outcome?.name ?? "—"}`, count: `${i.indicators_count ?? 0} ${t.dash_admin_fw_lbl_indicator || "Indikator"}` }));
-    if (tab === "indicators") return (indicators ?? []).map(i => ({ id: i.id, main: (locale === 'id' ? (i.name_id || i.name) : i.name) ?? "", sub: `${t.dash_admin_fw_lbl_principle || "Prinsip"}: ${locale === 'id' ? (i.principle?.name_id || i.principle?.name) : i.principle?.name ?? "—"}`, count: `${i.questions_count ?? 0} ${t.dash_admin_fw_lbl_question || "Pertanyaan"}`, hasAuditData: !!(i.evidence && i.verification_method && i.regulation) }));
-    if (tab === "questions")  return (questions  ?? []).map(i => ({ id: i.id, main: (locale === 'en' ? (i.text_en || i.text) : (i.text || i.text_en)) ?? "", sub: `${t.dash_admin_fw_lbl_indicator || "Indikator"}: ${locale === 'id' ? (i.indicator?.name_id || i.indicator?.name) : i.indicator?.name ?? "—"}`, count: t.dash_admin_fw_weight?.replace("{weight}", String(i.weight ?? 1)) || `Bobot: ${i.weight ?? 1}`, isMandatory: !!i.is_mandatory }));
+    if (tab === "indicators") return (indicators ?? []).map(i => ({ id: i.id, main: (locale === 'id' ? (i.name_id || i.name) : i.name) ?? "", sub: `${t.dash_admin_fw_lbl_principle || "Prinsip"}: ${locale === 'id' ? (i.principle?.name_id || i.principle?.name) : i.principle?.name ?? "—"}`, count: `${i.questions_count ?? 0} ${t.dash_admin_fw_lbl_question || "Pertanyaan"}`, hasAuditData: !!(i.evidence && i.verification_method && i.regulation), isMandatory: !!i.is_mandatory }));
+    if (tab === "questions")  return (questions  ?? []).map(i => ({ id: i.id, main: (locale === 'en' ? (i.text_en || i.text) : (i.text || i.text_en)) ?? "", sub: `${t.dash_admin_fw_lbl_indicator || "Indikator"}: ${locale === 'id' ? (i.indicator?.name_id || i.indicator?.name) : i.indicator?.name ?? "—"}`, count: t.dash_admin_fw_weight?.replace("{weight}", String(i.weight ?? 1)) || `Bobot: ${i.weight ?? 1}` }));
     return [];
   };
 
@@ -353,19 +353,21 @@ export default function AdminFrameworkPage() {
                           </span>
                         )}
                         {tab === "indicators" && (
-                          <span className={cn(
-                            "inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold w-fit",
-                            (row as { hasAuditData?: boolean }).hasAuditData
-                              ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-300"
-                              : "bg-amber-100 text-amber-700 dark:bg-amber-900/50 dark:text-amber-300"
-                          )}>
-                            {(row as { hasAuditData?: boolean }).hasAuditData ? ((t as unknown as Record<string, string>).admin_fw_badge_complete || "✓ Data Audit Lengkap") : ((t as unknown as Record<string, string>).admin_fw_badge_incomplete || "⚠ Audit Belum Lengkap")}
-                          </span>
-                        )}
-                        {tab === "questions" && (row as { isMandatory?: boolean }).isMandatory && (
-                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold w-fit bg-red-100 text-red-700 dark:bg-red-900/50 dark:text-red-300">
-                            ★ Wajib
-                          </span>
+                          <div className="flex flex-wrap gap-1 items-center">
+                            <span className={cn(
+                              "inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold w-fit",
+                              (row as { hasAuditData?: boolean }).hasAuditData
+                                ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-300"
+                                : "bg-amber-100 text-amber-700 dark:bg-amber-900/50 dark:text-amber-300"
+                            )}>
+                              {(row as { hasAuditData?: boolean }).hasAuditData ? ((t as unknown as Record<string, string>).admin_fw_badge_complete || "✓ Data Audit Lengkap") : ((t as unknown as Record<string, string>).admin_fw_badge_incomplete || "⚠ Audit Belum Lengkap")}
+                            </span>
+                            {(row as { isMandatory?: boolean }).isMandatory && (
+                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold w-fit bg-red-100 text-red-700 dark:bg-red-900/50 dark:text-red-300 border border-red-200 dark:border-red-800">
+                                ★ Mandatory Indicator
+                              </span>
+                            )}
+                          </div>
                         )}
                       </div>
                     </td>

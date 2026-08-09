@@ -374,7 +374,7 @@ export function AssessmentTab({ submission, onUpdate, onGoToScore }: Props) {
         (answers[q.id] ?? null) !== null &&
         (answers[q.id] ?? undefined) !== undefined;
       if (isAnswered) answeredQuestions++;
-      if (q.is_mandatory) {
+      if (pi.indicator.is_mandatory || q.is_mandatory) {
         mandatoryTotal++;
         if (isAnswered) mandatoryAnswered++;
       }
@@ -709,6 +709,9 @@ export function AssessmentTab({ submission, onUpdate, onGoToScore }: Props) {
                                             ? pi.indicator.name_id ||
                                               pi.indicator.name
                                             : pi.indicator.name}
+                                          {pi.indicator.is_mandatory && (
+                                            <span className="text-red-500 font-extrabold text-sm" title="Mandatory Indicator">*</span>
+                                          )}
                                           {(pi.indicator.description ||
                                             pi.indicator.description_en ||
                                             pi.indicator.evidence ||
@@ -836,7 +839,7 @@ export function AssessmentTab({ submission, onUpdate, onGoToScore }: Props) {
                                                   className="flex items-start justify-between gap-4">
                                                   <div className="flex-1">
                                                     <div className="flex items-start gap-2 flex-wrap mb-1">
-                                                      {question.is_mandatory && (
+                                                      {(pi.indicator.is_mandatory || question.is_mandatory) && (
                                                         <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[10px] font-extrabold bg-red-100 text-red-700 dark:bg-red-900/50 dark:text-red-300 border border-red-200 dark:border-red-700 shrink-0 mt-0.5">
                                                           ★ {locale === "en" ? "Mandatory" : "Wajib"}
                                                         </span>

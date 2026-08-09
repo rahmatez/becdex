@@ -82,6 +82,7 @@ class SubmissionResource extends JsonResource
                     'verification_method_en'  => $pi->indicator->verification_method_en,
                     'regulation'              => $pi->indicator->regulation,
                     'regulation_en'           => $pi->indicator->regulation_en,
+                    'is_mandatory'            => (bool) $pi->indicator->is_mandatory,
                     'principle'   => $pi->indicator->relationLoaded('principle') && $pi->indicator->principle ? [
                         'id'      => $pi->indicator->principle->id,
                         'name'    => $pi->indicator->principle->name,
