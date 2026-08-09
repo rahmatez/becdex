@@ -33,10 +33,10 @@ import { useTranslation } from "@/store/lang";
 
 const TABS = [
   { id: "assessment", labelKey: "dash_sub_tab_assessment", defaultLabel: "Form Assessment", icon: ClipboardList },
-  { id: "documents", labelKey: "dash_sub_tab_documents", defaultLabel: "Dokumen Terunggah", icon: FolderOpen },
   { id: "score", labelKey: "dash_sub_tab_score", defaultLabel: "Skor & Pembayaran", icon: CreditCard },
   { id: "status", labelKey: "dash_sub_tab_status", defaultLabel: "Riwayat Status", icon: History },
   { id: "certificate", labelKey: "dash_sub_tab_certificate", defaultLabel: "Sertifikat Resmi", icon: Award },
+  { id: "documents", labelKey: "dash_sub_tab_documents", defaultLabel: "Dokumen Terunggah", icon: FolderOpen },
 ];
 
 export default function SubmissionDetailPage() {
