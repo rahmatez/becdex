@@ -48,8 +48,12 @@ export const isCompany = (user: UserWithRole | null | undefined): boolean =>
 export const isAnyAdmin = (user: UserWithRole | null | undefined): boolean =>
   !isCompany(user) && !!user;
 
-/** Apakah user bisa mengakses halaman Submissions & verifikasi */
-export const canAccessSubmissions = (user: UserWithRole | null | undefined): boolean =>
+/** Apakah user bisa membaca halaman Submissions (list & detail) */
+export const canReadSubmissions = (user: UserWithRole | null | undefined): boolean =>
+  isSuperAdmin(user) || isQcAdmin(user) || isAssessmentAdmin(user) || isCertAdmin(user);
+
+/** Apakah user bisa melakukan verifikasi dan meluluskan submission */
+export const canVerifySubmissions = (user: UserWithRole | null | undefined): boolean =>
   isSuperAdmin(user) || isQcAdmin(user) || isAssessmentAdmin(user);
 
 /** Apakah user bisa menerbitkan sertifikat */

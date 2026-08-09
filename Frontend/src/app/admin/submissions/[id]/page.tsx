@@ -22,7 +22,8 @@ import FieldSurveyTab from "@/components/admin-tabs/FieldSurveyTab";
 import { IndicatorChat } from "@/components/submission-tabs/IndicatorChat";
 import { useTranslation } from "@/store/lang";
 import { useAuthStore } from "@/store/auth";
-import { canIssueCertificate, canAccessSubmissions } from "@/lib/roles";
+import { canIssueCertificate, canVerifySubmissions } from "@/lib/roles";
+import { useAdminRouteGuard } from "@/hooks/useAdminRouteGuard";
 
 interface IndicatorDoc { id: number; file_url: string; original_name: string; upload_phase?: number; }
 interface IndicatorQuestion { id: number; text: string; text_en?: string | null; }
@@ -62,9 +63,12 @@ interface SubmissionData {
   survey?: { scheduled_at: string; location_link?: string; notes?: string };
 }
 
-export default function AdminSubmissionDetailPage() {
-  const params = useParams();
-  const id = params.id as string;
+export default function AdminSubmissionDetailPage({ params }: { params: { id: string } }) {
+  const { id } = params;
+  const { user } = useAuthStore();
+  const { t, locale } = useTranslation();
+  const { authorized } = useAdminRouteGuard({ guard: "submission_reader" });
+  
   const [activeTab, setActiveTab] = useState<"verification" | "assessors" | "survey" | "logs">("verification");
   const [expandedIndicators, setExpandedIndicators] = useState<Set<number>>(new Set());
   const [showSurveyModal, setShowSurveyModal] = useState(false);
@@ -74,8 +78,6 @@ export default function AdminSubmissionDetailPage() {
   const [showScoringGuide, setShowScoringGuide] = useState(false);
   const [surveyForm, setSurveyForm] = useState({ scheduled_at: "", location_link: "", notes: "" });
   const [certForm, setCertForm] = useState({ certificate_id: "10", becdex_category_id: "3", published_at: "", mmic: "", direktur: "" });
-  const { t, locale } = useTranslation();
-  const { user } = useAuthStore();
 
   const { data, isLoading, refetch } = useQuery<{ data: SubmissionData }>({
     queryKey: ["admin-submission", id],
@@ -83,6 +85,7 @@ export default function AdminSubmissionDetailPage() {
       const res = await api.get(`/admin/submissions/${id}`);
       return res.data;
     },
+    enabled: authorized,
   });
 
   const indicatorMutation = useMutation({
@@ -138,7 +141,6 @@ export default function AdminSubmissionDetailPage() {
     });
   };
 
-  // Admin bisa edit indikator saat: Status 3 (Verifikasi) ATAU Status 7 (Survei — untuk tandai revisi)
   const isAdminEditable = submission?.status.id === 3 || submission?.status.id === 7;
 
   const returnMutation = useMutation({
@@ -152,7 +154,6 @@ export default function AdminSubmissionDetailPage() {
       refetch();
     },
     onError: (error: unknown) => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const err = error as any;
       toast.error(err.response?.data?.message || (t.dash_admin_sub_id_msg_return_error || "Gagal mengembalikan pengajuan."));
     },
@@ -178,7 +179,6 @@ export default function AdminSubmissionDetailPage() {
       refetch();
     },
     onError: (error: unknown) => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const err = error as any;
       toast.error(err.response?.data?.message || "Gagal meluluskan pengajuan.");
     },
@@ -195,13 +195,10 @@ export default function AdminSubmissionDetailPage() {
       refetch();
     },
     onError: (error: unknown) => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const err = error as any;
       toast.error(err.response?.data?.message || "Gagal menolak pengajuan.");
     },
   });
-
-
 
   const grouped = new Map<string, Map<string, Map<string, PerIndicatorItem[]>>>();
   for (const pi of submission?.per_indicators ?? []) {
@@ -217,7 +214,6 @@ export default function AdminSubmissionDetailPage() {
     principleMap.get(principle)!.push(pi);
   }
 
-  // Build sequential indicator number map (linear by array order, matches User View)
   const indicatorNumberMap = useMemo(() => {
     const map = new Map<number, number>();
     let counter = 0;
@@ -240,6 +236,8 @@ export default function AdminSubmissionDetailPage() {
     }
     return map;
   }, [submission?.per_indicators]);
+
+  if (!authorized) return null;
 
   if (isLoading) {
     return (
@@ -375,7 +373,7 @@ export default function AdminSubmissionDetailPage() {
                         <span className="hidden sm:inline">{t.dash_admin_sub_id_btn_cert || "Terbitkan Sertifikat"}</span>
                       </button>
                     )}
-                    {!submission.survey && canAccessSubmissions(user) && (
+                    {!submission.survey && canVerifySubmissions(user) && (
                       <button
                         onClick={() => approveMutation.mutate()}
                         disabled={approveMutation.isPending}

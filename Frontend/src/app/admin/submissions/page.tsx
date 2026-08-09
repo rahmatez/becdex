@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { MdWarning } from "react-icons/md";
 import { useTranslation } from "@/store/lang";
+import { useAdminRouteGuard } from "@/hooks/useAdminRouteGuard";
 
 interface SubmissionRow {
   id: string;
@@ -44,6 +45,7 @@ export default function AdminSubmissionsPage() {
 
   const router = useRouter();
   const { t } = useTranslation();
+  const { authorized } = useAdminRouteGuard({ guard: "submission_reader" });
 
   const STATUS_FILTERS = [
     { label: t.dash_admin_sub_filter_all || "Semua Submission", value: "" },
@@ -64,6 +66,7 @@ export default function AdminSubmissionsPage() {
       const res = await api.get(`/admin/submissions?${params}`);
       return res.data;
     },
+    enabled: authorized,
   });
 
   const submissions = data?.data ?? [];
@@ -78,6 +81,9 @@ export default function AdminSubmissionsPage() {
     const subId = s.id.toLowerCase();
     return companyName.includes(q) || companyEmail.includes(q) || subId.includes(q);
   });
+
+  // Early return setelah semua hooks — React Rules of Hooks
+  if (!authorized) return null;
 
   return (
     <AppLayout title={t.dash_admin_sub_title || "Verifikasi Submission"}>

@@ -3,9 +3,9 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/auth";
-import { canManageUsers, canAccessPayments, canAccessSubmissions, canIssueCertificate, isAnyAdmin } from "@/lib/roles";
+import { canManageUsers, canAccessPayments, canVerifySubmissions, canReadSubmissions, canIssueCertificate, isAnyAdmin } from "@/lib/roles";
 
-type GuardType = "super_admin" | "any_admin" | "assessment_admin" | "finance_admin" | "cert_admin";
+type GuardType = "super_admin" | "any_admin" | "assessment_admin" | "finance_admin" | "cert_admin" | "submission_reader";
 
 interface UseAdminRouteGuardOptions {
   guard: GuardType;
@@ -34,7 +34,9 @@ export function useAdminRouteGuard({ guard, redirectTo = "/admin" }: UseAdminRou
       case "finance_admin":
         return canAccessPayments(user);
       case "assessment_admin":
-        return canAccessSubmissions(user);
+        return canVerifySubmissions(user);
+      case "submission_reader":
+        return canReadSubmissions(user);
       case "cert_admin":
         return canIssueCertificate(user);
       case "any_admin":
