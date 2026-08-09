@@ -885,19 +885,36 @@ export function AssessmentTab({ submission, onUpdate, onGoToScore }: Props) {
                                                       </button>
                                                       {/* Tidak Button */}
                                                       <button
-                                                        onClick={() =>
+                                                        onClick={() => {
+                                                          if (pi.indicator.is_mandatory || question.is_mandatory) {
+                                                            toast.error(
+                                                              locale === "en"
+                                                                ? "This is a mandatory requirement and must be answered 'Yes'."
+                                                                : "Pertanyaan ini bersifat wajib dan harus dijawab 'Ya'."
+                                                            );
+                                                            return;
+                                                          }
                                                           handleNoClick(
                                                             question.id,
                                                             pi,
                                                             uploadedDocsByIndicator,
-                                                          )
-                                                        }
+                                                          );
+                                                        }}
                                                         className={cn(
-                                                          "px-3 py-1 rounded-full text-xs font-semibold transition-colors cursor-pointer",
+                                                          "px-3 py-1 rounded-full text-xs font-semibold transition-colors",
                                                           isExplicitlyNo
                                                             ? "bg-red-500 text-white"
                                                             : "bg-gray-100 text-gray-500 hover:bg-red-50",
-                                                        )}>
+                                                          (pi.indicator.is_mandatory || question.is_mandatory)
+                                                            ? "opacity-50 cursor-not-allowed hover:bg-gray-100 hover:text-gray-500"
+                                                            : "cursor-pointer"
+                                                        )}
+                                                        title={
+                                                          (pi.indicator.is_mandatory || question.is_mandatory)
+                                                            ? (locale === "en" ? "Mandatory question must be answered Yes" : "Pertanyaan wajib harus dijawab Ya")
+                                                            : undefined
+                                                        }
+                                                      >
                                                         Tidak
                                                       </button>
 
