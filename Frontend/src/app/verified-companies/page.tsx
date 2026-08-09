@@ -229,6 +229,7 @@ export default function VerifiedCompaniesPage() {
                   const companyName = cert.user?.company?.company_name || cert.user?.name || "Unknown Company";
                   const countryName = getCountryName(cert.user?.company?.company_country);
                   const sectorName = cert.user?.company?.company_field?.name || "Marine Sector";
+                  const catName = cert.certificate?.name || cert.user?.company?.becdex_category?.name || "Standard";
                   
                   return (
                     <div 
@@ -272,7 +273,7 @@ export default function VerifiedCompaniesPage() {
 
                           <div className="flex items-center gap-1.5 text-[13px] text-gray-600 font-medium mt-1">
                             <MdCheckCircle size={16} className="text-[#0d6efd] shrink-0" />
-                            <span>Verified</span>
+                            <span>Certified ({catName}) Blue Economy Company</span>
                           </div>
                         </div>
                       </div>
