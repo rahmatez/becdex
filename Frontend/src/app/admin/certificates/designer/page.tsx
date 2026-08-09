@@ -32,7 +32,9 @@ export default function CertificateDesignerPage() {
   // Canvas state
   const canvasRef = useRef<HTMLDivElement>(null);
   const [bgCategory, setBgCategory] = useState<string>("excellent");
-  const bgImage = `${(process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000").replace('/api', '')}/storage/certificates/${bgCategory}.jpg`;
+  const bgImage = activeTemplate?.background_path
+    ? `${(process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000").replace('/api', '')}/storage/${activeTemplate.background_path}`
+    : `/certificate/${bgCategory}.jpg`;
 
   // Dragging state
   const [isDragging, setIsDragging] = useState<string | null>(null);

@@ -114,10 +114,10 @@ class CertificateTemplateController extends Controller
         $template = CertificateTemplate::findOrFail($id);
         
         $bgPath = null;
-        if ($template->background_path) {
+        if ($template->background_path && Storage::disk('public')->exists($template->background_path)) {
             $bgPath = storage_path('app/public/' . $template->background_path);
         } else {
-            $bgPath = public_path('assets/certificate_default_bg.jpg'); 
+            $bgPath = storage_path('app/public/certificates/excellent.jpg');
         }
 
         $data = [
