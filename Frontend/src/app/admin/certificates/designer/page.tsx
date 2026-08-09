@@ -33,7 +33,7 @@ export default function CertificateDesignerPage() {
   const canvasRef = useRef<HTMLDivElement>(null);
   const [bgCategory, setBgCategory] = useState<string>("excellent");
   const bgImage = activeTemplate?.background_path
-    ? `${(process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000").replace('/api', '')}/storage/${activeTemplate.background_path}`
+    ? `${(process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000").replace(/\/api\/?$/, '')}/storage/${activeTemplate.background_path}`
     : `/certificate/${bgCategory}.jpg`;
 
   // Dragging state
@@ -113,7 +113,7 @@ export default function CertificateDesignerPage() {
       toast.error("Harap simpan desain terlebih dahulu untuk melihat pratinjau PDF.");
       return;
     }
-    const url = `${(process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000").replace('/api', '')}/api/admin/certificate-templates/${activeTemplate.id}/preview`;
+    const url = `${(process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000").replace(/\/api\/?$/, '')}/api/admin/certificate-templates/${activeTemplate.id}/preview`;
     window.open(url, "_blank");
   };
 

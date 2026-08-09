@@ -21,7 +21,7 @@ export default function AdminProfilePage() {
   const getImageUrl = (imagePath: string | null | undefined) => {
     if (!imagePath) return "";
     if (imagePath.startsWith("http")) return imagePath;
-    const baseUrl = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000").replace('/api', '');
+    const baseUrl = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000").replace(/\/api\/?$/, '');
     return `${baseUrl}/storage/${imagePath}`;
   };
 

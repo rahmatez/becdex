@@ -391,7 +391,7 @@ export default function AdminSubmissionsPage() {
                 Batal
               </button>
               <a
-                href={`${process.env.NEXT_PUBLIC_API_URL?.replace('/api', '')}/api/admin/submissions/export/csv?start_date=${exportStartDate}&end_date=${exportEndDate}&status_id=${exportStatus}`}
+                href={`${process.env.NEXT_PUBLIC_API_URL?.replace(/\/api\/?$/, '')}/api/admin/submissions/export/csv?start_date=${exportStartDate}&end_date=${exportEndDate}&status_id=${exportStatus}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => setShowExportModal(false)}

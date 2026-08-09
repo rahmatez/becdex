@@ -241,7 +241,7 @@ export default function VerifiedCompaniesPage() {
                       {cert.user?.image ? (
                         /* eslint-disable-next-line @next/next/no-img-element */
                         <img
-                          src={cert.user.image.startsWith("http") ? cert.user.image : `${(process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000").replace('/api', '')}/storage/${cert.user.image}`}
+                          src={cert.user.image.startsWith("http") ? cert.user.image : `${(process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000").replace(/\/api\/?$/, '')}/storage/${cert.user.image}`}
                           alt={companyName}
                           className="w-full h-full object-contain"
                         />

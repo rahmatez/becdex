@@ -218,7 +218,7 @@ export default function ContentManagementPage() {
                   {item.value_en && (
                     <div className="relative w-64 h-32 rounded-lg overflow-hidden border border-slate-200">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={`${process.env.NEXT_PUBLIC_API_URL?.replace('/api', '')}/storage/${item.value_en}`} alt={item.key} className="object-cover w-full h-full" />
+                      <img src={`${process.env.NEXT_PUBLIC_API_URL?.replace(/\/api\/?$/, '')}/storage/${item.value_en}`} alt={item.key} className="object-cover w-full h-full" />
                     </div>
                   )}
                   <label className="cursor-pointer flex items-center justify-center gap-2 border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-xl py-6 px-4 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors w-full md:w-1/2">

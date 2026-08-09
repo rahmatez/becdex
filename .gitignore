@@ -77,3 +77,4 @@ Backend/.phpunit.cache/
 
 # Vitest coverage output
 Frontend/coverage/
+becdex_local.sql

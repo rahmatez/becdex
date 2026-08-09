@@ -248,7 +248,7 @@ export default function ProfilePage() {
               {profile?.image ? (
                 /* eslint-disable-next-line @next/next/no-img-element */
                 <img
-                  src={profile.image.startsWith("http") ? profile.image : `${(process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000").replace('/api', '')}/storage/${profile.image}`}
+                  src={profile.image.startsWith("http") ? profile.image : `${(process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000").replace(/\/api\/?$/, '')}/storage/${profile.image}`}
                   alt={profile.name}
                   className="w-full h-full object-cover"
                 />
@@ -479,7 +479,7 @@ export default function ProfilePage() {
                 </div>
                 <div className="flex items-center justify-end min-w-30">
                   {profile?.legal_documents ? (
-                    <a href={`${(process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000").replace('/api', '')}/storage/${profile.legal_documents}`} target="_blank" rel="noreferrer" className="flex items-center gap-1.5 text-xs font-bold text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">
+                    <a href={`${(process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000").replace(/\/api\/?$/, '')}/storage/${profile.legal_documents}`} target="_blank" rel="noreferrer" className="flex items-center gap-1.5 text-xs font-bold text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">
                       <Download size={14} /> {t.dash_profile_legal_view || "Lihat File"}
                     </a>
                   ) : (
@@ -512,7 +512,7 @@ export default function ProfilePage() {
                 </div>
                 <div className="flex items-center justify-end min-w-30">
                   {profile?.organizational_chart ? (
-                    <a href={`${(process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000").replace('/api', '')}/storage/${profile.organizational_chart}`} target="_blank" rel="noreferrer" className="flex items-center gap-1.5 text-xs font-bold text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">
+                    <a href={`${(process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000").replace(/\/api\/?$/, '')}/storage/${profile.organizational_chart}`} target="_blank" rel="noreferrer" className="flex items-center gap-1.5 text-xs font-bold text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">
                       <Download size={14} /> {t.dash_profile_legal_view || "Lihat File"}
                     </a>
                   ) : (

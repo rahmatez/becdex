@@ -27,6 +27,7 @@ class PublicController extends Controller
         $data = $this->fetchVerifiedCompanies($search, $perPage);
 
         return response()->json($data);
+
     }
 
     private function fetchVerifiedCompanies(string $search, int $perPage): array

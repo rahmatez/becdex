@@ -124,7 +124,7 @@ export default function FieldSurveyTab({ submissionId }: { submissionId: string 
               </div>
 
               {survey.file_path ? (
-                <a href={`${process.env.NEXT_PUBLIC_API_URL?.replace('/api', '')}/storage/${survey.file_path}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-4 py-2 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-lg text-xs font-bold hover:bg-emerald-100 transition-colors">
+                <a href={`${process.env.NEXT_PUBLIC_API_URL?.replace(/\/api\/?$/, '')}/storage/${survey.file_path}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-4 py-2 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-lg text-xs font-bold hover:bg-emerald-100 transition-colors">
                   <Download size={14} /> Download Laporan (PDF/Foto)
                 </a>
               ) : (

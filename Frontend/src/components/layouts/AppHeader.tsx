@@ -261,7 +261,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ title }) => {
             {user?.image ? (
               /* eslint-disable-next-line @next/next/no-img-element */
               <img
-                src={user.image.startsWith("http") ? user.image : `${(process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000").replace('/api', '')}/storage/${user.image}`}
+                src={user.image.startsWith("http") ? user.image : `${(process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000").replace(/\/api\/?$/, '')}/storage/${user.image}`}
                 alt={user.name}
                 className="w-9 h-9 rounded-xl object-cover shadow-sm border border-slate-200/60 dark:border-slate-850"
               />
