@@ -93,9 +93,9 @@ class SubmissionAdminController extends Controller
 
         $submission = Submission::findOrFail($id);
 
-        if ($submission->submission_status_id !== 3) {
+        if (!in_array($submission->submission_status_id, [3, 7])) {
             return response()->json([
-                'message' => 'Status tidak dapat diubah karena submission tidak dalam tahap verifikasi (Status 3).',
+                'message' => 'Status tidak dapat diubah karena submission tidak dalam tahap verifikasi atau survei (Status 3 / 7).',
             ], 422);
         }
 
@@ -110,9 +110,12 @@ class SubmissionAdminController extends Controller
         // Update valid_value per jawaban
         if ($request->valid_values) {
             foreach ($request->valid_values as $v) {
+                // If status is 6 (Invalid), force valid_value to 0
+                $validValue = ($request->status_id == 6) ? 0 : $v['valid_value'];
+                
                 Answer::updateOrCreate(
                     ['submission_id' => $id, 'question_id' => $v['question_id']],
-                    ['valid_value' => $v['valid_value']]
+                    ['valid_value' => $validValue]
                 );
             }
 
@@ -132,13 +135,20 @@ class SubmissionAdminController extends Controller
         if ($request->status_id == 5) { // Declined (Need Revision)
             $message = 'Ada indikator yang perlu diperbaiki/direvisi. Silakan cek detail kuesioner Anda.';
             if ($submission->user) {
-                $submission->user->notify(new SystemNotification(
+                $submission->user->notify(new \App\Notifications\SystemNotification(
                     'Revisi Dokumen Diperlukan',
                     $message,
                     '/dashboard/submissions/' . $submission->id
                 ));
-                // We intentionally do not send an email here to avoid spamming the user
-                // on every indicator change and to keep the API response fast.
+            }
+        } else if ($request->status_id == 6) { // Invalid (Permanently Failed)
+            $message = 'Ada indikator yang dinilai gagal (Invalid) dan tidak memenuhi standar.';
+            if ($submission->user) {
+                $submission->user->notify(new \App\Notifications\SystemNotification(
+                    'Indikator Invalid',
+                    $message,
+                    '/dashboard/submissions/' . $submission->id
+                ));
             }
         }
 

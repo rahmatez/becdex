@@ -612,29 +612,55 @@ export default function AdminSubmissionDetailPage({ params }: { params: { id: st
                             <CheckCircle2 size={13} />
                             <span>{t.dash_admin_sub_id_btn_valid || "Valid"}</span>
                           </button>
-                          <button
-                            onClick={() =>
-                              indicatorMutation.mutate({
-                                indicatorId: pi.indicator_id,
-                                statusId: 5,
-                                valid_values: pi.indicator.questions.map((q: { id: number }) => ({
-                                  question_id: q.id,
-                                  valid_value: 0,
-                                })),
-                              })
-                            }
-                            disabled={!isAdminEditable || indicatorMutation.isPending}
-                            title={t.dash_admin_sub_id_tooltip_revise || "Tolak / Revisi"}
-                            className={cn(
-                              "inline-flex items-center gap-1 px-2.5 py-1 rounded-xl font-bold text-xs transition-all border cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed",
-                              pi.status.id === 5
-                                ? "bg-rose-600 text-white border-rose-600 shadow-md shadow-rose-600/20"
-                                : "bg-rose-50 text-rose-700 border-rose-200/80 hover:bg-rose-600 hover:text-white dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-800"
-                            )}
-                          >
-                            <XCircle size={13} />
-                            <span>{t.dash_admin_sub_id_btn_revise || "Revisi"}</span>
-                          </button>
+                          {(submission.revision_count === 0) ? (
+                            <button
+                              onClick={() =>
+                                indicatorMutation.mutate({
+                                  indicatorId: pi.indicator_id,
+                                  statusId: 5,
+                                  valid_values: pi.indicator.questions.map((q: { id: number }) => ({
+                                    question_id: q.id,
+                                    valid_value: 0,
+                                  })),
+                                })
+                              }
+                              disabled={!isAdminEditable || indicatorMutation.isPending}
+                              title={t.dash_admin_sub_id_tooltip_revise || "Minta perusahaan merevisi dokumen"}
+                              className={cn(
+                                "inline-flex items-center gap-1 px-2.5 py-1 rounded-xl font-bold text-xs transition-all border cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed",
+                                pi.status.id === 5
+                                  ? "bg-amber-600 text-white border-amber-600 shadow-md shadow-amber-600/20"
+                                  : "bg-amber-50 text-amber-700 border-amber-200/80 hover:bg-amber-600 hover:text-white dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800"
+                              )}
+                            >
+                              <XCircle size={13} />
+                              <span>{t.dash_admin_sub_id_btn_revise || "Revisi"}</span>
+                            </button>
+                          ) : (
+                            <button
+                              onClick={() =>
+                                indicatorMutation.mutate({
+                                  indicatorId: pi.indicator_id,
+                                  statusId: 6,
+                                  valid_values: pi.indicator.questions.map((q: { id: number }) => ({
+                                    question_id: q.id,
+                                    valid_value: 0,
+                                  })),
+                                })
+                              }
+                              disabled={!isAdminEditable || indicatorMutation.isPending}
+                              title="Tolak permanen / Gagal (Invalid)"
+                              className={cn(
+                                "inline-flex items-center gap-1 px-2.5 py-1 rounded-xl font-bold text-xs transition-all border cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed",
+                                pi.status.id === 6
+                                  ? "bg-rose-600 text-white border-rose-600 shadow-md shadow-rose-600/20"
+                                  : "bg-rose-50 text-rose-700 border-rose-200/80 hover:bg-rose-600 hover:text-white dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-800"
+                              )}
+                            >
+                              <XCircle size={13} />
+                              <span>Invalid</span>
+                            </button>
+                          )}
                         </div>
                       </div>
 

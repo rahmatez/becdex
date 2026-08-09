@@ -18,6 +18,7 @@ import {
   BookOpen,
   Scale,
   CheckCircle2,
+  XCircle,
 } from "lucide-react";
 import { MdCheckCircle, MdSearch, MdWarning } from "react-icons/md";
 import { SubmissionDetail, PerIndicator } from "@/types";
@@ -729,7 +730,7 @@ export function AssessmentTab({ submission, onUpdate, onGoToScore }: Props) {
                                   canEdit &&
                                   !(
                                     submission.status.id === 4 &&
-                                    pi.status?.id === 3
+                                    (pi.status?.id === 4 || pi.status?.id === 6)
                                   );
 
                                 return (
@@ -833,7 +834,7 @@ export function AssessmentTab({ submission, onUpdate, onGoToScore }: Props) {
                                         )}
                                         {!isIndicatorEditable &&
                                           submission.status.id === 4 &&
-                                          pi.status?.id === 3 && (
+                                          pi.status?.id === 4 && (
                                             <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded-md border border-emerald-200/60 dark:border-emerald-800 shrink-0">
                                               <MdCheckCircle className="inline w-3 h-3 mr-1 mb-0.5" />
                                               {t.tab_assessment_done ||
@@ -842,10 +843,18 @@ export function AssessmentTab({ submission, onUpdate, onGoToScore }: Props) {
                                           )}
                                         {!isIndicatorEditable &&
                                           submission.status.id === 4 &&
-                                          pi.status?.id === 4 && (
-                                            <span className="text-[10px] font-bold text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/60 px-2 py-0.5 rounded-md border border-rose-200/60 dark:border-rose-800 shrink-0 animate-pulse">
+                                          pi.status?.id === 5 && (
+                                            <span className="text-[10px] font-bold text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/60 px-2 py-0.5 rounded-md border border-amber-200/60 dark:border-amber-800 shrink-0 animate-pulse">
                                               <MdWarning className="inline w-3 h-3 mr-1 mb-0.5" />
                                               Butuh Revisi
+                                            </span>
+                                          )}
+                                        {!isIndicatorEditable &&
+                                          submission.status.id === 4 &&
+                                          pi.status?.id === 6 && (
+                                            <span className="text-[10px] font-bold text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/60 px-2 py-0.5 rounded-md border border-rose-200/60 dark:border-rose-800 shrink-0">
+                                              <XCircle className="inline w-3 h-3 mr-1 mb-0.5" />
+                                              Gagal (Invalid)
                                             </span>
                                           )}
                                       </div>
@@ -1187,7 +1196,8 @@ export function AssessmentTab({ submission, onUpdate, onGoToScore }: Props) {
                                             {/* Indicator Chat Component */}
                                             {(!isIndicatorEditable ||
                                               pi.status?.id === 4 ||
-                                              pi.status?.id === 3) && (
+                                              pi.status?.id === 5 ||
+                                              pi.status?.id === 6) && (
                                               <div className="mt-6 border-t border-slate-200/60 dark:border-slate-800 pt-5">
                                                 <h4 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 flex items-center gap-1.5">
                                                   <MessageSquare
