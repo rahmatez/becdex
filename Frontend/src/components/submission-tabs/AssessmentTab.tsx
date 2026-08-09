@@ -388,6 +388,39 @@ export function AssessmentTab({ submission, onUpdate, onGoToScore }: Props) {
 
   const [showUnansweredOnly, setShowUnansweredOnly] = useState(false);
 
+  // Helper calculation for fulfilled indicators & mandatory indicator progress
+  const indicatorStats = useMemo(() => {
+    let fulfilled = 0;
+    let fulfilledMandatory = 0;
+    let totalMandatory = 0;
+    const perInds = submission.per_indicators ?? [];
+
+    for (const pi of perInds) {
+      const isMandatory = !!pi.indicator.is_mandatory;
+      if (isMandatory) totalMandatory++;
+
+      const questions = pi.indicator.questions ?? [];
+      const isFulfilled =
+        questions.length > 0 &&
+        questions.every((q) => {
+          const val = answers[q.id];
+          return val !== undefined && val !== null && val > 0;
+        });
+
+      if (isFulfilled) {
+        fulfilled++;
+        if (isMandatory) fulfilledMandatory++;
+      }
+    }
+
+    return {
+      fulfilled,
+      fulfilledMandatory,
+      totalMandatory: totalMandatory || 22,
+      totalIndicators: perInds.length || 50,
+    };
+  }, [submission.per_indicators, answers]);
+
   // Helper calculation for unanswered counts per aspect
   const aspectUnansweredCounts = useMemo(() => {
     const counts = new Map<string, number>();
@@ -463,29 +496,49 @@ export function AssessmentTab({ submission, onUpdate, onGoToScore }: Props) {
           </div>
         </div>
 
-        <div className="bg-emerald-50/60 dark:bg-emerald-950/40 border border-emerald-200/80 dark:border-emerald-800/80 rounded-2xl p-5 shadow-2xs flex items-center justify-between">
-          <div>
+        {/* Fulfilled Indicators Card */}
+        <div className="bg-emerald-50/60 dark:bg-emerald-950/40 border border-emerald-200/80 dark:border-emerald-800/80 rounded-2xl p-5 shadow-2xs flex flex-col justify-between">
+          <div className="flex items-center justify-between mb-1.5">
             <p className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-              Dokumen Pendukung Diunggah
+              {locale === "en" ? "Fulfilled Indicators" : "Indikator Terpenuhi"}
             </p>
-            <p className="text-xs text-slate-600 dark:text-slate-300 font-medium mt-1">
-              Minimal 35 berkas untuk verifikasi
-            </p>
-          </div>
-          <div className="text-right">
             <span
               className={cn(
-                "text-2xl md:text-3xl font-extrabold tracking-tight",
-                (submission.documents_uploaded ?? 0) >= 35
-                  ? "text-emerald-600 dark:text-emerald-400"
-                  : "text-[#0c2340] dark:text-white",
+                "px-2 py-0.5 rounded-md text-[10px] font-extrabold border shrink-0",
+                indicatorStats.fulfilledMandatory >= indicatorStats.totalMandatory
+                  ? "bg-emerald-100 text-emerald-800 border-emerald-200 dark:bg-emerald-900/60 dark:text-emerald-300 dark:border-emerald-800"
+                  : "bg-amber-100 text-amber-800 border-amber-200 dark:bg-amber-900/60 dark:text-amber-300 dark:border-amber-800"
               )}>
-              {submission.documents_uploaded ?? 0}
+              {indicatorStats.fulfilledMandatory}/{indicatorStats.totalMandatory} ★ {locale === "en" ? "Mandatory" : "Wajib"}
             </span>
-            <span className="text-slate-400 dark:text-slate-500 text-xs font-bold">
-              {" "}
-              / 35
-            </span>
+          </div>
+
+          <div>
+            <div className="flex items-baseline justify-between mb-1">
+              <div>
+                <span
+                  className={cn(
+                    "text-2xl md:text-3xl font-extrabold tracking-tight",
+                    indicatorStats.fulfilled >= 35
+                      ? "text-emerald-600 dark:text-emerald-400"
+                      : "text-[#0c2340] dark:text-white"
+                  )}>
+                  {indicatorStats.fulfilled}
+                </span>
+                <span className="text-slate-400 dark:text-slate-500 text-xs font-bold">
+                  {" "}
+                  / {indicatorStats.totalIndicators}
+                </span>
+              </div>
+              <span className="text-[11px] font-bold text-slate-400">
+                Target: min. 35
+              </span>
+            </div>
+            <p className="text-xs text-slate-600 dark:text-slate-300 font-medium leading-snug">
+              {locale === "en"
+                ? `Min. 35 indicators required (${indicatorStats.totalMandatory} must be mandatory)`
+                : `Minimal 35 indikator (${indicatorStats.totalMandatory} di antaranya wajib)`}
+            </p>
           </div>
         </div>
       </div>
