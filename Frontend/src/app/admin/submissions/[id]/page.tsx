@@ -259,6 +259,7 @@ export default function AdminSubmissionDetailPage({ params }: { params: { id: st
   }
 
   const isCertified = submission.status.id === 5;
+  const unverifiedCount = submission.per_indicators?.filter(pi => pi.status.id === 3).length || 0;
 
   return (
     <AppLayout title={t.dash_admin_sub_id_title || "Review & Verifikasi Auditor"}>
@@ -284,6 +285,21 @@ export default function AdminSubmissionDetailPage({ params }: { params: { id: st
           </div>
         </div>
       ) : null}
+
+      {/* Warning Unverified Indicators */}
+      {[3, 7].includes(submission.status.id) && unverifiedCount > 0 && (
+        <div className="mb-6 flex items-start gap-3.5 bg-amber-50/80 dark:bg-amber-950/50 border border-amber-200 dark:border-amber-800/80 rounded-2xl p-5 shadow-2xs animate-in fade-in slide-in-from-top-4 duration-500">
+          <AlertTriangle size={22} className="text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+          <div>
+            <p className="text-sm font-extrabold text-amber-900 dark:text-amber-200">
+              Audit Belum Selesai ({unverifiedCount} Indikator Menunggu Penilaian)
+            </p>
+            <p className="text-xs text-amber-700 dark:text-amber-300 mt-1 leading-relaxed font-medium">
+              Sistem mengunci tombol keputusan akhir. Anda wajib memberikan status (Valid, Revisi, atau Invalid) untuk 100% indikator secara spesifik agar rekam jejak audit BECdex valid dan dapat dipertanggungjawabkan.
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* Top Header Card */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
@@ -375,9 +391,9 @@ export default function AdminSubmissionDetailPage({ params }: { params: { id: st
                     {!submission.survey && canVerifySubmissions(user) && (
                       <button
                         onClick={() => approveMutation.mutate()}
-                        disabled={approveMutation.isPending}
+                        disabled={approveMutation.isPending || unverifiedCount > 0}
                         className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl border border-emerald-600/80 bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400 hover:bg-emerald-600 hover:text-white font-bold text-[10px] sm:text-xs transition-all cursor-pointer disabled:opacity-50"
-                        title="Selesaikan & Luluskan"
+                        title={unverifiedCount > 0 ? "Selesaikan penilaian semua indikator terlebih dahulu" : "Selesaikan & Luluskan"}
                       >
                         <CheckCircle2 size={14} />
                         <span className="hidden sm:inline">Luluskan</span>
@@ -386,8 +402,9 @@ export default function AdminSubmissionDetailPage({ params }: { params: { id: st
                     {(submission.revision_count ?? 0) >= 1 ? (
                       <button
                         onClick={() => setShowRejectModal(true)}
-                        className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl border border-rose-600/80 bg-rose-50 text-rose-700 dark:bg-rose-950/40 dark:text-rose-400 hover:bg-rose-600 hover:text-white font-bold text-[10px] sm:text-xs transition-all cursor-pointer"
-                        title="Tolak Permanen (Batas Revisi Habis)"
+                        disabled={unverifiedCount > 0}
+                        className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl border border-rose-600/80 bg-rose-50 text-rose-700 dark:bg-rose-950/40 dark:text-rose-400 hover:bg-rose-600 hover:text-white font-bold text-[10px] sm:text-xs transition-all cursor-pointer disabled:opacity-50"
+                        title={unverifiedCount > 0 ? "Selesaikan penilaian semua indikator terlebih dahulu" : "Tolak Permanen (Batas Revisi Habis)"}
                       >
                         <XCircle size={14} />
                         <span className="hidden sm:inline">Tolak Permanen</span>
@@ -395,9 +412,9 @@ export default function AdminSubmissionDetailPage({ params }: { params: { id: st
                     ) : (
                       <button
                         onClick={() => setShowReturnModal(true)}
-                        disabled={returnMutation.isPending}
+                        disabled={returnMutation.isPending || unverifiedCount > 0}
                         className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl border border-amber-500/80 bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-400 hover:bg-amber-500 hover:text-white font-bold text-[10px] sm:text-xs transition-all cursor-pointer disabled:opacity-50"
-                        title="Kembalikan untuk Revisi"
+                        title={unverifiedCount > 0 ? "Selesaikan penilaian semua indikator terlebih dahulu" : "Kembalikan untuk Revisi"}
                       >
                         <AlertTriangle size={14} />
                         <span className="hidden sm:inline">{t.admin_sub_badge_revision || "Revisi"}</span>
@@ -428,8 +445,9 @@ export default function AdminSubmissionDetailPage({ params }: { params: { id: st
                     {(submission.revision_count ?? 0) >= 1 ? (
                       <button
                         onClick={() => setShowRejectModal(true)}
-                        className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl border border-rose-600/80 bg-rose-50 text-rose-700 dark:bg-rose-950/40 dark:text-rose-400 hover:bg-rose-600 hover:text-white font-bold text-[10px] sm:text-xs transition-all cursor-pointer"
-                        title="Tolak Permanen (Batas Revisi Habis)"
+                        disabled={unverifiedCount > 0}
+                        className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl border border-rose-600/80 bg-rose-50 text-rose-700 dark:bg-rose-950/40 dark:text-rose-400 hover:bg-rose-600 hover:text-white font-bold text-[10px] sm:text-xs transition-all cursor-pointer disabled:opacity-50"
+                        title={unverifiedCount > 0 ? "Selesaikan penilaian semua indikator terlebih dahulu" : "Tolak Permanen (Batas Revisi Habis)"}
                       >
                         <XCircle size={14} />
                         <span className="hidden sm:inline">Tolak Permanen</span>
@@ -437,9 +455,9 @@ export default function AdminSubmissionDetailPage({ params }: { params: { id: st
                     ) : (
                       <button
                         onClick={() => setShowReturnModal(true)}
-                        disabled={returnMutation.isPending}
+                        disabled={returnMutation.isPending || unverifiedCount > 0}
                         className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl border border-amber-500/80 bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-400 hover:bg-amber-500 hover:text-white font-bold text-[10px] sm:text-xs transition-all cursor-pointer disabled:opacity-50"
-                        title="Kembalikan untuk Revisi Pasca Survei"
+                        title={unverifiedCount > 0 ? "Selesaikan penilaian semua indikator terlebih dahulu" : "Kembalikan untuk Revisi Pasca Survei"}
                       >
                         <AlertTriangle size={14} />
                         <span className="hidden sm:inline">{t.admin_sub_badge_revision || "Revisi"}</span>
