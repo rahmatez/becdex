@@ -50,17 +50,19 @@ interface UserRow {
 const getRoleBadge = (roleId?: number, fallbackName?: string) => {
   switch (roleId) {
     case 1:
-      return { label: "Super Admin", className: "bg-indigo-50 text-indigo-700 border-indigo-200" };
-    case 6:
-      return { label: "Assessment Admin", className: "bg-amber-50 text-amber-700 border-amber-200" };
-    case 7:
-      return { label: "Certificate Admin", className: "bg-blue-50 text-blue-700 border-blue-200" };
-    case 10:
-      return { label: "Finance Admin", className: "bg-emerald-50 text-emerald-700 border-emerald-200" };
+      return { label: "Director", className: "bg-indigo-50 text-indigo-700 border-indigo-200" };
+    case 12:
+      return { label: "IT Manager", className: "bg-indigo-50 text-indigo-700 border-indigo-200" };
     case 11:
-      return { label: "QC Admin", className: "bg-purple-50 text-purple-700 border-purple-200" };
+      return { label: "Quality Control and Standardization Manager", className: "bg-purple-50 text-purple-700 border-purple-200" };
+    case 10:
+      return { label: "HR and Finance Manager", className: "bg-emerald-50 text-emerald-700 border-emerald-200" };
+    case 6:
+      return { label: "Auditor", className: "bg-amber-50 text-amber-700 border-amber-200" };
+    case 7:
+      return { label: "Certification Manager", className: "bg-blue-50 text-blue-700 border-blue-200" };
     case 2:
-      return { label: "Company", className: "bg-slate-100 text-slate-700 border-slate-200" };
+      return { label: "Company PIC", className: "bg-slate-100 text-slate-700 border-slate-200" };
     default:
       return { label: fallbackName || "—", className: "bg-slate-100 text-slate-700 border-slate-200" };
   }
@@ -197,12 +199,13 @@ export default function AdminUsersPage() {
               className="text-xs font-bold px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 focus:outline-none"
             >
               <option value="all">{t.dash_admin_user_role_all || "Semua Role"}</option>
-              <option value="admin">Super Admin</option>
-              <option value="reviewer">Assessment Admin</option>
-              <option value="supervisor">Certificate Admin</option>
-              <option value="manager">Finance Admin</option>
-              <option value="qc_admin">QC Admin</option>
-              <option value="company">Company</option>
+              <option value="admin">Director</option>
+              <option value="it_manager">IT Manager</option>
+              <option value="qc_admin">Quality Control and Standardization Manager</option>
+              <option value="manager">HR and Finance Manager</option>
+              <option value="reviewer">Auditor</option>
+              <option value="supervisor">Certification Manager</option>
+              <option value="company">Company PIC</option>
             </select>
           </div>
 

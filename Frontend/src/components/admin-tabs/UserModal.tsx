@@ -35,12 +35,13 @@ export function UserModal({
   });
 
   const roles = [
-    { id: 1,  name: "Super Admin",        desc: "Director / IT Manager — Akses penuh" },
-    { id: 6,  name: "Assessment Admin",   desc: "Auditor — Verifikasi & luluskan submission" },
-    { id: 7,  name: "Certificate Admin",  desc: "Certification Manager — Terbitkan sertifikat" },
-    { id: 10, name: "Finance Admin",      desc: "HR & Finance Manager — Akses pembayaran" },
-    { id: 11, name: "QC Admin",           desc: "QC & Standardization Manager — Akses luas kecuali users" },
-    { id: 2,  name: "Company",            desc: "Perusahaan terdaftar (user biasa)" },
+    { id: 1, name: "Director", desc: "Akses penuh" },
+    { id: 12, name: "IT Manager", desc: "Akses penuh" },
+    { id: 11, name: "Quality Control and Standardization Manager", desc: "Akses penuh (tanpa kelola pengguna)" },
+    { id: 10, name: "HR and Finance Manager", desc: "Akses finance/pembayaran" },
+    { id: 6, name: "Auditor", desc: "Penilai submission" },
+    { id: 7, name: "Certification Manager", desc: "Penerbitan sertifikat" },
+    { id: 2, name: "Company PIC", desc: "Perusahaan" },
   ];
 
   useEffect(() => {

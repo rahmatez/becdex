@@ -24,6 +24,7 @@ enum RoleId: int
     case Supervisor = 7;   // Certificate Admin (Certification Manager)
     case Manager    = 10;  // Finance Admin (HR & Finance Manager)
     case QcAdmin    = 11;  // Admin QC (Quality Control & Standardization Manager)
+    case ItManager  = 12;  // IT Manager
 
     /**
      * Semua role yang memiliki hak akses ke admin panel (bukan company).
@@ -32,6 +33,7 @@ enum RoleId: int
     {
         return [
             self::SuperAdmin->value,
+            self::ItManager->value,
             self::Reviewer->value,
             self::Supervisor->value,
             self::Manager->value,
@@ -47,6 +49,7 @@ enum RoleId: int
     {
         return [
             self::SuperAdmin->value,
+            self::ItManager->value,
         ];
     }
 
@@ -58,6 +61,7 @@ enum RoleId: int
     {
         return [
             self::SuperAdmin->value,
+            self::ItManager->value,
             self::QcAdmin->value,
             self::Reviewer->value,
         ];
@@ -72,6 +76,7 @@ enum RoleId: int
     {
         return [
             self::SuperAdmin->value,
+            self::ItManager->value,
             self::QcAdmin->value,
             self::Reviewer->value,
             self::Supervisor->value, // Certificate Admin — read only, untuk terbitkan sertifikat
@@ -98,6 +103,7 @@ enum RoleId: int
     {
         return [
             self::SuperAdmin->value,
+            self::ItManager->value,
             self::Supervisor->value,
         ];
     }
@@ -110,6 +116,7 @@ enum RoleId: int
     {
         return [
             self::SuperAdmin->value,
+            self::ItManager->value,
             self::QcAdmin->value,
             self::Manager->value,
         ];
@@ -123,6 +130,7 @@ enum RoleId: int
     {
         return [
             self::SuperAdmin->value,
+            self::ItManager->value,
         ];
     }
 }

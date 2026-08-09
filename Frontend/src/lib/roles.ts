@@ -4,12 +4,13 @@
  */
 
 export const ROLE_IDS = {
-  SUPER_ADMIN: 1,       // Director, IT Manager
-  COMPANY: 2,           // Company PIC (user biasa)
-  ASSESSMENT_ADMIN: 6,  // Auditor / Assessment Admin
-  CERT_ADMIN: 7,        // Certification Manager / Certificate Admin
-  FINANCE_ADMIN: 10,    // HR & Finance Manager / Finance Admin
-  QC_ADMIN: 11,         // Quality Control & Standardization Manager
+  SUPER_ADMIN: 1,       // Director
+  COMPANY: 2,           // Company PIC
+  ASSESSMENT_ADMIN: 6,  // Auditor
+  CERT_ADMIN: 7,        // Certification Manager
+  FINANCE_ADMIN: 10,    // HR and Finance Manager
+  QC_ADMIN: 11,         // Quality Control and Standardization Manager
+  IT_MANAGER: 12,       // IT Manager (sama dengan Super Admin)
 } as const;
 
 export type RoleId = (typeof ROLE_IDS)[keyof typeof ROLE_IDS];
@@ -20,7 +21,7 @@ interface UserWithRole {
 
 /** Director & IT Manager — akses penuh semua fitur */
 export const isSuperAdmin = (user: UserWithRole | null | undefined): boolean =>
-  user?.role?.id === ROLE_IDS.SUPER_ADMIN;
+  user?.role?.id === ROLE_IDS.SUPER_ADMIN || user?.role?.id === ROLE_IDS.IT_MANAGER;
 
 /** Quality Control Manager — akses selain Users & Settings */
 export const isQcAdmin = (user: UserWithRole | null | undefined): boolean =>
