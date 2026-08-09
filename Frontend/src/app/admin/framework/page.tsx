@@ -167,8 +167,12 @@ export default function AdminFrameworkPage() {
 
   const saveMutation = useMutation({
     mutationFn: async ({ id, data }: { id?: number; data: Record<string, string> }) => {
-      if (id) return api.put(`${endpoint}/${id}`, data);
-      return api.post(endpoint, data);
+      const payload: Record<string, unknown> = { ...data };
+      if ("is_mandatory" in payload) {
+        payload.is_mandatory = payload.is_mandatory === "true" || payload.is_mandatory === true;
+      }
+      if (id) return api.put(`${endpoint}/${id}`, payload);
+      return api.post(endpoint, payload);
     },
     onSuccess: () => {
       toast.success(modal?.mode === "add" ? (t.dash_admin_fw_toast_add_success || "Data berhasil ditambahkan!") : (t.dash_admin_fw_toast_edit_success || "Data berhasil diperbarui!"));
