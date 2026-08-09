@@ -124,116 +124,133 @@ Route::middleware('auth:sanctum')->group(function () {
     // ── ADMIN ROUTES ──────────────────────────────────────────────────────
     Route::middleware('admin')->prefix('admin')->group(function () {
 
-        // Submissions
-        Route::get('submissions/export/csv',            [SubmissionController::class, 'exportCsv']);
-        Route::get('submissions',                       [SubmissionAdminController::class, 'index']);
-        Route::get('submissions/{id}',                  [SubmissionAdminController::class, 'show']);
-        Route::put('submissions/{id}/indicators/{ind}', [SubmissionAdminController::class, 'updateIndicator']);
-        Route::post('submissions/{id}/survey',          [SubmissionAdminController::class, 'addSurvey']);
-        Route::post('submissions/{id}/certificate',     [SubmissionAdminController::class, 'issueCertificate']);
-        Route::post('submissions/{id}/start',           [SubmissionAdminController::class, 'startVerification']);
-        Route::post('submissions/{id}/approve',         [SubmissionAdminController::class, 'approve']);
-        Route::post('submissions/{id}/reject',          [SubmissionAdminController::class, 'reject']);
-        Route::post('submissions/{id}/return',          [SubmissionAdminController::class, 'returnToUser']);
-        Route::get('dashboard/stats',                   [SubmissionAdminController::class, 'stats']);
+        // ── SHARED: Semua role admin bisa akses dashboard stats ──────────
+        Route::get('dashboard/stats', [SubmissionAdminController::class, 'stats']);
 
-        // Assessors Assignment
-        Route::get('assessors/available',               [AssessorController::class, 'availableAssessors']);
-        Route::get('submissions/{id}/assessors',        [AssessorController::class, 'getAssigned']);
-        Route::post('submissions/{id}/assessors',       [AssessorController::class, 'assign']);
+        // ── ASSESSMENT: Super Admin + QC Admin + Assessment Admin ─────────
+        Route::middleware('assessment_admin')->group(function () {
+            Route::get('submissions/export/csv',            [SubmissionController::class, 'exportCsv']);
+            Route::get('submissions',                       [SubmissionAdminController::class, 'index']);
+            Route::get('submissions/{id}',                  [SubmissionAdminController::class, 'show']);
+            Route::put('submissions/{id}/indicators/{ind}', [SubmissionAdminController::class, 'updateIndicator']);
+            Route::post('submissions/{id}/survey',          [SubmissionAdminController::class, 'addSurvey']);
+            Route::post('submissions/{id}/start',           [SubmissionAdminController::class, 'startVerification']);
+            Route::post('submissions/{id}/approve',         [SubmissionAdminController::class, 'approve']);
+            Route::post('submissions/{id}/reject',          [SubmissionAdminController::class, 'reject']);
+            Route::post('submissions/{id}/return',          [SubmissionAdminController::class, 'returnToUser']);
 
-        // Indicator Comments for Admin
-        Route::get('submissions/{id}/indicators/{indicator_id}/comments', [IndicatorCommentController::class, 'index']);
-        Route::post('submissions/{id}/indicators/{indicator_id}/comments', [IndicatorCommentController::class, 'store']);
+            // Assessors Assignment
+            Route::get('assessors/available',               [AssessorController::class, 'availableAssessors']);
+            Route::get('submissions/{id}/assessors',        [AssessorController::class, 'getAssigned']);
+            Route::post('submissions/{id}/assessors',       [AssessorController::class, 'assign']);
 
-        // Activity Logs
-        Route::get('submissions/{id}/activity-logs',    [ActivityLogController::class, 'index']);
+            // Indicator Comments for Admin
+            Route::get('submissions/{id}/indicators/{indicator_id}/comments',  [IndicatorCommentController::class, 'index']);
+            Route::post('submissions/{id}/indicators/{indicator_id}/comments', [IndicatorCommentController::class, 'store']);
 
-        // Field Surveys
-        Route::get('submissions/{id}/surveys',          [FieldSurveyController::class, 'index']);
-        Route::post('submissions/{id}/surveys',         [FieldSurveyController::class, 'store']);
-        Route::put('surveys/{id}',                      [FieldSurveyController::class, 'update']);
-        Route::post('surveys/{id}/upload',              [FieldSurveyController::class, 'uploadFile']);
+            // Activity Logs
+            Route::get('submissions/{id}/activity-logs', [ActivityLogController::class, 'index']);
 
-        // Users
-        Route::get('users',              [UserAdminController::class, 'index']);
-        Route::post('users',             [UserAdminController::class, 'store']);
-        Route::put('users/{id}',         [UserAdminController::class, 'update']);
-        Route::delete('users/{id}',      [UserAdminController::class, 'destroy']);
-        Route::post('users/{id}/verify', [UserAdminController::class, 'verifyManual']);
-        Route::put('users/{id}/status',  [UserAdminController::class, 'updateStatus']);
+            // Field Surveys
+            Route::get('submissions/{id}/surveys',  [FieldSurveyController::class, 'index']);
+            Route::post('submissions/{id}/surveys', [FieldSurveyController::class, 'store']);
+            Route::put('surveys/{id}',              [FieldSurveyController::class, 'update']);
+            Route::post('surveys/{id}/upload',      [FieldSurveyController::class, 'uploadFile']);
 
-        // Payments
-        Route::get('payments',     [PaymentAdminController::class, 'index']);
-        Route::get('payments/{id}',[PaymentAdminController::class, 'show']);
+            // Framework CRUD
+            Route::get('framework/aspects',          [FrameworkAdminController::class, 'indexAspects']);
+            Route::post('framework/aspects',         [FrameworkAdminController::class, 'storeAspect']);
+            Route::put('framework/aspects/{id}',     [FrameworkAdminController::class, 'updateAspect']);
+            Route::delete('framework/aspects/{id}',  [FrameworkAdminController::class, 'destroyAspect']);
 
-        // Certificates
-        Route::get('certificates',     [CertificateAdminController::class, 'index']);
-        Route::get('certificates/{id}',[CertificateAdminController::class, 'show']);
+            Route::get('framework/outcomes',         [FrameworkAdminController::class, 'indexOutcomes']);
+            Route::post('framework/outcomes',        [FrameworkAdminController::class, 'storeOutcome']);
+            Route::put('framework/outcomes/{id}',    [FrameworkAdminController::class, 'updateOutcome']);
+            Route::delete('framework/outcomes/{id}', [FrameworkAdminController::class, 'destroyOutcome']);
 
-        // Certificate Templates
-        Route::get('certificate-templates', [CertificateTemplateController::class, 'index']);
-        Route::post('certificate-templates', [CertificateTemplateController::class, 'store']);
-        Route::get('certificate-templates/{id}', [CertificateTemplateController::class, 'show']);
-        Route::put('certificate-templates/{id}', [CertificateTemplateController::class, 'update']);
-        Route::delete('certificate-templates/{id}', [CertificateTemplateController::class, 'destroy']);
-        Route::post('certificate-templates/{id}/active', [CertificateTemplateController::class, 'setActive']);
-        Route::get('certificate-templates/{id}/preview', [CertificateTemplateController::class, 'preview']);
+            Route::get('framework/principles',         [FrameworkAdminController::class, 'indexPrinciples']);
+            Route::post('framework/principles',        [FrameworkAdminController::class, 'storePrinciple']);
+            Route::put('framework/principles/{id}',    [FrameworkAdminController::class, 'updatePrinciple']);
+            Route::delete('framework/principles/{id}', [FrameworkAdminController::class, 'destroyPrinciple']);
 
-        // Settings
-        Route::get('settings', [SettingAdminController::class, 'index']);
-        Route::put('settings', [SettingAdminController::class, 'update']);
+            Route::get('framework/indicators',         [FrameworkAdminController::class, 'indexIndicators']);
+            Route::post('framework/indicators',        [FrameworkAdminController::class, 'storeIndicator']);
+            Route::put('framework/indicators/{id}',    [FrameworkAdminController::class, 'updateIndicator']);
+            Route::delete('framework/indicators/{id}', [FrameworkAdminController::class, 'destroyIndicator']);
 
-        // Framework CRUD
-        Route::get('framework/aspects',         [FrameworkAdminController::class, 'indexAspects']);
-        Route::post('framework/aspects',        [FrameworkAdminController::class, 'storeAspect']);
-        Route::put('framework/aspects/{id}',    [FrameworkAdminController::class, 'updateAspect']);
-        Route::delete('framework/aspects/{id}', [FrameworkAdminController::class, 'destroyAspect']);
+            Route::get('framework/questions',         [FrameworkAdminController::class, 'indexQuestions']);
+            Route::post('framework/questions',        [FrameworkAdminController::class, 'storeQuestion']);
+            Route::put('framework/questions/{id}',    [FrameworkAdminController::class, 'updateQuestion']);
+            Route::delete('framework/questions/{id}', [FrameworkAdminController::class, 'destroyQuestion']);
 
-        Route::get('framework/outcomes',         [FrameworkAdminController::class, 'indexOutcomes']);
-        Route::post('framework/outcomes',        [FrameworkAdminController::class, 'storeOutcome']);
-        Route::put('framework/outcomes/{id}',    [FrameworkAdminController::class, 'updateOutcome']);
-        Route::delete('framework/outcomes/{id}', [FrameworkAdminController::class, 'destroyOutcome']);
+            // Master Data CRUD
+            Route::get('master/company-fields',          [FrameworkAdminController::class, 'indexCompanyFields']);
+            Route::post('master/company-fields',         [FrameworkAdminController::class, 'storeCompanyField']);
+            Route::put('master/company-fields/{id}',     [FrameworkAdminController::class, 'updateCompanyField']);
+            Route::delete('master/company-fields/{id}',  [FrameworkAdminController::class, 'destroyCompanyField']);
 
-        Route::get('framework/principles',         [FrameworkAdminController::class, 'indexPrinciples']);
-        Route::post('framework/principles',        [FrameworkAdminController::class, 'storePrinciple']);
-        Route::put('framework/principles/{id}',    [FrameworkAdminController::class, 'updatePrinciple']);
-        Route::delete('framework/principles/{id}', [FrameworkAdminController::class, 'destroyPrinciple']);
+            Route::get('master/countries',         [FrameworkAdminController::class, 'indexCountries']);
+            Route::post('master/countries',        [FrameworkAdminController::class, 'storeCountry']);
+            Route::put('master/countries/{id}',    [FrameworkAdminController::class, 'updateCountry']);
+            Route::delete('master/countries/{id}', [FrameworkAdminController::class, 'destroyCountry']);
 
-        Route::get('framework/indicators',         [FrameworkAdminController::class, 'indexIndicators']);
-        Route::post('framework/indicators',        [FrameworkAdminController::class, 'storeIndicator']);
-        Route::put('framework/indicators/{id}',    [FrameworkAdminController::class, 'updateIndicator']);
-        Route::delete('framework/indicators/{id}', [FrameworkAdminController::class, 'destroyIndicator']);
+            // Help Messages
+            Route::get('help',           [HelpAdminController::class, 'index']);
+            Route::put('help/{id}/read', [HelpAdminController::class, 'markAsRead']);
+            Route::delete('help/{id}',   [HelpAdminController::class, 'destroy']);
 
-        Route::get('framework/questions',         [FrameworkAdminController::class, 'indexQuestions']);
-        Route::post('framework/questions',        [FrameworkAdminController::class, 'storeQuestion']);
-        Route::put('framework/questions/{id}',    [FrameworkAdminController::class, 'updateQuestion']);
-        Route::delete('framework/questions/{id}', [FrameworkAdminController::class, 'destroyQuestion']);
+            // Downloads Management
+            Route::get('downloads',          [DownloadAdminController::class, 'index']);
+            Route::post('downloads',         [DownloadAdminController::class, 'store']);
+            Route::delete('downloads/{id}',  [DownloadAdminController::class, 'destroy']);
 
-        // Master Data CRUD
-        Route::get('master/company-fields',         [FrameworkAdminController::class, 'indexCompanyFields']);
-        Route::post('master/company-fields',        [FrameworkAdminController::class, 'storeCompanyField']);
-        Route::put('master/company-fields/{id}',    [FrameworkAdminController::class, 'updateCompanyField']);
-        Route::delete('master/company-fields/{id}', [FrameworkAdminController::class, 'destroyCompanyField']);
+            // CMS Management
+            Route::get('cms',              [App\Http\Controllers\Admin\CmsController::class, 'index']);
+            Route::put('cms',              [App\Http\Controllers\Admin\CmsController::class, 'update']);
+            Route::post('cms/{id}/image',  [App\Http\Controllers\Admin\CmsController::class, 'uploadImage']);
+        });
 
-        Route::get('master/countries',         [FrameworkAdminController::class, 'indexCountries']);
-        Route::post('master/countries',        [FrameworkAdminController::class, 'storeCountry']);
-        Route::put('master/countries/{id}',    [FrameworkAdminController::class, 'updateCountry']);
-        Route::delete('master/countries/{id}', [FrameworkAdminController::class, 'destroyCountry']);
+        // ── CERTIFICATE: Super Admin + Certificate Admin ──────────────────
+        Route::middleware('cert_admin')->group(function () {
+            Route::post('submissions/{id}/certificate', [SubmissionAdminController::class, 'issueCertificate']);
 
-        // Help Messages
-        Route::get('help',            [HelpAdminController::class, 'index']);
-        Route::put('help/{id}/read',  [HelpAdminController::class, 'markAsRead']);
-        Route::delete('help/{id}',    [HelpAdminController::class, 'destroy']);
+            // Certificate Templates
+            Route::get('certificate-templates',                    [CertificateTemplateController::class, 'index']);
+            Route::post('certificate-templates',                   [CertificateTemplateController::class, 'store']);
+            Route::get('certificate-templates/{id}',               [CertificateTemplateController::class, 'show']);
+            Route::put('certificate-templates/{id}',               [CertificateTemplateController::class, 'update']);
+            Route::delete('certificate-templates/{id}',            [CertificateTemplateController::class, 'destroy']);
+            Route::post('certificate-templates/{id}/active',       [CertificateTemplateController::class, 'setActive']);
+            Route::get('certificate-templates/{id}/preview',       [CertificateTemplateController::class, 'preview']);
+        });
 
-        // Downloads Management
-        Route::get('downloads',       [DownloadAdminController::class, 'index']);
-        Route::post('downloads',      [DownloadAdminController::class, 'store']);
-        Route::delete('downloads/{id}', [DownloadAdminController::class, 'destroy']);
+        // ── FINANCE: Super Admin + Finance Admin + QC Admin ───────────────
+        Route::middleware('finance_admin')->group(function () {
+            Route::get('payments',      [PaymentAdminController::class, 'index']);
+            Route::get('payments/{id}', [PaymentAdminController::class, 'show']);
+        });
 
-        // CMS Management
-        Route::get('cms',             [App\Http\Controllers\Admin\CmsController::class, 'index']);
-        Route::put('cms',             [App\Http\Controllers\Admin\CmsController::class, 'update']);
-        Route::post('cms/{id}/image', [App\Http\Controllers\Admin\CmsController::class, 'uploadImage']);
+        // ── CERTIFICATES (list & view): semua admin bisa lihat ────────────
+        Route::get('certificates',      [CertificateAdminController::class, 'index']);
+        Route::get('certificates/{id}', [CertificateAdminController::class, 'show']);
+
+        // ── SUPER ADMIN ONLY ─────────────────────────────────────────────
+        Route::middleware('super_admin')->group(function () {
+            // Users Management
+            Route::get('users',               [UserAdminController::class, 'index']);
+            Route::post('users',              [UserAdminController::class, 'store']);
+            Route::put('users/{id}',          [UserAdminController::class, 'update']);
+            Route::delete('users/{id}',       [UserAdminController::class, 'destroy']);
+            Route::post('users/{id}/verify',  [UserAdminController::class, 'verifyManual']);
+            Route::put('users/{id}/status',   [UserAdminController::class, 'updateStatus']);
+
+            // Settings
+            Route::get('settings', [SettingAdminController::class, 'index']);
+            Route::put('settings', [SettingAdminController::class, 'update']);
+
+            // Approve Certificate (2-step workflow)
+            Route::post('certificates/{id}/approve', [CertificateAdminController::class, 'approve']);
+        });
     });
+
 });

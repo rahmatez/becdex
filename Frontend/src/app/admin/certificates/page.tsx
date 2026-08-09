@@ -1,14 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { AppLayout } from "@/components/layouts/AppLayout";
 import { LoadingSpinner, EmptyState } from "@/components/ui/index";
 import api from "@/lib/api";
 import { formatDate, cn } from "@/lib/utils";
-import { Award, Search, ChevronLeft, ChevronRight, ShieldCheck, Building2 } from "lucide-react";
+import { Award, Search, ChevronLeft, ChevronRight, ShieldCheck, Building2, CheckCircle2 } from "lucide-react";
 import { useTranslation } from "@/store/lang";
 import Link from "next/link";
+import { useAuthStore } from "@/store/auth";
+import { canApproveCertificate } from "@/lib/roles";
 
 interface CertRow {
   id: number;
@@ -16,6 +18,7 @@ interface CertRow {
   direktur: string;
   published_at: string;
   valid_until: string;
+  is_approved: boolean;
   user?: { name?: string; email?: string };
   certificate?: { name?: string };
   submission?: { initial_score?: number; valid_score?: number };
@@ -26,6 +29,16 @@ export default function AdminCertificatesPage() {
   const [search, setSearch] = useState("");
   const [valid, setValid] = useState("");
   const { t } = useTranslation();
+  const { user } = useAuthStore();
+  const queryClient = useQueryClient();
+  const canApprove = canApproveCertificate(user);
+
+  const approveMutation = useMutation({
+    mutationFn: (certId: number) => api.post(`/admin/certificates/${certId}/approve`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin-certificates"] });
+    },
+  });
 
   const { data, isLoading } = useQuery({
     queryKey: ["admin-certificates", page, search, valid],
@@ -129,6 +142,7 @@ export default function AdminCertificatesPage() {
                     <th className="px-6 py-4">{t.dash_admin_cert_col_score || "Skor Valid"}</th>
                     <th className="px-6 py-4">{t.dash_admin_cert_col_published || "Tanggal Diterbitkan"}</th>
                     <th className="px-6 py-4">{t.dash_admin_cert_col_valid_until || "Berlaku Hingga"}</th>
+                    <th className="px-6 py-4">Status Approval</th>
                     <th className="px-6 py-4 text-right">{t.dash_admin_cert_col_status || "Status Masa Berlaku"}</th>
                   </tr>
                 </thead>
@@ -175,22 +189,30 @@ export default function AdminCertificatesPage() {
                           {formatDate(c.valid_until)}
                         </td>
                         <td className="px-6 py-4 text-right">
-                          <span
-                            className={cn(
-                              "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border shadow-2xs",
-                              isActive
-                                ? "bg-emerald-50 text-emerald-700 border-emerald-200/80 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-800"
-                                : "bg-slate-100 text-slate-500 border-slate-200/80 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700"
-                            )}
-                          >
-                            <span
-                              className={cn(
-                                "w-1.5 h-1.5 rounded-full shrink-0",
-                                isActive ? "bg-emerald-500" : "bg-slate-400"
+                          {/* Approval Status + Approve Button */}
+                          {c.is_approved ? (
+                            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border shadow-2xs bg-emerald-50 text-emerald-700 border-emerald-200/80 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-800">
+                              <span className="w-1.5 h-1.5 rounded-full shrink-0 bg-emerald-500" />
+                              {isActive ? (t.dash_admin_cert_status_active || "Aktif & Valid") : (t.dash_admin_cert_status_expired || "Expired")}
+                            </span>
+                          ) : (
+                            <div className="flex items-center justify-end gap-2">
+                              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border shadow-2xs bg-amber-50 text-amber-700 border-amber-200/80 dark:bg-amber-950/60 dark:text-amber-300 dark:border-amber-800">
+                                <span className="w-1.5 h-1.5 rounded-full shrink-0 bg-amber-500 animate-pulse" />
+                                Pending Approval
+                              </span>
+                              {canApprove && (
+                                <button
+                                  onClick={() => approveMutation.mutate(c.id)}
+                                  disabled={approveMutation.isPending}
+                                  className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white transition-colors shadow-sm disabled:opacity-60 cursor-pointer"
+                                >
+                                  <CheckCircle2 size={13} />
+                                  Setujui
+                                </button>
                               )}
-                            />
-                            {isActive ? (t.dash_admin_cert_status_active || "Aktif & Valid") : (t.dash_admin_cert_status_expired || "Expired / Habis")}
-                          </span>
+                            </div>
+                          )}
                         </td>
                       </tr>
                     );

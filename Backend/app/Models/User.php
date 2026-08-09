@@ -97,6 +97,31 @@ class User extends Authenticatable implements MustVerifyEmail
         return in_array($this->role_id, RoleId::adminRoleIds());
     }
 
+    public function isSuperAdmin(): bool
+    {
+        return in_array($this->role_id, RoleId::superAdminRoleIds());
+    }
+
+    public function isQcAdmin(): bool
+    {
+        return $this->role_id === RoleId::QcAdmin->value;
+    }
+
+    public function isAssessmentAdmin(): bool
+    {
+        return in_array($this->role_id, RoleId::assessmentRoleIds());
+    }
+
+    public function isCertAdmin(): bool
+    {
+        return in_array($this->role_id, RoleId::certAdminRoleIds());
+    }
+
+    public function isFinanceAdmin(): bool
+    {
+        return in_array($this->role_id, RoleId::financeRoleIds());
+    }
+
     public function isCompany(): bool
     {
         return $this->role_id === RoleId::Company->value;

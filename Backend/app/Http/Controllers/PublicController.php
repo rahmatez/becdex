@@ -38,6 +38,7 @@ class PublicController extends Controller
             'certificate',
         ])
         ->where('valid_until', '>=', now())
+        ->where('is_approved', true)
         ->latest('published_at');
 
         if ($search) {

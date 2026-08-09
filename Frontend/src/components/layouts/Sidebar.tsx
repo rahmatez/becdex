@@ -79,19 +79,30 @@ export function Sidebar() {
 
   const ADMIN_MAIN_MENU: NavItem[] = [
     { label: t.sidebar_admin_dash || "Overview Admin", href: "/admin", icon: LayoutDashboard },
-    { label: t.sidebar_admin_submissions || "Verifikasi Submission", href: "/admin/submissions", icon: FileCheck, badge: "New", badgeColor: "bg-blue-100 text-blue-700" },
-    { label: t.sidebar_admin_users || "Kelola Pengguna", href: "/admin/users", icon: Users, roles: [1, 7, 10] },
-    { label: t.sidebar_admin_payments || "Riwayat Transaksi", href: "/admin/payments", icon: CreditCard, roles: [1, 10] },
+    // Submissions: Super Admin + QC Admin + Assessment Admin
+    { label: t.sidebar_admin_submissions || "Verifikasi Submission", href: "/admin/submissions", icon: FileCheck, badge: "New", badgeColor: "bg-blue-100 text-blue-700", roles: [1, 6, 11] },
+    // Users: hanya Super Admin
+    { label: t.sidebar_admin_users || "Kelola Pengguna", href: "/admin/users", icon: Users, roles: [1] },
+    // Payments: Super Admin + Finance Admin + QC Admin
+    { label: t.sidebar_admin_payments || "Riwayat Transaksi", href: "/admin/payments", icon: CreditCard, roles: [1, 10, 11] },
+    // Certificates: semua admin
     { label: t.sidebar_admin_certificates || "Sertifikat", href: "/admin/certificates", icon: Award },
   ];
 
   const ADMIN_SYSTEM_MENU: NavItem[] = [
-    { label: t.sidebar_admin_framework || "Indikator & Framework", href: "/admin/framework", icon: GitBranch, roles: [1] },
-    { label: t.sidebar_admin_master || "Master Data", href: "/admin/master", icon: Globe, roles: [1] },
-    { label: t.sidebar_admin_help || "Inbox Bantuan", href: "/admin/help", icon: Mail },
-    { label: t.sidebar_admin_downloads || "Kelola Unduhan", href: "/admin/downloads", icon: Download, roles: [1, 10] },
-    { label: t.sidebar_admin_content || "Kelola Konten Web", href: "/admin/content", icon: FileText, roles: [1, 10] },
+    // Framework: Super Admin + QC Admin
+    { label: t.sidebar_admin_framework || "Indikator & Framework", href: "/admin/framework", icon: GitBranch, roles: [1, 11] },
+    // Master Data: Super Admin + QC Admin
+    { label: t.sidebar_admin_master || "Master Data", href: "/admin/master", icon: Globe, roles: [1, 11] },
+    // Help: semua admin
+    { label: t.sidebar_admin_help || "Inbox Bantuan", href: "/admin/help", icon: Mail, roles: [1, 11, 6] },
+    // Downloads: Super Admin + QC Admin
+    { label: t.sidebar_admin_downloads || "Kelola Unduhan", href: "/admin/downloads", icon: Download, roles: [1, 11] },
+    // CMS: Super Admin + QC Admin
+    { label: t.sidebar_admin_content || "Kelola Konten Web", href: "/admin/content", icon: FileText, roles: [1, 11] },
+    // Profil: semua admin
     { label: t.sidebar_admin_profile || "Profil Admin", href: "/admin/profile", icon: Building2 },
+    // Settings: hanya Super Admin
     { label: t.sidebar_admin_settings || "Pengaturan Sistem", href: "/admin/settings", icon: Settings, roles: [1] },
   ];
 
@@ -101,7 +112,8 @@ export function Sidebar() {
     return menu.filter(item => !item.roles || item.roles.includes(roleId));
   };
 
-  const isAdmin = roleId && [1, 6, 7, 10].includes(roleId);
+  // Semua role selain Company (2) dianggap admin dan diarahkan ke admin panel
+  const isAdmin = roleId && [1, 6, 7, 10, 11].includes(roleId);
   const mainMenu = isAdmin ? filterByRole(ADMIN_MAIN_MENU) : COMPANY_MAIN_MENU;
   const secondaryMenu = isAdmin ? filterByRole(ADMIN_SYSTEM_MENU) : COMPANY_OTHERS_MENU;
   const dashboardHref = isAdmin ? "/admin" : "/dashboard";

@@ -255,6 +255,7 @@ class SubmissionAdminController extends Controller
         $mmicNumber = $request->mmic ?: CertificateNumberService::generate($request->published_at, $companyCountry);
 
         // Update atau insert certificate_user
+        // is_approved = false: sertifikat menunggu persetujuan Super Admin
         CertificateUser::updateOrCreate(
             ['submission_id' => $submission->id],
             [
@@ -264,6 +265,7 @@ class SubmissionAdminController extends Controller
                 'direktur'       => $request->direktur,
                 'published_at'   => $publishedAt,
                 'valid_until'    => $validUntil,
+                'is_approved'    => false,
             ]
         );
 
@@ -284,9 +286,20 @@ class SubmissionAdminController extends Controller
         ]);
 
         if ($submission->user) {
+            // Kirim notifikasi ke Super Admin untuk approval sertifikat
+            $superAdmins = \App\Models\User::whereIn('role_id', RoleId::superAdminRoleIds())->get();
+            foreach ($superAdmins as $admin) {
+                $admin->notify(new SystemNotification(
+                    'Sertifikat Menunggu Persetujuan',
+                    'Certification Manager telah menerbitkan sertifikat untuk ' . $submission->user->name . '. Silakan review dan setujui.',
+                    '/admin/certificates'
+                ));
+            }
+
+            // Notifikasi ke perusahaan bahwa sertifikat sedang diproses
             $submission->user->notify(new SystemNotification(
-                'Sertifikat Diterbitkan',
-                'Selamat! Sertifikat BECdex Anda telah diterbitkan.',
+                'Sertifikat Sedang Diproses',
+                'Sertifikat BECdex Anda sedang menunggu persetujuan akhir dari manajemen. Anda akan diberitahu setelah disetujui.',
                 '/dashboard/submissions/' . $submission->id
             ));
 
@@ -340,7 +353,7 @@ class SubmissionAdminController extends Controller
         }
 
         return response()->json([
-            'message' => 'Certificate issued successfully. Valid until ' . $validUntil->format('d M Y') . '.',
+            'message' => 'Sertifikat berhasil diterbitkan dan menunggu persetujuan Super Admin. Berlaku hingga ' . $validUntil->format('d M Y') . '.',
         ]);
     }
 
