@@ -25,8 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('roles', function (Blueprint $table) {
-            //
-        });
+        DB::table('roles')->where('id', 12)->delete();
     }
 };
