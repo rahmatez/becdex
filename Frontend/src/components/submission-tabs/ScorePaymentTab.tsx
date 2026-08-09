@@ -110,7 +110,7 @@ export function ScorePaymentTab({ submission, onUpdate }: Props) {
       if (isRevision) {
         toast.success("Revisi berhasil dikirim! Admin akan meninjau ulang dokumen yang direvisi.");
       } else {
-        toast.success("Pengajuan berhasil dikunci! Silakan selesaikan pembayaran biaya sertifikasi.");
+        toast.success("Pengajuan berhasil disimpan! Silakan selesaikan pembayaran biaya sertifikasi.");
       }
       queryClient.invalidateQueries({ queryKey: ["submission", submission.id] });
       queryClient.invalidateQueries({ queryKey: ["score", submission.id] });
@@ -166,10 +166,10 @@ export function ScorePaymentTab({ submission, onUpdate }: Props) {
             <SendHorizonal size={22} className="text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
             <div>
               <p className="text-sm font-extrabold text-[#0c2340] dark:text-white">
-                Kunci & Lanjutkan ke Pembayaran
+                Simpan & Lanjutkan ke Pembayaran
               </p>
               <p className="text-xs text-slate-600 dark:text-slate-300 mt-1 leading-relaxed font-medium">
-                Jika Anda sudah melengkapi kuesioner dan dokumen, klik tombol di bawah untuk mengunci pengajuan. Anda akan diarahkan ke tahap pembayaran biaya sertifikasi. Pengajuan tidak dapat diubah setelah dikunci.
+                Jika Anda sudah melengkapi kuesioner dan dokumen, klik tombol di bawah untuk menyimpan pengajuan. Anda akan diarahkan ke tahap pembayaran biaya sertifikasi. Pengajuan tidak dapat diubah setelah disimpan.
               </p>
             </div>
           </div>
@@ -187,8 +187,8 @@ export function ScorePaymentTab({ submission, onUpdate }: Props) {
             )}
             <span>
               {submitVerificationMutation.isPending
-                ? "Mengunci pengajuan..."
-                : "Kunci & Lanjut ke Pembayaran"}
+                ? "Menyimpan pengajuan..."
+                : "Simpan & Lanjut ke Pembayaran"}
             </span>
           </button>
         </div>
@@ -309,10 +309,10 @@ export function ScorePaymentTab({ submission, onUpdate }: Props) {
           <Clock size={22} className="text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
           <div>
             <p className="text-sm font-extrabold text-amber-900 dark:text-amber-200">
-              Pengajuan Dikunci — Menunggu Pembayaran
+              Pengajuan Disimpan — Menunggu Pembayaran
             </p>
             <p className="text-xs text-amber-700 dark:text-amber-300 mt-1 leading-relaxed font-medium">
-              Pengajuan Anda sudah dikunci. Selesaikan pembayaran biaya sertifikasi di bawah untuk melanjutkan ke tahap verifikasi oleh Admin.
+              Pengajuan Anda sudah disimpan. Selesaikan pembayaran biaya sertifikasi di bawah untuk melanjutkan ke tahap verifikasi oleh Admin.
             </p>
           </div>
         </div>
