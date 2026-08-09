@@ -46,6 +46,26 @@ interface UserRow {
     company_field?: string;
   };
 }
+
+const getRoleBadge = (roleId?: number, fallbackName?: string) => {
+  switch (roleId) {
+    case 1:
+      return { label: "Super Admin", className: "bg-indigo-50 text-indigo-700 border-indigo-200" };
+    case 6:
+      return { label: "Assessment Admin", className: "bg-amber-50 text-amber-700 border-amber-200" };
+    case 7:
+      return { label: "Certificate Admin", className: "bg-blue-50 text-blue-700 border-blue-200" };
+    case 10:
+      return { label: "Finance Admin", className: "bg-emerald-50 text-emerald-700 border-emerald-200" };
+    case 11:
+      return { label: "QC Admin", className: "bg-purple-50 text-purple-700 border-purple-200" };
+    case 2:
+      return { label: "Company", className: "bg-slate-100 text-slate-700 border-slate-200" };
+    default:
+      return { label: fallbackName || "—", className: "bg-slate-100 text-slate-700 border-slate-200" };
+  }
+};
+
 export default function AdminUsersPage() {
   const [page, setPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
@@ -177,11 +197,12 @@ export default function AdminUsersPage() {
               className="text-xs font-bold px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 focus:outline-none"
             >
               <option value="all">{t.dash_admin_user_role_all || "Semua Role"}</option>
-              <option value="admin">Admin</option>
+              <option value="admin">Super Admin</option>
+              <option value="reviewer">Assessment Admin</option>
+              <option value="supervisor">Certificate Admin</option>
+              <option value="manager">Finance Admin</option>
+              <option value="qc_admin">QC Admin</option>
               <option value="company">Company</option>
-              <option value="reviewer">Reviewer</option>
-              <option value="supervisor">Supervisor</option>
-              <option value="manager">Manager</option>
             </select>
           </div>
 
@@ -272,9 +293,14 @@ export default function AdminUsersPage() {
                         </div>
                       </td>
                       <td className="px-6 py-4">
-                        <span className={`inline-block px-2.5 py-1 rounded-lg text-xs font-bold uppercase border shadow-2xs ${u.role?.name === 'admin' ? 'bg-indigo-50 text-indigo-700 border-indigo-200' : u.role?.name === 'company' ? 'bg-slate-100 text-slate-700 border-slate-200' : 'bg-purple-50 text-purple-700 border-purple-200'}`}>
-                          {u.role?.name || "—"}
-                        </span>
+                        {(() => {
+                          const badge = getRoleBadge(u.role?.id, u.role?.name);
+                          return (
+                            <span className={`inline-block px-2.5 py-1 rounded-lg text-[10px] font-extrabold uppercase tracking-wide border shadow-2xs ${badge.className}`}>
+                              {badge.label}
+                            </span>
+                          );
+                        })()}
                       </td>
                       <td className="px-6 py-4">
                         {u.role?.name === 'company' ? (
