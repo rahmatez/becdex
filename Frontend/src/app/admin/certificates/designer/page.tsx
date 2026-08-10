@@ -33,8 +33,8 @@ export default function CertificateDesignerPage() {
   const canvasRef = useRef<HTMLDivElement>(null);
   const [bgCategory, setBgCategory] = useState<string>("excellent");
   const bgImage = activeTemplate?.background_path
-    ? `${(process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000").replace(/\/api\/?$/, '')}/storage/${activeTemplate.background_path}`
-    : `/certificate/${bgCategory}.jpg`;
+    ? `${(process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000").replace(/\/api\/?$/, '')}/storage/${activeTemplate.background_path}?v=2`
+    : `/certificate/${bgCategory}.jpg?v=2`;
 
   // Config state
   const [config, setConfig] = useState<TemplateConfig>({
