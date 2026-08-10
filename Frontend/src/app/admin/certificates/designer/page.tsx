@@ -36,24 +36,20 @@ export default function CertificateDesignerPage() {
     ? `${(process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000").replace(/\/api\/?$/, '')}/storage/${activeTemplate.background_path}`
     : `/certificate/${bgCategory}.jpg`;
 
-  // Dragging state
-  const [isDragging, setIsDragging] = useState<string | null>(null);
-  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
-
   // Config state
   const [config, setConfig] = useState<TemplateConfig>({
-    mmic_code: { x: 70, y: 15, fontSize: 25, color: "#000000", textAlign: "right", fontFamily: "Helvetica", fontWeight: "bold", width: "auto", text: "1313-1313-1324" },
-    company_name: { x: 50, y: 35, fontSize: 25, color: "#000000", textAlign: "center", fontFamily: "Helvetica", fontWeight: "bold", width: "80%", text: "PT CINTA ABADI NUSANTARA" },
-    company_address: { x: 50, y: 40, fontSize: 25, color: "#000000", textAlign: "center", fontFamily: "Helvetica", fontWeight: "bold", width: "80%", text: "Jl. Pratekan No. 9A, Jakarta 13220" },
-    company_sector: { x: 50, y: 65, fontSize: 25, color: "#000000", textAlign: "left", fontFamily: "Helvetica", fontWeight: "bold", width: "auto", text: "Sektor Perikanan & Kelautan" },
-    company_sector_en: { x: 50, y: 70, fontSize: 25, color: "#000000", textAlign: "left", fontFamily: "Helvetica", fontWeight: "bold", width: "auto", text: "Fisheries & Marine Sector" },
-    published_date_1: { x: 30, y: 78, fontSize: 25, color: "#000000", textAlign: "center", fontFamily: "Helvetica", fontWeight: "bold", width: "auto", text: "22 Juli 2026" },
-    valid_until: { x: 50, y: 78, fontSize: 25, color: "#000000", textAlign: "center", fontFamily: "Helvetica", fontWeight: "bold", width: "auto", text: "22 Juli 2027" },
-    published_date_2: { x: 40, y: 83, fontSize: 25, color: "#000000", textAlign: "center", fontFamily: "Helvetica", fontWeight: "bold", width: "auto", text: "22 Juli 2026" },
-    published_date_1_en: { x: 30, y: 80, fontSize: 25, color: "#000000", textAlign: "center", fontFamily: "Helvetica", fontWeight: "bold", width: "auto", text: "22 July 2026" },
-    valid_until_en: { x: 50, y: 80, fontSize: 25, color: "#000000", textAlign: "center", fontFamily: "Helvetica", fontWeight: "bold", width: "auto", text: "22 July 2027" },
-    published_date_2_en: { x: 40, y: 85, fontSize: 25, color: "#000000", textAlign: "center", fontFamily: "Helvetica", fontWeight: "bold", width: "auto", text: "22 July 2026" },
-    qr_code: { x: 80, y: 80, fontSize: 80, color: "#000000", textAlign: "center", fontFamily: "Helvetica", fontWeight: "bold", width: "auto", text: "[QR CODE]" },
+    mmic_code: { x: 74, y: 12.3, fontSize: 12, color: "#000000", textAlign: "right", fontFamily: "Helvetica", fontWeight: "bold", width: "auto", text: "BICCID002072026" },
+    company_name: { x: 17, y: 28.5, fontSize: 20, color: "#000000", textAlign: "left", fontFamily: "Helvetica", fontWeight: "bold", width: "80%", text: "PT Eco Karya Teknologi (Crustea Indonesia)" },
+    company_address: { x: 17, y: 31, fontSize: 10, color: "#000000", textAlign: "left", fontFamily: "Helvetica", fontWeight: "bold", width: "80%", text: "Jl. Griya Lestari No.19 Blok D3, Gondoriyo, Ngaliyan, Semarang" },
+    company_sector: { x: 39, y: 62.5, fontSize: 13, color: "#000000", textAlign: "left", fontFamily: "Helvetica", fontWeight: "bold", width: "auto", text: "Perikanan Tangkap dan Budidaya" },
+    company_sector_en: { x: 39, y: 64.5, fontSize: 13, color: "#000000", textAlign: "left", fontFamily: "Helvetica", fontWeight: "bold", width: "auto", text: "Marine Fisheries and Aquaculture" },
+    published_date_1: { x: 23, y: 92.5, fontSize: 9, color: "#000000", textAlign: "center", fontFamily: "Helvetica", fontWeight: "bold", width: "auto", text: "29/07/2026" },
+    valid_until: { x: 38, y: 92.5, fontSize: 9, color: "#000000", textAlign: "center", fontFamily: "Helvetica", fontWeight: "bold", width: "auto", text: "28/07/2029" },
+    published_date_2: { x: 30, y: 95.8, fontSize: 9, color: "#000000", textAlign: "center", fontFamily: "Helvetica", fontWeight: "bold", width: "auto", text: "29/07/2026" },
+    published_date_1_en: { x: 23, y: 94, fontSize: 9, color: "#000000", textAlign: "center", fontFamily: "Helvetica", fontWeight: "bold", width: "auto", text: "29/07/2026" },
+    valid_until_en: { x: 38, y: 94, fontSize: 9, color: "#000000", textAlign: "center", fontFamily: "Helvetica", fontWeight: "bold", width: "auto", text: "28/07/2029" },
+    published_date_2_en: { x: 30, y: 97.4, fontSize: 9, color: "#000000", textAlign: "center", fontFamily: "Helvetica", fontWeight: "bold", width: "auto", text: "29/07/2026" },
+    qr_code: { x: 70, y: 78.5, fontSize: 75, color: "#000000", textAlign: "center", fontFamily: "Helvetica", fontWeight: "bold", width: "auto", text: "[QR CODE]" },
   });
 
   const [selectedElement, setSelectedElement] = useState<string | null>(null);
@@ -117,55 +113,7 @@ export default function CertificateDesignerPage() {
     window.open(url, "_blank");
   };
 
-  // Draggable logic
-  const handlePointerDown = (e: React.PointerEvent, key: string) => {
-    if (!canvasRef.current) return;
-    const rect = canvasRef.current.getBoundingClientRect();
-    const el = config[key];
-    
-    // Calculate pixel positions based on percentage
-    const currentX = (el.x / 100) * rect.width;
-    const currentY = (el.y / 100) * rect.height;
-    
-    // Offset between mouse click and element center (since transform: translate(-50%, -50%))
-    setDragOffset({
-      x: e.clientX - rect.left - currentX,
-      y: e.clientY - rect.top - currentY
-    });
-    
-    setIsDragging(key);
-    setSelectedElement(key);
-    (e.target as HTMLElement).setPointerCapture(e.pointerId);
-  };
 
-  const handlePointerMove = (e: React.PointerEvent) => {
-    if (!isDragging || !canvasRef.current) return;
-    const rect = canvasRef.current.getBoundingClientRect();
-    
-    // New pixel positions
-    const newX = e.clientX - rect.left - dragOffset.x;
-    const newY = e.clientY - rect.top - dragOffset.y;
-
-    // Convert back to percentage
-    let pX = (newX / rect.width) * 100;
-    let pY = (newY / rect.height) * 100;
-
-    // Constrain
-    pX = Math.max(0, Math.min(100, pX));
-    pY = Math.max(0, Math.min(100, pY));
-
-    setConfig(prev => ({
-      ...prev,
-      [isDragging]: { ...prev[isDragging], x: pX, y: pY }
-    }));
-  };
-
-  const handlePointerUp = (e: React.PointerEvent) => {
-    if (isDragging) {
-      (e.target as HTMLElement).releasePointerCapture(e.pointerId);
-      setIsDragging(null);
-    }
-  };
 
   return (
     <AppLayout title="Certificate Designer">
@@ -206,10 +154,8 @@ export default function CertificateDesignerPage() {
             {Object.entries(config).map(([key, style]) => (
               <div
                 key={key}
-                onPointerDown={(e) => handlePointerDown(e, key)}
-                onPointerMove={handlePointerMove}
-                onPointerUp={handlePointerUp}
-                className={`absolute cursor-move select-none ${selectedElement === key ? 'ring-2 ring-blue-500 ring-offset-2' : 'hover:ring-1 hover:ring-slate-400'}`}
+                onClick={() => setSelectedElement(key)}
+                className={`absolute cursor-pointer select-none ${selectedElement === key ? 'ring-2 ring-blue-500 ring-offset-2' : 'hover:ring-1 hover:ring-slate-400'}`}
                 style={{
                   left: `${style.x}%`,
                   top: `${style.y}%`,
@@ -233,7 +179,7 @@ export default function CertificateDesignerPage() {
             ))}
           </div>
           <div className="mt-4 text-center text-xs text-slate-500">
-            Tarik (Drag) teks di atas untuk memindahkan posisinya di sertifikat.
+            Klik elemen di atas lalu atur posisinya (X dan Y) melalui panel Properties di samping kanan.
           </div>
         </div>
 
@@ -303,9 +249,27 @@ export default function CertificateDesignerPage() {
                 </select>
               </div>
 
-              <div className="pt-4 border-t border-slate-100 text-xs text-slate-400">
-                Position X: {config[selectedElement].x.toFixed(1)}% <br/>
-                Position Y: {config[selectedElement].y.toFixed(1)}%
+              <div className="pt-4 border-t border-slate-100 flex gap-4">
+                <div className="flex-1">
+                  <label className="text-xs font-bold text-slate-500 block mb-1">Position X (%)</label>
+                  <input 
+                    type="number" 
+                    step="0.1"
+                    value={config[selectedElement].x}
+                    onChange={(e) => setConfig(prev => ({...prev, [selectedElement]: {...prev[selectedElement], x: Number(e.target.value)}}))}
+                    className="w-full px-3 py-1.5 rounded-lg border text-sm bg-slate-50"
+                  />
+                </div>
+                <div className="flex-1">
+                  <label className="text-xs font-bold text-slate-500 block mb-1">Position Y (%)</label>
+                  <input 
+                    type="number" 
+                    step="0.1"
+                    value={config[selectedElement].y}
+                    onChange={(e) => setConfig(prev => ({...prev, [selectedElement]: {...prev[selectedElement], y: Number(e.target.value)}}))}
+                    className="w-full px-3 py-1.5 rounded-lg border text-sm bg-slate-50"
+                  />
+                </div>
               </div>
             </div>
           ) : (
