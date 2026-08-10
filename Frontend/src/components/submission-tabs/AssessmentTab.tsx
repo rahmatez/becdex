@@ -141,6 +141,8 @@ function DocumentUploadZone({
 
 export function AssessmentTab({ submission, onUpdate, onGoToScore }: Props) {
   const { t, locale } = useTranslation();
+  // Only Indonesian companies have access to local Legal Basis & Regulation data
+  const isIndonesianCompany = /indonesia/i.test(submission.user?.company?.country ?? "");
   // Jawaban yang sudah tersimpan di server (nilai numerik: 0, 0.5, 1, 2)
   const [answers, setAnswers] = useState<Record<number, number>>(() => {
     const initial: Record<number, number> = {};
@@ -1315,8 +1317,8 @@ export function AssessmentTab({ submission, onUpdate, onGoToScore }: Props) {
                 </div>
               )}
 
-              {/* Regulation */}
-              {infoModalIndicator.regulation && (
+              {/* Regulation — only visible for Indonesian companies */}
+              {isIndonesianCompany && infoModalIndicator.regulation && (
                 <div className="p-3.5 rounded-xl border border-purple-200 dark:border-purple-800 bg-purple-50 dark:bg-purple-950/30">
                   <p className="text-[10px] font-bold text-purple-700 dark:text-purple-400 uppercase tracking-widest mb-1.5 flex items-center gap-1.5">
                     <Scale size={11} />{" "}
