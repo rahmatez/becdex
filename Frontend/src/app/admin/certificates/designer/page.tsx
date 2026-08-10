@@ -104,13 +104,27 @@ export default function CertificateDesignerPage() {
     }
   };
 
-  const handlePreview = () => {
+  const handlePreview = async () => {
     if (!activeTemplate) {
       toast.error("Harap simpan desain terlebih dahulu untuk melihat pratinjau PDF.");
       return;
     }
-    const url = `${(process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000").replace(/\/api\/?$/, '')}/api/admin/certificate-templates/${activeTemplate.id}/preview`;
-    window.open(url, "_blank");
+    
+    try {
+      const toastId = toast.loading("Memuat pratinjau PDF...");
+      const response = await api.get(`/admin/certificate-templates/${activeTemplate.id}/preview`, {
+        responseType: 'blob'
+      });
+      
+      const blob = new Blob([response.data], { type: 'application/pdf' });
+      const url = window.URL.createObjectURL(blob);
+      window.open(url, "_blank");
+      toast.dismiss(toastId);
+    } catch (err) {
+      console.error(err);
+      toast.dismiss();
+      toast.error("Gagal memuat pratinjau PDF.");
+    }
   };
 
 
