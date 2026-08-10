@@ -121,19 +121,19 @@ class CertificateTemplateController extends Controller
         }
 
         $data = [
-            'mmic_code' => '1313-1313-1324',
-            'company_name' => 'PT CINTA ABADI NUSANTARA',
-            'company_address' => 'Jl. Jendral Sudirman No. 1, Jakarta',
-            'company_sector' => 'Sektor Perikanan dan Akuakultur',
-            'company_sector_en' => 'Fisheries & Marine Sector',
+            'mmic_code' => 'BICCID002072026',
+            'company_name' => 'PT Eco Karya Teknologi (Crustea Indonesia)',
+            'company_address' => 'Jl. Griya Lestari No.19 Blok D3, Gondoriyo, Ngaliyan, Semarang',
+            'company_sector' => 'Perikanan Tangkap dan Budidaya',
+            'company_sector_en' => 'Marine Fisheries and Aquaculture',
             'becdex_score' => 95.5,
             'becdex_category_id' => 11,
-            'published_date' => Carbon::now()->translatedFormat('d F Y'),
-            'valid_until' => Carbon::now()->addYear()->translatedFormat('d F Y'),
-            'published_date_en' => Carbon::now()->locale('en')->translatedFormat('d F Y'),
-            'valid_until_en' => Carbon::now()->addYear()->locale('en')->translatedFormat('d F Y'),
+            'published_date' => '29/07/2026',
+            'valid_until' => '28/07/2029',
+            'published_date_en' => '29/07/2026',
+            'valid_until_en' => '28/07/2029',
             'director_name' => 'Kaisar Akhir',
-            'qr_base64' => 'https://becdex.com', // Dummy QR, in blade we check if it is valid or print text
+            'qr_base64' => 'https://becdex.com', // Dummy QR
             'bg_image_base64' => $bgPath,
             'config' => $template->config ?? [],
             'is_preview' => true
