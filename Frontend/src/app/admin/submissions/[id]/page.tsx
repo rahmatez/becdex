@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, use } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { AppLayout } from "@/components/layouts/AppLayout";
@@ -62,8 +62,9 @@ interface SubmissionData {
   survey?: { scheduled_at: string; location_link?: string; notes?: string };
 }
 
-export default function AdminSubmissionDetailPage({ params }: { params: { id: string } }) {
-  const { id } = params;
+export default function AdminSubmissionDetailPage({ params }: { params: Promise<{ id: string }> | { id: string } }) {
+  const resolvedParams = typeof (params as any)?.then === "function" ? use(params as Promise<{ id: string }>) : (params as { id: string });
+  const id = resolvedParams?.id;
   const { user } = useAuthStore();
   const { t, locale } = useTranslation();
   const { authorized } = useAdminRouteGuard({ guard: "submission_reader" });
@@ -85,6 +86,8 @@ export default function AdminSubmissionDetailPage({ params }: { params: { id: st
       return res.data;
     },
     enabled: authorized,
+    staleTime: 0,
+    gcTime: 0,
   });
 
   const indicatorMutation = useMutation({
@@ -140,7 +143,7 @@ export default function AdminSubmissionDetailPage({ params }: { params: { id: st
     });
   };
 
-  const isAdminEditable = submission?.status.id === 3 || submission?.status.id === 7;
+  const isAdminEditable = [3, 6, 7].includes(Number(submission?.status?.id));
 
   const returnMutation = useMutation({
     mutationFn: async () => {
@@ -258,8 +261,8 @@ export default function AdminSubmissionDetailPage({ params }: { params: { id: st
     );
   }
 
-  const isCertified = submission.status.id === 5;
-  const unverifiedCount = submission.per_indicators?.filter(pi => pi.status.id === 3).length || 0;
+  const isCertified = Number(submission.status.id) === 5;
+  const unverifiedCount = submission.per_indicators?.filter(pi => Number(pi.status.id) === 3).length || 0;
 
   return (
     <AppLayout title={t.dash_admin_sub_id_title || "Review & Verifikasi Auditor"}>
@@ -272,12 +275,12 @@ export default function AdminSubmissionDetailPage({ params }: { params: { id: st
       </Link>
 
       {/* Warning Revision Limit — only show during active verification/survey */}
-      {[3, 7].includes(submission.status.id) && (submission.revision_count ?? 0) >= 1 ? (
+      {[3, 7].includes(Number(submission.status.id)) && (submission.revision_count ?? 0) >= 1 ? (
         <div className="mb-6 flex items-start gap-3.5 bg-rose-50/80 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-800/80 rounded-2xl p-5 shadow-2xs">
           <XCircle size={22} className="text-rose-600 dark:text-rose-400 shrink-0 mt-0.5" />
           <div>
             <p className="text-sm font-extrabold text-rose-900 dark:text-rose-200">
-              Batas Revisi Habis (Maksimal 1x {submission.status.id === 7 ? 'Pasca Survei' : 'Tahap Verifikasi'})
+              Batas Revisi Habis (Maksimal 1x {Number(submission.status.id) === 7 ? 'Pasca Survei' : 'Tahap Verifikasi'})
             </p>
             <p className="text-xs text-rose-700 dark:text-rose-300 mt-1 leading-relaxed font-medium">
               Pengajuan ini telah mencapai batas maksimal revisi pada tahap ini. Jika masih terdapat dokumen yang tidak sesuai, Anda harus menolak pengajuan ini secara permanen.
@@ -287,7 +290,7 @@ export default function AdminSubmissionDetailPage({ params }: { params: { id: st
       ) : null}
 
       {/* Warning Unverified Indicators */}
-      {[3, 7].includes(submission.status.id) && unverifiedCount > 0 && (
+      {[3, 7].includes(Number(submission.status.id)) && unverifiedCount > 0 && (
         <div className="mb-6 flex items-start gap-3.5 bg-amber-50/80 dark:bg-amber-950/50 border border-amber-200 dark:border-amber-800/80 rounded-2xl p-5 shadow-2xs animate-in fade-in slide-in-from-top-4 duration-500">
           <AlertTriangle size={22} className="text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
           <div>
@@ -376,7 +379,7 @@ export default function AdminSubmissionDetailPage({ params }: { params: { id: st
             {!isCertified ? (
               <>
                 {/* cert button: hanya tampil untuk Super Admin & Certificate Admin */}
-                {submission.status.id === 3 && (
+                {Number(submission.status.id) === 3 && (
                   <div className="flex w-full gap-2">
                     {submission.survey && canIssueCertificate(user) && (
                       <button

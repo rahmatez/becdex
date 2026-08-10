@@ -51,6 +51,8 @@ export default function SubmissionDetailPage() {
       const res = await api.get(`/submissions/${id}`);
       return res.data;
     },
+    staleTime: 0,
+    gcTime: 0,
   });
 
   const submission = data?.data;

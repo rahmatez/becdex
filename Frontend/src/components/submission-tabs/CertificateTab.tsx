@@ -11,7 +11,7 @@ interface Props {
 export function CertificateTab({ submission }: Props) {
   const { t } = useTranslation();
   const cert = submission.certificate;
-  const isCertified = submission.status.id === 5;
+  const isCertified = Number(submission.status.id) === 5;
 
   if (!isCertified || !cert) {
     return (
