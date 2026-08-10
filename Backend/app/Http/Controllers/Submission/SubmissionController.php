@@ -112,6 +112,7 @@ class SubmissionController extends Controller
         $submission = $request->user()
             ->submissions()
             ->with([
+                'user.companyDetail',
                 'status',
                 'perIndicators.indicator.questions',
                 'perIndicators.indicator.principle.outcome.aspect',
