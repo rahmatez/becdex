@@ -18,7 +18,9 @@ class IndicatorAuditDataSeeder extends Seeder
                 'evidence_en'             => 'KKPR/PKKPR or spatial conformity approval, NIB (Business Identification Number), business license, location map, licensing documents',
                 'verification_method'     => 'Review dokumen, wawancara, observasi lokasi',
                 'verification_method_en'  => 'Document review, interviews, site observation',
-                'regulation'              => 'UU No. 32 Tahun 2014, PP No. 21 Tahun 2021, PP No. 5 Tahun 2021',
+                'regulation'              => "• UU No. 32 Tahun 2014 tentang Kelautan — mengatur pengelolaan wilayah laut, pembangunan dan pengelolaan kelautan, pemanfaatan ruang laut, serta perlindungan lingkungan laut.
+• PP No. 21 Tahun 2021 tentang Penyelenggaraan Penataan Ruang — mengatur penyelenggaraan penataan ruang, termasuk perencanaan, pemanfaatan, dan pengendalian pemanfaatan ruang.
+• PP No. 5 Tahun 2021 tentang Penyelenggaraan Perizinan Berusaha Berbasis Risiko — mengatur perizinan berusaha berdasarkan tingkat risiko kegiatan usaha.",
                 'regulation_en'           => 'Law No. 32 of 2014 on Marine Affairs, Government Regulation No. 21 of 2021 on Spatial Planning, Government Regulation No. 5 of 2021 on Risk-Based Business Licensing',
             ],
             2 => [
@@ -30,7 +32,9 @@ class IndicatorAuditDataSeeder extends Seeder
                 'evidence_en'             => 'Work programs, activity reports, before-and-after photos, location coordinates, participant lists, monitoring results',
                 'verification_method'     => 'Review dokumen, observasi lapangan, wawancara',
                 'verification_method_en'  => 'Document review, field observation, interviews',
-                'regulation'              => 'UU No. 32 Tahun 2009, UU No. 32 Tahun 2014, PP No. 22 Tahun 2021',
+                'regulation'              => "• UU No. 32 Tahun 2009 tentang Perlindungan dan Pengelolaan Lingkungan Hidup — mengatur perlindungan lingkungan hidup, pencegahan pencemaran dan kerusakan lingkungan, serta pemulihan lingkungan.
+• UU No. 32 Tahun 2014 tentang Kelautan — mengatur perlindungan dan pengelolaan lingkungan laut serta pemanfaatan sumber daya kelautan secara berkelanjutan.
+• PP No. 22 Tahun 2021 tentang Penyelenggaraan Perlindungan dan Pengelolaan Lingkungan Hidup — mengatur perlindungan mutu lingkungan, pengendalian kerusakan, pemulihan lingkungan, serta pengawasan kegiatan usaha.",
                 'regulation_en'           => 'Law No. 32 of 2009 on Environmental Protection and Management, Law No. 32 of 2014 on Marine Affairs, Government Regulation No. 22 of 2021',
             ],
             3 => [
@@ -42,7 +46,8 @@ class IndicatorAuditDataSeeder extends Seeder
                 'evidence_en'             => 'Environmental Impact Assessment (AMDAL/UKL-UPL), operational SOPs, field inspections, monitoring reports, official records',
                 'verification_method'     => 'Review dokumen, observasi, wawancara',
                 'verification_method_en'  => 'Document review, observation, interviews',
-                'regulation'              => 'UU No. 32 Tahun 2009, PP No. 22 Tahun 2021',
+                'regulation'              => "• UU No. 32 Tahun 2009 tentang Perlindungan dan Pengelolaan Lingkungan Hidup — mengatur pencegahan pencemaran dan kerusakan lingkungan serta kewajiban pelaku usaha menjaga kelestarian lingkungan.
+• PP No. 22 Tahun 2021 tentang Penyelenggaraan Perlindungan dan Pengelolaan Lingkungan Hidup — mengatur pengendalian pencemaran, kerusakan lingkungan, persetujuan lingkungan, dan pengawasan kegiatan usaha.",
                 'regulation_en'           => 'Law No. 32 of 2009 on Environmental Protection and Management, Government Regulation No. 22 of 2021',
             ],
             4 => [
@@ -54,7 +59,8 @@ class IndicatorAuditDataSeeder extends Seeder
                 'evidence_en'             => 'Conservation programs, activity reports, photos, environmental quality monitoring results',
                 'verification_method'     => 'Review dokumen, observasi',
                 'verification_method_en'  => 'Document review, observation',
-                'regulation'              => 'UU No. 17 Tahun 2019, PP No. 22 Tahun 2021',
+                'regulation'              => "• UU No. 17 Tahun 2019 tentang Sumber Daya Air — mengatur pengelolaan, perlindungan, pemanfaatan, dan konservasi sumber daya air.
+• PP No. 22 Tahun 2021 tentang Penyelenggaraan Perlindungan dan Pengelolaan Lingkungan Hidup — mengatur perlindungan mutu air dan pengendalian pencemaran air.",
                 'regulation_en'           => 'Law No. 17 of 2019 on Water Resources, Government Regulation No. 22 of 2021',
             ],
             5 => [
@@ -66,7 +72,8 @@ class IndicatorAuditDataSeeder extends Seeder
                 'evidence_en'             => 'Clean water system diagram, laboratory test results, SOPs, inspection logbooks',
                 'verification_method'     => 'Review dokumen, observasi',
                 'verification_method_en'  => 'Document review, observation',
-                'regulation'              => 'Permenkes No. 2 Tahun 2023, PP No. 22 Tahun 2021',
+                'regulation'              => "• Permenkes No. 2 Tahun 2023 tentang Peraturan Pelaksanaan Peraturan Pemerintah No. 66 Tahun 2014 tentang Kesehatan Lingkungan — mengatur persyaratan dan standar kesehatan lingkungan, termasuk kualitas air untuk kebutuhan masyarakat.
+• PP No. 22 Tahun 2021 tentang Penyelenggaraan Perlindungan dan Pengelolaan Lingkungan Hidup — mengatur perlindungan dan pengelolaan mutu air serta pengendalian pencemaran air.",
                 'regulation_en'           => 'Minister of Health Regulation No. 2 of 2023, Government Regulation No. 22 of 2021',
             ],
             6 => [
@@ -78,7 +85,7 @@ class IndicatorAuditDataSeeder extends Seeder
                 'evidence_en'             => 'Wastewater Treatment Plant (WWTP) SOPs, WWTP layout, effluent test results, operation logbooks, discharge permits',
                 'verification_method'     => 'Review dokumen, observasi, wawancara',
                 'verification_method_en'  => 'Document review, observation, interviews',
-                'regulation'              => 'PP No. 22 Tahun 2021',
+                'regulation'              => "• PP No. 22 Tahun 2021 tentang Penyelenggaraan Perlindungan dan Pengelolaan Lingkungan Hidup — mengatur pengelolaan mutu air, pengendalian pencemaran, baku mutu air limbah, serta kewajiban pemantauan dan pengelolaan air limbah.",
                 'regulation_en'           => 'Government Regulation No. 22 of 2021 on Environmental Protection and Management',
             ],
             7 => [
@@ -90,7 +97,7 @@ class IndicatorAuditDataSeeder extends Seeder
                 'evidence_en'             => 'Waste temporary storage facility layout, facility photos, waste manifests, waste transporter contracts',
                 'verification_method'     => 'Review dokumen, observasi',
                 'verification_method_en'  => 'Document review, observation',
-                'regulation'              => 'PP No. 22 Tahun 2021',
+                'regulation'              => "• PP No. 22 Tahun 2021 tentang Penyelenggaraan Perlindungan dan Pengelolaan Lingkungan Hidup — mengatur pengelolaan limbah B3 dan non-B3, termasuk penyimpanan, pengangkutan, pemanfaatan, pengolahan, dan pembuangan limbah.",
                 'regulation_en'           => 'Government Regulation No. 22 of 2021 on Environmental Protection and Management',
             ],
             8 => [
@@ -102,7 +109,9 @@ class IndicatorAuditDataSeeder extends Seeder
                 'evidence_en'             => 'Waste Management Plan, SOPs, implementation reports, waste volume records',
                 'verification_method'     => 'Review dokumen, observasi',
                 'verification_method_en'  => 'Document review, observation',
-                'regulation'              => 'UU No. 18 Tahun 2008, PP No. 27 Tahun 2020, PP No. 22 Tahun 2021',
+                'regulation'              => "• UU No. 18 Tahun 2008 tentang Pengelolaan Sampah — mengatur pengurangan dan penanganan sampah, termasuk pemilahan, pengumpulan, pengangkutan, pengolahan, dan pemrosesan akhir sampah.
+• PP No. 27 Tahun 2020 tentang Pengelolaan Sampah Spesifik — mengatur pengelolaan sampah yang memiliki karakteristik khusus dan memerlukan penanganan tertentu.
+• PP No. 22 Tahun 2021 tentang Penyelenggaraan Perlindungan dan Pengelolaan Lingkungan Hidup — mengatur pengelolaan limbah dan pengendalian pencemaran lingkungan.",
                 'regulation_en'           => 'Law No. 18 of 2008 on Waste Management, Government Regulation No. 27 of 2020, Government Regulation No. 22 of 2021',
             ],
             9 => [
@@ -114,7 +123,8 @@ class IndicatorAuditDataSeeder extends Seeder
                 'evidence_en'             => 'GHG inventory report, energy consumption data, emission factors, calculation spreadsheets',
                 'verification_method'     => 'Review dokumen, wawancara',
                 'verification_method_en'  => 'Document review, interviews',
-                'regulation'              => 'Perpres No. 98 Tahun 2021, Permen LHK terkait Inventarisasi GRK',
+                'regulation'              => "• Perpres No. 98 Tahun 2021 tentang Nilai Ekonomi Karbon untuk Pencapaian Target Kontribusi yang Ditetapkan Secara Nasional dan Pengendalian Emisi Gas Rumah Kaca dalam Pembangunan Nasional — mengatur mekanisme pengendalian emisi GRK dan nilai ekonomi karbon.
+• Permen LHK terkait Inventarisasi GRK — mengatur tata cara inventarisasi dan pelaporan emisi gas rumah kaca.",
                 'regulation_en'           => 'Presidential Regulation No. 98 of 2021 on Carbon Economic Value, Ministry of Environment and Forestry Regulation on GHG Inventory',
             ],
             10 => [
@@ -126,7 +136,10 @@ class IndicatorAuditDataSeeder extends Seeder
                 'evidence_en'             => 'Emission reduction policy, GHG inventory, reduction targets and programs, energy/fuel consumption data, emission reduction reports',
                 'verification_method'     => 'Review dokumen, wawancara, observasi',
                 'verification_method_en'  => 'Document review, interviews, observation',
-                'regulation'              => 'UU No. 32 Tahun 2009; PP No. 22 Tahun 2021; Perpres No. 98 Tahun 2021; Permen LHK No. 21 Tahun 2022',
+                'regulation'              => "• UU No. 32 Tahun 2009 tentang Perlindungan dan Pengelolaan Lingkungan Hidup — mengatur pencegahan pencemaran dan kerusakan lingkungan serta pengendalian dampak kegiatan usaha.
+• PP No. 22 Tahun 2021 tentang Penyelenggaraan Perlindungan dan Pengelolaan Lingkungan Hidup — mengatur pengendalian pencemaran dan kerusakan lingkungan.
+• Perpres No. 98 Tahun 2021 tentang Nilai Ekonomi Karbon untuk Pencapaian Target Kontribusi yang Ditetapkan Secara Nasional dan Pengendalian Emisi Gas Rumah Kaca dalam Pembangunan Nasional — mengatur pengendalian emisi GRK dan mekanisme nilai ekonomi karbon.
+• Permen LHK No. 21 Tahun 2022 tentang Penerapan Nilai Ekonomi Karbon — mengatur penerapan nilai ekonomi karbon sebagai bagian dari pengendalian emisi GRK.",
                 'regulation_en'           => 'Law No. 32 of 2009; Government Regulation No. 22 of 2021; Presidential Regulation No. 98 of 2021; Ministry of Environment Regulation No. 21 of 2022',
             ],
             11 => [
@@ -138,7 +151,9 @@ class IndicatorAuditDataSeeder extends Seeder
                 'evidence_en'             => 'Plastic reduction policy, work programs, plastic usage data, implementation reports, implementation documentation',
                 'verification_method'     => 'Review dokumen, observasi, wawancara',
                 'verification_method_en'  => 'Document review, observation, interviews',
-                'regulation'              => 'UU No. 18 Tahun 2008; PP No. 81 Tahun 2012; Permen LHK No. P75/2019; kebijakan daerah terkait pengurangan plastik sekali pakai',
+                'regulation'              => "• UU No. 18 Tahun 2008 tentang Pengelolaan Sampah — mengatur pengurangan dan penanganan sampah, termasuk upaya mengurangi timbulan sampah.
+• PP No. 81 Tahun 2012 tentang Pengelolaan Sampah Rumah Tangga dan Sampah Sejenis Sampah Rumah Tangga — mengatur pengurangan dan pengelolaan sampah sejak sumbernya.
+• Permen LHK No. P.75/MENLHK/SETJEN/KUM.1/10/2019 tentang Peta Jalan Pengurangan Sampah oleh Produsen — mengatur upaya produsen mengurangi sampah dari produk dan kemasan.",
                 'regulation_en'           => 'Law No. 18 of 2008; Government Regulation No. 81 of 2012; Ministry of Environment Regulation No. P75/2019; regional policies on single-use plastic reduction',
             ],
             12 => [
@@ -150,7 +165,9 @@ class IndicatorAuditDataSeeder extends Seeder
                 'evidence_en'             => 'Water Management Plan, water balance records, water consumption data, evaluation reports, SOPs',
                 'verification_method'     => 'Review dokumen, observasi',
                 'verification_method_en'  => 'Document review, observation',
-                'regulation'              => 'UU No. 17 Tahun 2019 tentang SDA; PP No. 30 Tahun 2024 tentang Pengelolaan SDA; PP No. 22 Tahun 2021',
+                'regulation'              => "• UU No. 17 Tahun 2019 tentang Sumber Daya Air — mengatur konservasi, pendayagunaan, pengendalian daya rusak, dan pengelolaan sumber daya air.
+• PP No. 30 Tahun 2024 tentang Pengelolaan Sumber Daya Air — mengatur penyelenggaraan pengelolaan sumber daya air secara terpadu dan berkelanjutan.
+• PP No. 22 Tahun 2021 tentang Penyelenggaraan Perlindungan dan Pengelolaan Lingkungan Hidup — mengatur perlindungan mutu air dan pengendalian pencemaran air.",
                 'regulation_en'           => 'Law No. 17 of 2019 on Water Resources; Government Regulation No. 30 of 2024 on Water Resources Management; Government Regulation No. 22 of 2021',
             ],
             13 => [
@@ -162,7 +179,8 @@ class IndicatorAuditDataSeeder extends Seeder
                 'evidence_en'             => 'Energy Management Plan, energy consumption data, energy KPIs, SOPs, monitoring reports',
                 'verification_method'     => 'Review dokumen, observasi, wawancara',
                 'verification_method_en'  => 'Document review, observation, interviews',
-                'regulation'              => 'PP No. 33 Tahun 2023 tentang Konservasi Energi; Permen ESDM tentang Manajemen Energi',
+                'regulation'              => "• PP No. 33 Tahun 2023 tentang Konservasi Energi — mengatur konservasi energi melalui pengelolaan dan efisiensi penggunaan energi.
+• Permen ESDM tentang Manajemen Energi — mengatur penerapan sistem manajemen energi untuk meningkatkan efisiensi penggunaan energi.",
                 'regulation_en'           => 'Government Regulation No. 33 of 2023 on Energy Conservation; Ministry of Energy and Mineral Resources Regulation on Energy Management',
             ],
             14 => [
@@ -174,7 +192,8 @@ class IndicatorAuditDataSeeder extends Seeder
                 'evidence_en'             => 'Energy reduction targets, efficiency reports, before-and-after consumption data, evaluation results',
                 'verification_method'     => 'Review dokumen, observasi',
                 'verification_method_en'  => 'Document review, observation',
-                'regulation'              => 'PP No. 33 Tahun 2023; Perpres No. 22 Tahun 2017 (RUEN)',
+                'regulation'              => "• PP No. 33 Tahun 2023 tentang Konservasi Energi — mengatur upaya penghematan dan efisiensi energi serta penerapan konservasi energi.
+• Perpres No. 22 Tahun 2017 tentang Rencana Umum Energi Nasional (RUEN) — mengatur arah dan kebijakan pengelolaan energi nasional, termasuk peningkatan efisiensi energi.",
                 'regulation_en'           => 'Government Regulation No. 33 of 2023; Presidential Regulation No. 22 of 2017 (National Energy General Plan)',
             ],
             15 => [
@@ -186,7 +205,8 @@ class IndicatorAuditDataSeeder extends Seeder
                 'evidence_en'             => 'Renewable energy investment documents, renewable energy production/usage data, operational reports, installation photos',
                 'verification_method'     => 'Review dokumen, observasi lapangan',
                 'verification_method_en'  => 'Document review, field observation',
-                'regulation'              => 'UU No. 30 Tahun 2007 tentang Energi; Perpres No. 112 Tahun 2022; RUEN',
+                'regulation'              => "• UU No. 30 Tahun 2007 tentang Energi — mengatur pengelolaan energi nasional, termasuk pengembangan energi baru dan terbarukan.
+• Perpres No. 112 Tahun 2022 tentang Percepatan Pengembangan Energi Terbarukan untuk Penyediaan Tenaga Listrik — mengatur percepatan pemanfaatan energi terbarukan dalam penyediaan tenaga listrik.",
                 'regulation_en'           => 'Law No. 30 of 2007 on Energy; Presidential Regulation No. 112 of 2022; National Energy General Plan (RUEN)',
             ],
             16 => [
@@ -198,7 +218,9 @@ class IndicatorAuditDataSeeder extends Seeder
                 'evidence_en'             => 'Dormitory management SOPs, inspection results, facility photos, maintenance checklists',
                 'verification_method'     => 'Review dokumen, observasi',
                 'verification_method_en'  => 'Document review, observation',
-                'regulation'              => 'UU No. 1 Tahun 1970; PP No. 50 Tahun 2012; Permenkes terkait sanitasi tempat kerja',
+                'regulation'              => "• UU No. 1 Tahun 1970 tentang Keselamatan Kerja — mengatur keselamatan dan kesehatan di tempat kerja serta persyaratan lingkungan kerja yang aman dan sehat.
+• PP No. 50 Tahun 2012 tentang Penerapan Sistem Manajemen Keselamatan dan Kesehatan Kerja — mengatur penerapan sistem manajemen K3 di perusahaan.
+• Permenkes terkait sanitasi tempat kerja — mengatur persyaratan kesehatan dan sanitasi lingkungan kerja.",
                 'regulation_en'           => 'Law No. 1 of 1970 on Occupational Safety; Government Regulation No. 50 of 2012; Ministry of Health Regulation on Workplace Sanitation',
             ],
             17 => [
@@ -210,7 +232,9 @@ class IndicatorAuditDataSeeder extends Seeder
                 'evidence_en'             => 'Water quality test results, catering contracts (if any), hygiene SOPs, inspection results',
                 'verification_method'     => 'Review dokumen, observasi',
                 'verification_method_en'  => 'Document review, observation',
-                'regulation'              => 'UU No. 17 Tahun 2023 tentang Kesehatan; Permenkes No. 2 Tahun 2023; PP No. 50 Tahun 2012',
+                'regulation'              => "• UU No. 17 Tahun 2023 tentang Kesehatan — mengatur penyelenggaraan kesehatan, termasuk upaya kesehatan lingkungan dan perlindungan kesehatan masyarakat.
+• Permenkes No. 2 Tahun 2023 tentang Peraturan Pelaksanaan Peraturan Pemerintah No. 66 Tahun 2014 tentang Kesehatan Lingkungan — mengatur standar kesehatan lingkungan, termasuk kualitas air.
+• PP No. 50 Tahun 2012 tentang Penerapan Sistem Manajemen Keselamatan dan Kesehatan Kerja — mengatur penerapan sistem K3 di lingkungan kerja.",
                 'regulation_en'           => 'Law No. 17 of 2023 on Health; Ministry of Health Regulation No. 2 of 2023; Government Regulation No. 50 of 2012',
             ],
             18 => [
@@ -222,7 +246,10 @@ class IndicatorAuditDataSeeder extends Seeder
                 'evidence_en'             => 'BPJS Health and BPJS Employment membership certificates, first aid SOPs, first aid personnel lists, occupational medical records, accident reports',
                 'verification_method'     => 'Review dokumen, wawancara',
                 'verification_method_en'  => 'Document review, interviews',
-                'regulation'              => 'UU No. 24 Tahun 2011; PP No. 44 Tahun 2015; PP No. 82 Tahun 2019; UU No. 1 Tahun 1970',
+                'regulation'              => "• UU No. 24 Tahun 2011 tentang Badan Penyelenggara Jaminan Sosial — mengatur penyelenggaraan program jaminan sosial melalui BPJS.
+• PP No. 44 Tahun 2015 tentang Penyelenggaraan Program Jaminan Kecelakaan Kerja dan Jaminan Kematian — mengatur perlindungan pekerja melalui program JKK dan JKM.
+• PP No. 82 Tahun 2019 tentang Perubahan atas PP No. 44 Tahun 2015 — mengatur perubahan ketentuan penyelenggaraan Jaminan Kecelakaan Kerja dan Jaminan Kematian.
+• UU No. 1 Tahun 1970 tentang Keselamatan Kerja — mengatur perlindungan keselamatan dan kesehatan pekerja.",
                 'regulation_en'           => 'Law No. 24 of 2011 on Social Security Agency (BPJS); Government Regulation No. 44 of 2015; Government Regulation No. 82 of 2019; Law No. 1 of 1970',
             ],
             19 => [
@@ -234,7 +261,9 @@ class IndicatorAuditDataSeeder extends Seeder
                 'evidence_en'             => 'OHS Management System manual, HIRADC/JSA, OHS SOPs, PPE lists, inspection reports, accident reports, OHS training records',
                 'verification_method'     => 'Review dokumen, observasi lapangan, wawancara',
                 'verification_method_en'  => 'Document review, field observation, interviews',
-                'regulation'              => 'UU No. 1 Tahun 1970; PP No. 50 Tahun 2012; Permenaker No. 5 Tahun 2018',
+                'regulation'              => "• UU No. 1 Tahun 1970 tentang Keselamatan Kerja — mengatur syarat keselamatan kerja dan perlindungan tenaga kerja dari risiko kecelakaan.
+• PP No. 50 Tahun 2012 tentang Penerapan Sistem Manajemen Keselamatan dan Kesehatan Kerja — mengatur penerapan SMK3 di perusahaan.
+• Permenaker No. 5 Tahun 2018 tentang Keselamatan dan Kesehatan Kerja Lingkungan Kerja — mengatur standar dan pengendalian faktor bahaya di lingkungan kerja.",
                 'regulation_en'           => 'Law No. 1 of 1970 on Occupational Safety; Government Regulation No. 50 of 2012 on OHS Management System; Ministry of Manpower Regulation No. 5 of 2018',
             ],
             20 => [
@@ -246,7 +275,10 @@ class IndicatorAuditDataSeeder extends Seeder
                 'evidence_en'             => 'Workplace environment measurement results, periodic health examination reports, industrial hygiene SOPs, inspection reports, work facility documentation',
                 'verification_method'     => 'Review dokumen, observasi lapangan, wawancara',
                 'verification_method_en'  => 'Document review, field observation, interviews',
-                'regulation'              => 'UU No. 1 Tahun 1970; UU No. 17 Tahun 2023 tentang Kesehatan; PP No. 50 Tahun 2012; Permenaker No. 5 Tahun 2018',
+                'regulation'              => "• UU No. 1 Tahun 1970 tentang Keselamatan Kerja — mengatur keselamatan dan kesehatan pekerja serta kondisi tempat kerja.
+• UU No. 17 Tahun 2023 tentang Kesehatan — mengatur penyelenggaraan kesehatan, termasuk kesehatan lingkungan dan kesehatan kerja.
+• PP No. 50 Tahun 2012 tentang Penerapan Sistem Manajemen Keselamatan dan Kesehatan Kerja — mengatur penerapan sistem manajemen K3.
+• Permenaker No. 5 Tahun 2018 tentang Keselamatan dan Kesehatan Kerja Lingkungan Kerja — mengatur pengendalian faktor fisik, kimia, biologi, ergonomi, dan faktor lainnya di tempat kerja.",
                 'regulation_en'           => 'Law No. 1 of 1970; Law No. 17 of 2023 on Health; Government Regulation No. 50 of 2012; Ministry of Manpower Regulation No. 5 of 2018',
             ],
             21 => [
@@ -258,7 +290,8 @@ class IndicatorAuditDataSeeder extends Seeder
                 'evidence_en'             => 'Training programs, competency matrices, certificates, attendance lists, training evaluations',
                 'verification_method'     => 'Review dokumen, wawancara',
                 'verification_method_en'  => 'Document review, interviews',
-                'regulation'              => 'UU No. 13 Tahun 2003 jo. UU No. 6 Tahun 2023; PP No. 31 Tahun 2006',
+                'regulation'              => "• UU No. 13 Tahun 2003 tentang Ketenagakerjaan sebagaimana telah diubah dengan UU No. 6 Tahun 2023 — mengatur hubungan ketenagakerjaan, termasuk pengembangan kompetensi tenaga kerja.
+• PP No. 31 Tahun 2006 tentang Sistem Pelatihan Kerja Nasional — mengatur penyelenggaraan pelatihan kerja dan peningkatan kompetensi tenaga kerja.",
                 'regulation_en'           => 'Law No. 13 of 2003 on Manpower as amended by Law No. 6 of 2023; Government Regulation No. 31 of 2006 on National Vocational Training System',
             ],
             22 => [
@@ -270,7 +303,8 @@ class IndicatorAuditDataSeeder extends Seeder
                 'evidence_en'             => 'Stakeholder Engagement Plan, public consultation minutes, attendance lists, official records, complaint and follow-up lists',
                 'verification_method'     => 'Review dokumen, wawancara, observasi',
                 'verification_method_en'  => 'Document review, interviews, observation',
-                'regulation'              => 'UU No. 32 Tahun 2009; PP No. 22 Tahun 2021',
+                'regulation'              => "• UU No. 32 Tahun 2009 tentang Perlindungan dan Pengelolaan Lingkungan Hidup — mengatur partisipasi masyarakat dalam perlindungan dan pengelolaan lingkungan hidup.
+• PP No. 22 Tahun 2021 tentang Penyelenggaraan Perlindungan dan Pengelolaan Lingkungan Hidup — mengatur persetujuan lingkungan, pelibatan masyarakat, pengawasan, dan pengendalian dampak lingkungan.",
                 'regulation_en'           => 'Law No. 32 of 2009 on Environmental Protection and Management; Government Regulation No. 22 of 2021',
             ],
             23 => [
@@ -282,7 +316,8 @@ class IndicatorAuditDataSeeder extends Seeder
                 'evidence_en'             => 'Recruitment SOPs, local workforce data, employment reports, competency development programs',
                 'verification_method'     => 'Review dokumen, wawancara',
                 'verification_method_en'  => 'Document review, interviews',
-                'regulation'              => 'UU No. 13 Tahun 2003 jo. UU No. 6 Tahun 2023; PP No. 35 Tahun 2021',
+                'regulation'              => "• UU No. 13 Tahun 2003 tentang Ketenagakerjaan sebagaimana telah diubah dengan UU No. 6 Tahun 2023 — mengatur hubungan kerja, kesempatan kerja, dan perlindungan tenaga kerja.
+• PP No. 35 Tahun 2021 tentang Perjanjian Kerja Waktu Tertentu, Alih Daya, Waktu Kerja dan Waktu Istirahat, dan Pemutusan Hubungan Kerja — mengatur hubungan kerja dan ketentuan penggunaan tenaga kerja.",
                 'regulation_en'           => 'Law No. 13 of 2003 on Manpower as amended by Law No. 6 of 2023; Government Regulation No. 35 of 2021',
             ],
             24 => [
@@ -294,7 +329,8 @@ class IndicatorAuditDataSeeder extends Seeder
                 'evidence_en'             => 'CSR programs, MOUs with SMEs, activity reports, cultural promotion documentation, local procurement contracts',
                 'verification_method'     => 'Review dokumen, observasi',
                 'verification_method_en'  => 'Document review, observation',
-                'regulation'              => 'UU No. 5 Tahun 2017; UU No. 20 Tahun 2008',
+                'regulation'              => "• UU No. 5 Tahun 2017 tentang Pemajuan Kebudayaan — mengatur perlindungan, pengembangan, pemanfaatan, dan pembinaan kebudayaan Indonesia.
+• UU No. 20 Tahun 2008 tentang Usaha Mikro, Kecil, dan Menengah — mengatur pemberdayaan dan pengembangan UMKM serta penguatan usaha masyarakat.",
                 'regulation_en'           => 'Law No. 5 of 2017 on Cultural Advancement; Law No. 20 of 2008 on Micro, Small, and Medium Enterprises',
             ],
             25 => [
@@ -306,7 +342,9 @@ class IndicatorAuditDataSeeder extends Seeder
                 'evidence_en'             => 'AMDAL/UKL-UPL documents, area maps, complaint mechanisms, community consultation records, environmental management reports',
                 'verification_method'     => 'Review dokumen, observasi, wawancara',
                 'verification_method_en'  => 'Document review, observation, interviews',
-                'regulation'              => 'UU No. 32 Tahun 2009; UU No. 32 Tahun 2014; PP No. 22 Tahun 2021',
+                'regulation'              => "• UU No. 32 Tahun 2009 tentang Perlindungan dan Pengelolaan Lingkungan Hidup — mengatur pemanfaatan sumber daya alam secara berkelanjutan dan perlindungan lingkungan.
+• UU No. 32 Tahun 2014 tentang Kelautan — mengatur pengelolaan dan pemanfaatan sumber daya kelautan secara berkelanjutan.
+• PP No. 22 Tahun 2021 tentang Penyelenggaraan Perlindungan dan Pengelolaan Lingkungan Hidup — mengatur pengendalian dampak lingkungan dan perlindungan lingkungan.",
                 'regulation_en'           => 'Law No. 32 of 2009; Law No. 32 of 2014 on Marine Affairs; Government Regulation No. 22 of 2021',
             ],
             26 => [
@@ -318,7 +356,8 @@ class IndicatorAuditDataSeeder extends Seeder
                 'evidence_en'             => 'Company Regulations/Collective Labor Agreements (CLA), evidence of trade union existence, bipartite meeting minutes, dispute resolution mechanisms',
                 'verification_method'     => 'Review dokumen, wawancara',
                 'verification_method_en'  => 'Document review, interviews',
-                'regulation'              => 'UU No. 21 Tahun 2000; UU No. 13 Tahun 2003 jo. UU No. 6 Tahun 2023',
+                'regulation'              => "• UU No. 21 Tahun 2000 tentang Serikat Pekerja/Serikat Buruh — mengatur hak pekerja untuk membentuk dan menjadi anggota serikat pekerja serta perlindungan terhadap kebebasan berserikat.
+• UU No. 13 Tahun 2003 tentang Ketenagakerjaan sebagaimana telah diubah dengan UU No. 6 Tahun 2023 — mengatur hubungan industrial dan hak-hak pekerja.",
                 'regulation_en'           => 'Law No. 21 of 2000 on Trade Unions; Law No. 13 of 2003 on Manpower as amended by Law No. 6 of 2023',
             ],
             27 => [
@@ -330,7 +369,8 @@ class IndicatorAuditDataSeeder extends Seeder
                 'evidence_en'             => 'Anti-discrimination policy, HR SOPs, promotion data, complaint mechanisms, case resolution reports',
                 'verification_method'     => 'Review dokumen, wawancara',
                 'verification_method_en'  => 'Document review, interviews',
-                'regulation'              => 'UU No. 39 Tahun 1999; UU No. 13 Tahun 2003 jo. UU No. 6 Tahun 2023',
+                'regulation'              => "• UU No. 39 Tahun 1999 tentang Hak Asasi Manusia — mengatur penghormatan, perlindungan, dan pemenuhan hak asasi manusia tanpa diskriminasi.
+• UU No. 13 Tahun 2003 tentang Ketenagakerjaan sebagaimana telah diubah dengan UU No. 6 Tahun 2023 — mengatur perlakuan yang adil dan perlindungan hak pekerja dalam hubungan kerja.",
                 'regulation_en'           => 'Law No. 39 of 1999 on Human Rights; Law No. 13 of 2003 on Manpower as amended by Law No. 6 of 2023',
             ],
             28 => [
@@ -342,7 +382,8 @@ class IndicatorAuditDataSeeder extends Seeder
                 'evidence_en'             => 'Collective Labor Agreements (CLA), bargaining minutes, attendance lists, meeting minutes, agreement result documents',
                 'verification_method'     => 'Review dokumen, wawancara',
                 'verification_method_en'  => 'Document review, interviews',
-                'regulation'              => 'UU No. 13 Tahun 2003 jo. UU No. 6 Tahun 2023; Permenaker tentang PKB',
+                'regulation'              => "• UU No. 13 Tahun 2003 tentang Ketenagakerjaan sebagaimana telah diubah dengan UU No. 6 Tahun 2023 — mengatur hubungan industrial, serikat pekerja, dan perundingan bersama.
+• Permenaker terkait Perjanjian Kerja Bersama (PKB) — mengatur tata cara dan ketentuan penyusunan serta pendaftaran PKB.",
                 'regulation_en'           => 'Law No. 13 of 2003 on Manpower as amended by Law No. 6 of 2023; Ministry of Manpower Regulation on Collective Labor Agreements',
             ],
             29 => [
@@ -354,7 +395,9 @@ class IndicatorAuditDataSeeder extends Seeder
                 'evidence_en'             => 'Female worker protection policies, SOPs, leave data, lactation facilities (where required), complaint mechanisms, socialization documentation',
                 'verification_method'     => 'Review dokumen, observasi, wawancara',
                 'verification_method_en'  => 'Document review, observation, interviews',
-                'regulation'              => 'UU No. 13 Tahun 2003 jo. UU No. 6 Tahun 2023; UU No. 12 Tahun 2022 tentang TPKS; Permenaker terkait pekerja perempuan',
+                'regulation'              => "• UU No. 13 Tahun 2003 tentang Ketenagakerjaan sebagaimana telah diubah dengan UU No. 6 Tahun 2023 — mengatur perlindungan pekerja perempuan, termasuk hak cuti dan perlindungan dalam hubungan kerja.
+• UU No. 12 Tahun 2022 tentang Tindak Pidana Kekerasan Seksual — mengatur pencegahan, penanganan, perlindungan, dan pemulihan korban kekerasan seksual.
+• Permenaker terkait pekerja perempuan — mengatur perlindungan dan kondisi kerja khusus bagi pekerja perempuan.",
                 'regulation_en'           => 'Law No. 13 of 2003 on Manpower as amended by Law No. 6 of 2023; Law No. 12 of 2022 on Sexual Violence Crime; Ministry of Manpower Regulation on Female Workers',
             ],
             30 => [
@@ -366,7 +409,9 @@ class IndicatorAuditDataSeeder extends Seeder
                 'evidence_en'             => 'Worker identity documents, recruitment SOPs, training programs, competency development reports, age verification results',
                 'verification_method'     => 'Review dokumen, wawancara',
                 'verification_method_en'  => 'Document review, interviews',
-                'regulation'              => 'UU No. 13 Tahun 2003 jo. UU No. 6 Tahun 2023; Konvensi ILO No. 138 dan No. 182 (diratifikasi Indonesia)',
+                'regulation'              => "• UU No. 13 Tahun 2003 tentang Ketenagakerjaan sebagaimana telah diubah dengan UU No. 6 Tahun 2023 — mengatur ketentuan usia kerja, perlindungan pekerja muda, dan larangan mempekerjakan anak dalam kondisi tertentu.
+• Konvensi ILO No. 138 tentang Usia Minimum untuk Diperbolehkan Bekerja — menetapkan standar usia minimum untuk bekerja.
+• Konvensi ILO No. 182 tentang Pelarangan dan Tindakan Segera untuk Penghapusan Bentuk-Bentuk Pekerjaan Terburuk untuk Anak — mengatur penghapusan bentuk pekerjaan terburuk bagi anak.",
                 'regulation_en'           => 'Law No. 13 of 2003 on Manpower as amended by Law No. 6 of 2023; ILO Convention No. 138 and No. 182 (ratified by Indonesia)',
             ],
             31 => [
@@ -378,7 +423,8 @@ class IndicatorAuditDataSeeder extends Seeder
                 'evidence_en'             => 'Employment policies, disability worker data, recruitment SOPs, accessibility facility documentation, training programs',
                 'verification_method'     => 'Review dokumen, observasi, wawancara',
                 'verification_method_en'  => 'Document review, observation, interviews',
-                'regulation'              => 'UU No. 8 Tahun 2016 tentang Penyandang Disabilitas; PP No. 60 Tahun 2020',
+                'regulation'              => "• UU No. 8 Tahun 2016 tentang Penyandang Disabilitas — mengatur hak penyandang disabilitas, termasuk hak memperoleh pekerjaan yang layak dan perlakuan tanpa diskriminasi.
+• PP No. 60 Tahun 2020 tentang Unit Layanan Disabilitas Bidang Ketenagakerjaan — mengatur penyediaan layanan ketenagakerjaan bagi penyandang disabilitas.",
                 'regulation_en'           => 'Law No. 8 of 2016 on Persons with Disabilities; Government Regulation No. 60 of 2020',
             ],
             32 => [
@@ -390,7 +436,9 @@ class IndicatorAuditDataSeeder extends Seeder
                 'evidence_en'             => 'Employment agreements, employment policies, overtime data, overtime payment slips, complaint mechanisms',
                 'verification_method'     => 'Review dokumen, wawancara',
                 'verification_method_en'  => 'Document review, interviews',
-                'regulation'              => 'UU No. 13 Tahun 2003 jo. UU No. 6 Tahun 2023; Konvensi ILO No. 129 dan No. 105',
+                'regulation'              => "• UU No. 13 Tahun 2003 tentang Ketenagakerjaan sebagaimana telah diubah dengan UU No. 6 Tahun 2023 — mengatur hubungan kerja dan perlindungan hak pekerja.
+• Konvensi ILO No. 29 tentang Kerja Paksa — mengatur penghapusan kerja paksa dalam segala bentuk.
+• Konvensi ILO No. 105 tentang Penghapusan Kerja Paksa — mengatur penghapusan kerja paksa sebagai sarana pemaksaan atau hukuman.",
                 'regulation_en'           => 'Law No. 13 of 2003 on Manpower as amended by Law No. 6 of 2023; ILO Convention No. 29 and No. 105 on Forced Labour',
             ],
             33 => [
@@ -402,7 +450,9 @@ class IndicatorAuditDataSeeder extends Seeder
                 'evidence_en'             => 'Worker identity documents, recruitment SOPs, age verification results, employee lists',
                 'verification_method'     => 'Review dokumen, wawancara',
                 'verification_method_en'  => 'Document review, interviews',
-                'regulation'              => 'UU No. 13 Tahun 2003 jo. UU No. 6 Tahun 2023; Konvensi ILO No. 138 dan No. 182',
+                'regulation'              => "• UU No. 13 Tahun 2003 tentang Ketenagakerjaan sebagaimana telah diubah dengan UU No. 6 Tahun 2023 — mengatur batas usia kerja dan perlindungan anak dari pekerjaan yang membahayakan.
+• Konvensi ILO No. 138 tentang Usia Minimum untuk Diperbolehkan Bekerja — menetapkan usia minimum untuk bekerja.
+• Konvensi ILO No. 182 tentang Pelarangan dan Tindakan Segera untuk Penghapusan Bentuk-Bentuk Pekerjaan Terburuk untuk Anak — mengatur penghapusan pekerjaan terburuk bagi anak.",
                 'regulation_en'           => 'Law No. 13 of 2003 on Manpower as amended by Law No. 6 of 2023; ILO Convention No. 138 and No. 182 (Minimum Age and Worst Forms of Child Labour)',
             ],
             34 => [
@@ -414,7 +464,8 @@ class IndicatorAuditDataSeeder extends Seeder
                 'evidence_en'             => 'Wage structure and scale, payslips, remuneration policies, overtime payment evidence, job evaluation results',
                 'verification_method'     => 'Review dokumen, wawancara',
                 'verification_method_en'  => 'Document review, interviews',
-                'regulation'              => 'PP No. 36 Tahun 2021 tentang Pengupahan; UU No. 13 Tahun 2003 jo. UU No. 6 Tahun 2023',
+                'regulation'              => "• PP No. 36 Tahun 2021 tentang Pengupahan — mengatur kebijakan pengupahan, struktur dan skala upah, upah minimum, perlindungan upah, dan pembayaran upah.
+• UU No. 13 Tahun 2003 tentang Ketenagakerjaan sebagaimana telah diubah dengan UU No. 6 Tahun 2023 — mengatur hak pekerja atas pengupahan dan perlindungan dalam hubungan kerja.",
                 'regulation_en'           => 'Government Regulation No. 36 of 2021 on Wages; Law No. 13 of 2003 on Manpower as amended by Law No. 6 of 2023',
             ],
             35 => [
@@ -426,7 +477,8 @@ class IndicatorAuditDataSeeder extends Seeder
                 'evidence_en'             => 'Fixed-term (PKWT)/part-time employment agreements, seasonal worker data, internship programs, wage payment evidence, training reports',
                 'verification_method'     => 'Review dokumen, wawancara',
                 'verification_method_en'  => 'Document review, interviews',
-                'regulation'              => 'UU No. 13 Tahun 2003 jo. UU No. 6 Tahun 2023; PP No. 35 Tahun 2021',
+                'regulation'              => "• UU No. 13 Tahun 2003 tentang Ketenagakerjaan sebagaimana telah diubah dengan UU No. 6 Tahun 2023 — mengatur hubungan kerja dan perlindungan hak pekerja.
+• PP No. 35 Tahun 2021 tentang Perjanjian Kerja Waktu Tertentu, Alih Daya, Waktu Kerja dan Waktu Istirahat, dan Pemutusan Hubungan Kerja — mengatur PKWT, alih daya, waktu kerja, waktu istirahat, lembur, dan PHK.",
                 'regulation_en'           => 'Law No. 13 of 2003 on Manpower as amended by Law No. 6 of 2023; Government Regulation No. 35 of 2021 on Fixed-Term Employment Agreements',
             ],
             36 => [
@@ -438,7 +490,8 @@ class IndicatorAuditDataSeeder extends Seeder
                 'evidence_en'             => 'Fixed-term (PKWT)/permanent (PKWTT) employment agreements, Company Regulations or CLA, HR SOPs, contract signing evidence',
                 'verification_method'     => 'Review dokumen',
                 'verification_method_en'  => 'Document review',
-                'regulation'              => 'UU No. 13 Tahun 2003 jo. UU No. 6 Tahun 2023; PP No. 35 Tahun 2021',
+                'regulation'              => "• UU No. 13 Tahun 2003 tentang Ketenagakerjaan sebagaimana telah diubah dengan UU No. 6 Tahun 2023 — mengatur hubungan kerja dan ketentuan perjanjian kerja antara pekerja dan pengusaha.
+• PP No. 35 Tahun 2021 tentang Perjanjian Kerja Waktu Tertentu, Alih Daya, Waktu Kerja dan Waktu Istirahat, dan Pemutusan Hubungan Kerja — mengatur ketentuan PKWT dan hubungan kerja.",
                 'regulation_en'           => 'Law No. 13 of 2003 on Manpower as amended by Law No. 6 of 2023; Government Regulation No. 35 of 2021',
             ],
             37 => [
@@ -450,7 +503,8 @@ class IndicatorAuditDataSeeder extends Seeder
                 'evidence_en'             => 'Payslips, bank transfer evidence, payroll lists, payroll payment reports, payroll SOPs',
                 'verification_method'     => 'Review dokumen, wawancara',
                 'verification_method_en'  => 'Document review, interviews',
-                'regulation'              => 'PP No. 36 Tahun 2021 tentang Pengupahan; UU No. 13 Tahun 2003 jo. UU No. 6 Tahun 2023',
+                'regulation'              => "• PP No. 36 Tahun 2021 tentang Pengupahan — mengatur pembayaran upah, struktur dan skala upah, perlindungan upah, serta ketentuan pembayaran upah.
+• UU No. 13 Tahun 2003 tentang Ketenagakerjaan sebagaimana telah diubah dengan UU No. 6 Tahun 2023 — mengatur hak pekerja atas upah dan perlindungan pengupahan.",
                 'regulation_en'           => 'Government Regulation No. 36 of 2021 on Wages; Law No. 13 of 2003 on Manpower as amended by Law No. 6 of 2023',
             ],
             38 => [
@@ -462,7 +516,9 @@ class IndicatorAuditDataSeeder extends Seeder
                 'evidence_en'             => 'Company Regulations/CLA, work schedules, attendance records (manual/digital), timesheets, overtime summaries, overtime consent forms, overtime payment slips, internal audit reports',
                 'verification_method'     => 'Review dokumen, wawancara pekerja, observasi sistem absensi',
                 'verification_method_en'  => 'Document review, worker interviews, attendance system observation',
-                'regulation'              => 'UU No. 13 Tahun 2003 tentang Ketenagakerjaan sebagaimana diubah dengan UU No. 6 Tahun 2023; PP No. 35 Tahun 2021; Kepmenaker No. 102/MEN/VI/2004 (sepanjang masih relevan)',
+                'regulation'              => "• UU No. 13 Tahun 2003 tentang Ketenagakerjaan sebagaimana telah diubah dengan UU No. 6 Tahun 2023 — mengatur waktu kerja, waktu istirahat, kerja lembur, dan hak pekerja.
+• PP No. 35 Tahun 2021 tentang Perjanjian Kerja Waktu Tertentu, Alih Daya, Waktu Kerja dan Waktu Istirahat, dan Pemutusan Hubungan Kerja — mengatur waktu kerja, waktu istirahat, kerja lembur, dan upah lembur.
+• Kepmenaker No. 102/MEN/VI/2004 tentang Waktu Kerja Lembur dan Upah Kerja Lembur — mengatur ketentuan pelaksanaan kerja lembur dan pembayaran upah lembur.",
                 'regulation_en'           => 'Law No. 13 of 2003 on Manpower as amended by Law No. 6 of 2023; Government Regulation No. 35 of 2021; Ministerial Decree No. 102/MEN/VI/2004 on Overtime (insofar as still applicable)',
             ],
             39 => [
@@ -474,7 +530,9 @@ class IndicatorAuditDataSeeder extends Seeder
                 'evidence_en'             => 'Company Regulations/CLA, leave SOPs, leave application and approval data, worker leave records, medical records (where required), payment slips during leave period',
                 'verification_method'     => 'Review dokumen, wawancara pekerja dan HR, verifikasi sampel data cuti',
                 'verification_method_en'  => 'Document review, interviews with workers and HR, sample leave data verification',
-                'regulation'              => 'UU No. 13 Tahun 2003 sebagaimana diubah dengan UU No. 6 Tahun 2023; UU No. 17 Tahun 2023 tentang Kesehatan; PP No. 35 Tahun 2021',
+                'regulation'              => "• UU No. 13 Tahun 2003 tentang Ketenagakerjaan sebagaimana telah diubah dengan UU No. 6 Tahun 2023 — mengatur hak pekerja atas cuti dan perlindungan pekerja perempuan.
+• UU No. 17 Tahun 2023 tentang Kesehatan — mengatur penyelenggaraan kesehatan, termasuk perlindungan kesehatan ibu dan anak.
+• PP No. 35 Tahun 2021 tentang Perjanjian Kerja Waktu Tertentu, Alih Daya, Waktu Kerja dan Waktu Istirahat, dan Pemutusan Hubungan Kerja — mengatur waktu kerja dan waktu istirahat pekerja.",
                 'regulation_en'           => 'Law No. 13 of 2003 on Manpower as amended by Law No. 6 of 2023; Law No. 17 of 2023 on Health; Government Regulation No. 35 of 2021',
             ],
             40 => [
@@ -486,7 +544,10 @@ class IndicatorAuditDataSeeder extends Seeder
                 'evidence_en'             => 'Pension policies, BPJS Employment (Old-Age Security/JHT and Pension Security/JP) membership evidence, retired worker lists, pension benefit/severance payment evidence, pension SOPs',
                 'verification_method'     => 'Review dokumen, wawancara HR, verifikasi sampel dokumen pensiun',
                 'verification_method_en'  => 'Document review, HR interviews, sample pension document verification',
-                'regulation'              => 'UU No. 13 Tahun 2003 sebagaimana diubah dengan UU No. 6 Tahun 2023; UU No. 24 Tahun 2011 tentang BPJS; PP No. 45 Tahun 2015 tentang Penyelenggaraan Program Jaminan Pensiun; PP No. 46 Tahun 2015 tentang Jaminan Hari Tua',
+                'regulation'              => "• UU No. 13 Tahun 2003 tentang Ketenagakerjaan sebagaimana telah diubah dengan UU No. 6 Tahun 2023 — mengatur hak pekerja ketika hubungan kerja berakhir, termasuk hak terkait masa kerja dan pensiun.
+• UU No. 24 Tahun 2011 tentang Badan Penyelenggara Jaminan Sosial — mengatur penyelenggaraan jaminan sosial bagi pekerja.
+• PP No. 45 Tahun 2015 tentang Penyelenggaraan Program Jaminan Pensiun — mengatur penyelenggaraan program jaminan pensiun bagi pekerja.
+• PP No. 46 Tahun 2015 tentang Penyelenggaraan Program Jaminan Hari Tua — mengatur penyelenggaraan program jaminan hari tua.",
                 'regulation_en'           => 'Law No. 13 of 2003 on Manpower as amended by Law No. 6 of 2023; Law No. 24 of 2011 on BPJS; Government Regulation No. 45 of 2015 on Pension Insurance Program; Government Regulation No. 46 of 2015 on Old-Age Security',
             ],
             41 => [
@@ -498,7 +559,8 @@ class IndicatorAuditDataSeeder extends Seeder
                 'evidence_en'             => 'Wage structure and scale, payslips, bank transfers, payroll lists, Company Regulations/CLA',
                 'verification_method'     => 'Review dokumen, wawancara pekerja',
                 'verification_method_en'  => 'Document review, worker interviews',
-                'regulation'              => 'UU No. 13 Tahun 2003 sebagaimana diubah dengan UU No. 6 Tahun 2023; PP No. 36 Tahun 2021 tentang Pengupahan',
+                'regulation'              => "• UU No. 13 Tahun 2003 tentang Ketenagakerjaan sebagaimana telah diubah dengan UU No. 6 Tahun 2023 — mengatur hak pekerja atas pengupahan dan perlindungan tenaga kerja.
+• PP No. 36 Tahun 2021 tentang Pengupahan — mengatur upah minimum, struktur dan skala upah, serta perlindungan upah.",
                 'regulation_en'           => 'Law No. 13 of 2003 on Manpower as amended by Law No. 6 of 2023; Government Regulation No. 36 of 2021 on Wages',
             ],
             42 => [
@@ -510,7 +572,8 @@ class IndicatorAuditDataSeeder extends Seeder
                 'evidence_en'             => 'Remuneration policies, compensation structure, welfare facilities, welfare survey results, evaluation reports',
                 'verification_method'     => 'Review dokumen, wawancara manajemen dan pekerja',
                 'verification_method_en'  => 'Document review, management and worker interviews',
-                'regulation'              => 'PP No. 36 Tahun 2021; UU No. 13 Tahun 2003 jo. UU No. 6 Tahun 2023; praktik baik ILO mengenai Living Wage',
+                'regulation'              => "• PP No. 36 Tahun 2021 tentang Pengupahan — mengatur kebijakan pengupahan, struktur dan skala upah, upah minimum, dan perlindungan upah.
+• UU No. 13 Tahun 2003 tentang Ketenagakerjaan sebagaimana telah diubah dengan UU No. 6 Tahun 2023 — mengatur hak pekerja atas penghasilan yang memenuhi kebutuhan hidup yang layak.",
                 'regulation_en'           => 'Government Regulation No. 36 of 2021; Law No. 13 of 2003 as amended by Law No. 6 of 2023; ILO best practices on Living Wage',
             ],
             43 => [
@@ -522,7 +585,12 @@ class IndicatorAuditDataSeeder extends Seeder
                 'evidence_en'             => 'Insurance policies, premium payment evidence, BPJS or insurance membership evidence, lists of insured workers, company insurance policies',
                 'verification_method'     => 'Review dokumen, wawancara',
                 'verification_method_en'  => 'Document review, interviews',
-                'regulation'              => 'UU No. 40 Tahun 2004, UU No. 24 Tahun 2011, PP No. 44 Tahun 2015 jo. PP No. 49 Tahun 2023, PP No. 45 Tahun 2015, PP No. 46 Tahun 2015 jo. PP No. 60 Tahun 2015, PP No. 37 Tahun 2021 jo. PP No. 6 Tahun 2025',
+                'regulation'              => "• UU No. 40 Tahun 2004 tentang Sistem Jaminan Sosial Nasional — mengatur penyelenggaraan sistem jaminan sosial nasional bagi masyarakat dan pekerja.
+• UU No. 24 Tahun 2011 tentang Badan Penyelenggara Jaminan Sosial — mengatur pembentukan dan penyelenggaraan BPJS.
+• PP No. 44 Tahun 2015 tentang Penyelenggaraan Program Jaminan Kecelakaan Kerja dan Jaminan Kematian — mengatur perlindungan pekerja melalui program JKK dan JKM.
+• PP No. 45 Tahun 2015 tentang Penyelenggaraan Program Jaminan Pensiun — mengatur program jaminan pensiun pekerja.
+• PP No. 46 Tahun 2015 tentang Penyelenggaraan Program Jaminan Hari Tua — mengatur program jaminan hari tua pekerja.
+• PP No. 37 Tahun 2021 tentang Penyelenggaraan Program Jaminan Kehilangan Pekerjaan — mengatur perlindungan bagi pekerja yang mengalami kehilangan pekerjaan.",
                 'regulation_en'           => 'Law No. 40 of 2004 on National Social Security System; Law No. 24 of 2011 on BPJS; Government Regulation No. 44 of 2015 as amended by No. 49 of 2023; Government Regulation No. 45 of 2015; Government Regulation No. 46 of 2015; Government Regulation No. 37 of 2021 as amended by No. 6 of 2025',
             ],
             44 => [
@@ -534,7 +602,7 @@ class IndicatorAuditDataSeeder extends Seeder
                 'evidence_en'             => 'NPWP (Taxpayer ID), Electronic Receipt (BPE), Annual/Monthly Tax Returns (SPT), tax payment evidence, audit reports',
                 'verification_method'     => 'Review dokumen, wawancara',
                 'verification_method_en'  => 'Document review, interviews',
-                'regulation'              => 'UU No. 6 Tahun 1983 sebagaimana terakhir diubah dengan UU Harmonisasi Peraturan Perpajakan (UU No. 7 Tahun 2021)',
+                'regulation'              => "• UU No. 6 Tahun 1983 tentang Ketentuan Umum dan Tata Cara Perpajakan sebagaimana telah beberapa kali diubah, terakhir dengan UU No. 7 Tahun 2021 tentang Harmonisasi Peraturan Perpajakan — mengatur ketentuan umum perpajakan, pendaftaran wajib pajak, pelaporan SPT, pembayaran, serta administrasi perpajakan.",
                 'regulation_en'           => 'Law No. 6 of 1983 on General Taxation Provisions as last amended by the Tax Regulations Harmonization Law (Law No. 7 of 2021)',
             ],
             45 => [
@@ -546,7 +614,7 @@ class IndicatorAuditDataSeeder extends Seeder
                 'evidence_en'             => 'Retribution payment evidence, PNBP payment evidence, business licenses, financial reports, official receipts',
                 'verification_method'     => 'Review dokumen',
                 'verification_method_en'  => 'Document review',
-                'regulation'              => 'UU No. 1 Tahun 2022 tentang Hubungan Keuangan antara Pemerintah Pusat dan Pemerintahan Daerah; peraturan daerah yang relevan',
+                'regulation'              => "• UU No. 1 Tahun 2022 tentang Hubungan Keuangan antara Pemerintah Pusat dan Pemerintahan Daerah — mengatur hubungan keuangan pusat dan daerah, termasuk pajak daerah dan retribusi daerah serta pengelolaan pendapatan daerah.",
                 'regulation_en'           => 'Law No. 1 of 2022 on Financial Relations between Central and Regional Governments; relevant regional regulations',
             ],
             46 => [
@@ -558,7 +626,9 @@ class IndicatorAuditDataSeeder extends Seeder
                 'evidence_en'             => 'Contracts/MoUs, Purchase Orders, Sales Agreements, contract management SOPs, contract evaluation documentation',
                 'verification_method'     => 'Review dokumen, wawancara',
                 'verification_method_en'  => 'Document review, interviews',
-                'regulation'              => 'KUH Perdata, UU No. 8 Tahun 1999 tentang Perlindungan Konsumen; UU No. 7 Tahun 2014 tentang Perdagangan',
+                'regulation'              => "• KUH Perdata — mengatur hubungan hukum perdata, termasuk perjanjian, hak dan kewajiban para pihak, serta akibat hukum dari suatu perjanjian.
+• UU No. 8 Tahun 1999 tentang Perlindungan Konsumen — mengatur hak dan kewajiban konsumen serta pelaku usaha dan perlindungan konsumen.
+• UU No. 7 Tahun 2014 tentang Perdagangan — mengatur kegiatan perdagangan, hubungan pelaku usaha, serta ketentuan perdagangan barang dan jasa.",
                 'regulation_en'           => 'Indonesian Civil Code; Law No. 8 of 1999 on Consumer Protection; Law No. 7 of 2014 on Trade',
             ],
             47 => [
@@ -570,7 +640,9 @@ class IndicatorAuditDataSeeder extends Seeder
                 'evidence_en'             => 'Circular Economy Plan, reuse/recycling volume data, SOPs, achievement reports, implementation documentation',
                 'verification_method'     => 'Review dokumen, observasi lapangan',
                 'verification_method_en'  => 'Document review, field observation',
-                'regulation'              => 'UU No. 18 Tahun 2008 tentang Pengelolaan Sampah; PP No. 27 Tahun 2020; PP No. 22 Tahun 2021',
+                'regulation'              => "• UU No. 18 Tahun 2008 tentang Pengelolaan Sampah — mengatur pengurangan dan penanganan sampah, termasuk pemanfaatan kembali dan daur ulang.
+• PP No. 27 Tahun 2020 tentang Pengelolaan Sampah Spesifik — mengatur pengelolaan sampah yang memiliki karakteristik khusus.
+• PP No. 22 Tahun 2021 tentang Penyelenggaraan Perlindungan dan Pengelolaan Lingkungan Hidup — mengatur pengelolaan limbah dan pengendalian dampak lingkungan.",
                 'regulation_en'           => 'Law No. 18 of 2008 on Waste Management; Government Regulation No. 27 of 2020; Government Regulation No. 22 of 2021',
             ],
             48 => [
@@ -582,7 +654,7 @@ class IndicatorAuditDataSeeder extends Seeder
                 'evidence_en'             => 'Innovation roadmap, R&D reports, patents/intellectual property (if any), technology SOPs, implementation reports, performance indicators',
                 'verification_method'     => 'Review dokumen, observasi, wawancara',
                 'verification_method_en'  => 'Document review, observation, interviews',
-                'regulation'              => 'UU No. 11 Tahun 2019 tentang Sistem Nasional Ilmu Pengetahuan dan Teknologi',
+                'regulation'              => "• UU No. 11 Tahun 2019 tentang Sistem Nasional Ilmu Pengetahuan dan Teknologi — mengatur penyelenggaraan ilmu pengetahuan dan teknologi, penelitian, pengembangan, inovasi, serta pemanfaatan hasil teknologi untuk pembangunan.",
                 'regulation_en'           => 'Law No. 11 of 2019 on the National Science and Technology System',
             ],
             49 => [
@@ -594,7 +666,8 @@ class IndicatorAuditDataSeeder extends Seeder
                 'evidence_en'             => 'MSME partnership programs, coached MSME lists, training reports, MoUs, evaluation reports, activity documentation',
                 'verification_method'     => 'Review dokumen, wawancara, observasi',
                 'verification_method_en'  => 'Document review, interviews, observation',
-                'regulation'              => 'UU No. 20 Tahun 2008 tentang UMKM; PP No. 7 Tahun 2021',
+                'regulation'              => "• UU No. 20 Tahun 2008 tentang Usaha Mikro, Kecil, dan Menengah — mengatur pemberdayaan, pengembangan, perlindungan, dan kemitraan UMKM.
+• PP No. 7 Tahun 2021 tentang Kemudahan, Pelindungan, dan Pemberdayaan Koperasi dan Usaha Mikro, Kecil, dan Menengah — mengatur kemudahan berusaha, perlindungan, pemberdayaan, pembinaan, serta pengembangan UMKM.",
                 'regulation_en'           => 'Law No. 20 of 2008 on Micro, Small, and Medium Enterprises; Government Regulation No. 7 of 2021',
             ],
             50 => [
@@ -606,7 +679,9 @@ class IndicatorAuditDataSeeder extends Seeder
                 'evidence_en'             => 'Digital transformation roadmap, IT policies, information security SOPs, system implementation reports, user training records, digital system effectiveness evaluation results',
                 'verification_method'     => 'Review dokumen, observasi, wawancara',
                 'verification_method_en'  => 'Document review, observation, interviews',
-                'regulation'              => 'UU No. 27 Tahun 2022 tentang Pelindungan Data Pribadi; UU No. 11 Tahun 2008 jo. UU No. 1 Tahun 2024 tentang Informasi dan Transaksi Elektronik; PP No. 71 Tahun 2019',
+                'regulation'              => "• UU No. 27 Tahun 2022 tentang Pelindungan Data Pribadi — mengatur pelindungan data pribadi, hak subjek data, kewajiban pengendali/pemroses data, serta keamanan dan pemrosesan data pribadi.
+• UU No. 11 Tahun 2008 tentang Informasi dan Transaksi Elektronik sebagaimana telah diubah dengan UU No. 1 Tahun 2024 — mengatur informasi elektronik, transaksi elektronik, sistem elektronik, serta aspek hukum pemanfaatan teknologi informasi.
+• PP No. 71 Tahun 2019 tentang Penyelenggaraan Sistem dan Transaksi Elektronik — mengatur penyelenggaraan sistem elektronik, kewajiban penyelenggara sistem elektronik, keamanan sistem, dan transaksi elektronik.",
                 'regulation_en'           => 'Law No. 27 of 2022 on Personal Data Protection; Law No. 11 of 2008 as amended by Law No. 1 of 2024 on Electronic Information and Transactions; Government Regulation No. 71 of 2019',
             ],
         ];

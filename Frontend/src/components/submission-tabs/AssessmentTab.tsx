@@ -1324,7 +1324,7 @@ export function AssessmentTab({ submission, onUpdate, onGoToScore }: Props) {
                     <Scale size={11} />{" "}
                     {t.assessment_modal_regulation || "Dasar Hukum & Regulasi"}
                   </p>
-                  <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+                  <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed whitespace-pre-line">
                     {infoModalIndicator.regulation}
                   </p>
                 </div>
