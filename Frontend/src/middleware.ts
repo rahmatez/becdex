@@ -14,7 +14,7 @@ const PUBLIC_ROUTES = [
 
 
 // Role IDs yang termasuk admin — harus sinkron dengan Backend/app/Enums/RoleId.php
-const ADMIN_ROLE_IDS = [1, 6, 7, 10];
+const ADMIN_ROLE_IDS = [1, 6, 7, 10, 11, 12];
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
