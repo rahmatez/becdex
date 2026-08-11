@@ -14,6 +14,7 @@ import api, { setAuthToken } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
 import { useLangStore } from "@/store/lang";
 import { useTheme } from "@/context/ThemeContext";
+import { isAnyAdmin } from "@/lib/roles";
 
 type ApiError = { response?: { data?: { message?: string } } };
 
@@ -75,8 +76,7 @@ export default function LoginPage() {
 
       toast.success(`Selamat datang, ${user.name}!`);
 
-      const adminRoles = [1, 6, 7, 10];
-      if (adminRoles.includes(user.role?.id)) {
+      if (isAnyAdmin(user)) {
         router.push("/admin");
       } else {
         router.push("/dashboard");
