@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo, use } from "react";
+import { useRouter } from "next/navigation";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { AppLayout } from "@/components/layouts/AppLayout";
@@ -21,7 +22,7 @@ import FieldSurveyTab from "@/components/admin-tabs/FieldSurveyTab";
 import { IndicatorChat } from "@/components/submission-tabs/IndicatorChat";
 import { useTranslation } from "@/store/lang";
 import { useAuthStore } from "@/store/auth";
-import { canIssueCertificate, canVerifySubmissions } from "@/lib/roles";
+import { canIssueCertificate, canVerifySubmissions, isSuperAdmin } from "@/lib/roles";
 import { useAdminRouteGuard } from "@/hooks/useAdminRouteGuard";
 
 interface IndicatorDoc { id: number; file_url: string; original_name: string; upload_phase?: number; }
@@ -69,15 +70,30 @@ export default function AdminSubmissionDetailPage({ params }: { params: Promise<
   const { t, locale } = useTranslation();
   const { authorized } = useAdminRouteGuard({ guard: "submission_reader" });
   
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState<"verification" | "assessors" | "survey" | "logs">("verification");
   const [expandedIndicators, setExpandedIndicators] = useState<Set<number>>(new Set());
   const [showSurveyModal, setShowSurveyModal] = useState(false);
   const [showCertModal, setShowCertModal] = useState(false);
   const [showReturnModal, setShowReturnModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [returnReason, setReturnReason] = useState("");
   const [showScoringGuide, setShowScoringGuide] = useState(false);
   const [surveyForm, setSurveyForm] = useState({ scheduled_at: "", location_link: "", notes: "" });
   const [certForm, setCertForm] = useState({ certificate_id: "10", becdex_category_id: "3", published_at: "", mmic: "", direktur: "" });
+
+  const deleteMutation = useMutation({
+    mutationFn: async () => {
+      await api.delete(`/admin/submissions/${id}`);
+    },
+    onSuccess: () => {
+      toast.success("Pengajuan berhasil dihapus.");
+      router.push("/admin/submissions");
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || "Gagal menghapus pengajuan.");
+    },
+  });
 
   const { data, isLoading, refetch } = useQuery<{ data: SubmissionData }>({
     queryKey: ["admin-submission", id],
@@ -266,13 +282,26 @@ export default function AdminSubmissionDetailPage({ params }: { params: Promise<
 
   return (
     <AppLayout title={t.dash_admin_sub_id_title || "Review & Verifikasi Auditor"}>
-      <Link
-        href="/admin/submissions"
-        className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold text-xs transition-all mb-6 shadow-2xs"
-      >
-        <ArrowLeft size={14} />
-        <span>{t.dash_admin_sub_id_back || "Kembali ke Daftar Submission"}</span>
-      </Link>
+      <div className="flex justify-between items-center mb-6">
+        <Link
+          href="/admin/submissions"
+          className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold text-xs transition-all shadow-2xs"
+        >
+          <ArrowLeft size={14} />
+          <span>{t.dash_admin_sub_id_back || "Kembali ke Daftar Submission"}</span>
+        </Link>
+
+        {isSuperAdmin(user) && (
+          <button
+            onClick={() => setShowDeleteModal(true)}
+            className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-rose-100 hover:bg-rose-200 text-rose-700 dark:bg-rose-900/50 dark:hover:bg-rose-900/80 dark:text-rose-400 font-bold text-xs transition-all shadow-2xs"
+            title="Hapus Pengajuan (Hanya Super Admin)"
+          >
+            <X size={14} />
+            <span>Hapus Pengajuan</span>
+          </button>
+        )}
+      </div>
 
       {/* Warning Revision Limit — only show during active verification/survey */}
       {[3, 7].includes(Number(submission.status.id)) && (submission.revision_count ?? 0) >= 1 ? (
@@ -1261,6 +1290,46 @@ export default function AdminSubmissionDetailPage({ params }: { params: Promise<
               >
                 {t.assessment_modal_btn_understand || "Mengerti"}
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {/* Delete Confirmation Modal */}
+      {showDeleteModal && (
+        <div className="fixed inset-0 z-100 flex items-center justify-center p-4">
+          <div
+            className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
+            onClick={() => setShowDeleteModal(false)}
+          />
+          <div className="relative bg-white dark:bg-slate-900 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+            <div className="p-6">
+              <div className="w-12 h-12 rounded-full bg-rose-100 dark:bg-rose-900/50 flex items-center justify-center mb-4 text-rose-600 dark:text-rose-400">
+                <AlertTriangle size={24} />
+              </div>
+              <h3 className="text-lg font-extrabold text-slate-900 dark:text-white mb-2">
+                Hapus Pengajuan Permanen?
+              </h3>
+              <p className="text-sm text-slate-600 dark:text-slate-400 mb-6">
+                Tindakan ini tidak dapat dibatalkan. Semua data terkait pengajuan ini (dokumen, penilaian, history) akan dihapus secara permanen dari sistem.
+              </p>
+              
+              <div className="flex justify-end gap-3">
+                <button
+                  onClick={() => setShowDeleteModal(false)}
+                  className="px-4 py-2.5 rounded-xl font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all text-sm"
+                >
+                  Batal
+                </button>
+                <button
+                  onClick={() => deleteMutation.mutate()}
+                  disabled={deleteMutation.isPending}
+                  className="flex items-center gap-2 px-5 py-2.5 bg-rose-600 hover:bg-rose-700 text-white rounded-xl font-bold shadow-md shadow-rose-600/20 disabled:opacity-60 transition-all text-sm"
+                >
+                  {deleteMutation.isPending && <Loader2 size={14} className="animate-spin" />}
+                  <span>Ya, Hapus Permanen</span>
+                </button>
+              </div>
             </div>
           </div>
         </div>

@@ -252,6 +252,9 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::post('users/{id}/verify',  [UserAdminController::class, 'verifyManual']);
             Route::put('users/{id}/status',   [UserAdminController::class, 'updateStatus']);
 
+            // Submissions Management (Super Admin Actions)
+            Route::delete('submissions/{id}', [SubmissionAdminController::class, 'destroy']);
+
             // Settings
             Route::get('settings', [SettingAdminController::class, 'index']);
             Route::put('settings', [SettingAdminController::class, 'update']);

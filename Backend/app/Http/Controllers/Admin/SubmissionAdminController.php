@@ -623,4 +623,36 @@ class SubmissionAdminController extends Controller
             ]
         ]);
     }
+
+    /**
+     * DELETE /api/admin/submissions/{id}
+     * Hapus submission sepenuhnya beserta relasinya (Hanya untuk Super Admin)
+     */
+    public function destroy(string $id): JsonResponse
+    {
+        $submission = Submission::with(['documents', 'certificateUser'])->findOrFail($id);
+        
+        // Hapus file dokumen yang diupload
+        foreach ($submission->documents as $doc) {
+            if (\Illuminate\Support\Facades\Storage::disk('public')->exists($doc->file_path)) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($doc->file_path);
+            }
+        }
+        
+        // Hapus file sertifikat background/template jika diupload spesifik
+        if ($submission->certificateUser && $submission->certificateUser->certificate) {
+            $cert = $submission->certificateUser->certificate;
+            if ($cert->file_path && \Illuminate\Support\Facades\Storage::disk('public')->exists($cert->file_path)) {
+                // Jangan hapus background template global
+                // Tapi kalau memang spesifik user, bisa dihapus. Karena file_path di tabel certificates dipakai bersama, kita skip hapus file fisiknya agar aman.
+            }
+        }
+        
+        // Relasi lain akan otomatis terhapus via foreign key cascadeOnDelete di database
+        $submission->delete();
+
+        return response()->json([
+            'message' => 'Pengajuan berhasil dihapus secara permanen dari sistem.',
+        ]);
+    }
 }
