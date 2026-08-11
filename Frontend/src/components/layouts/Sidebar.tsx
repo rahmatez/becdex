@@ -79,31 +79,31 @@ export function Sidebar() {
 
   const ADMIN_MAIN_MENU: NavItem[] = [
     { label: t.sidebar_admin_dash || "Overview Admin", href: "/admin", icon: LayoutDashboard },
-    // Submissions: Super Admin + QC Admin + Assessment Admin + Certificate Admin
-    { label: t.sidebar_admin_submissions || "Verifikasi Submission", href: "/admin/submissions", icon: FileCheck, badge: "New", badgeColor: "bg-blue-100 text-blue-700", roles: [1, 6, 7, 11] },
-    // Users: hanya Super Admin
-    { label: t.sidebar_admin_users || "Kelola Pengguna", href: "/admin/users", icon: Users, roles: [1] },
-    // Payments: Super Admin + Finance Admin + QC Admin
-    { label: t.sidebar_admin_payments || "Riwayat Transaksi", href: "/admin/payments", icon: CreditCard, roles: [1, 10, 11] },
+    // Submissions: Super Admin + IT Manager + QC Admin + Assessment Admin + Certificate Admin
+    { label: t.sidebar_admin_submissions || "Verifikasi Submission", href: "/admin/submissions", icon: FileCheck, badge: "New", badgeColor: "bg-blue-100 text-blue-700", roles: [1, 6, 7, 11, 12] },
+    // Users: hanya Super Admin + IT Manager
+    { label: t.sidebar_admin_users || "Kelola Pengguna", href: "/admin/users", icon: Users, roles: [1, 12] },
+    // Payments: Super Admin + IT Manager + Finance Admin + QC Admin
+    { label: t.sidebar_admin_payments || "Riwayat Transaksi", href: "/admin/payments", icon: CreditCard, roles: [1, 10, 11, 12] },
     // Certificates: semua admin
     { label: t.sidebar_admin_certificates || "Sertifikat", href: "/admin/certificates", icon: Award },
   ];
 
   const ADMIN_SYSTEM_MENU: NavItem[] = [
-    // Framework: Super Admin + QC Admin
-    { label: t.sidebar_admin_framework || "Indikator & Framework", href: "/admin/framework", icon: GitBranch, roles: [1, 11] },
-    // Master Data: Super Admin + QC Admin
-    { label: t.sidebar_admin_master || "Master Data", href: "/admin/master", icon: Globe, roles: [1, 11] },
+    // Framework: Super Admin + IT Manager + QC Admin
+    { label: t.sidebar_admin_framework || "Indikator & Framework", href: "/admin/framework", icon: GitBranch, roles: [1, 11, 12] },
+    // Master Data: Super Admin + IT Manager + QC Admin
+    { label: t.sidebar_admin_master || "Master Data", href: "/admin/master", icon: Globe, roles: [1, 11, 12] },
     // Help: semua admin
-    { label: t.sidebar_admin_help || "Inbox Bantuan", href: "/admin/help", icon: Mail, roles: [1, 11, 6] },
-    // Downloads: Super Admin + QC Admin
-    { label: t.sidebar_admin_downloads || "Kelola Unduhan", href: "/admin/downloads", icon: Download, roles: [1, 11] },
-    // CMS: Super Admin + QC Admin
-    { label: t.sidebar_admin_content || "Kelola Konten Web", href: "/admin/content", icon: FileText, roles: [1, 11] },
+    { label: t.sidebar_admin_help || "Inbox Bantuan", href: "/admin/help", icon: Mail, roles: [1, 11, 6, 12] },
+    // Downloads: Super Admin + IT Manager + QC Admin
+    { label: t.sidebar_admin_downloads || "Kelola Unduhan", href: "/admin/downloads", icon: Download, roles: [1, 11, 12] },
+    // CMS: Super Admin + IT Manager + QC Admin
+    { label: t.sidebar_admin_content || "Kelola Konten Web", href: "/admin/content", icon: FileText, roles: [1, 11, 12] },
     // Profil: semua admin
     { label: t.sidebar_admin_profile || "Profil Admin", href: "/admin/profile", icon: Building2 },
-    // Settings: hanya Super Admin
-    { label: t.sidebar_admin_settings || "Pengaturan Sistem", href: "/admin/settings", icon: Settings, roles: [1] },
+    // Settings: Super Admin + IT Manager
+    { label: t.sidebar_admin_settings || "Pengaturan Sistem", href: "/admin/settings", icon: Settings, roles: [1, 12] },
   ];
 
   const roleId = user?.role?.id;
@@ -113,7 +113,7 @@ export function Sidebar() {
   };
 
   // Semua role selain Company (2) dianggap admin dan diarahkan ke admin panel
-  const isAdmin = roleId && [1, 6, 7, 10, 11].includes(roleId);
+  const isAdmin = roleId && [1, 6, 7, 10, 11, 12].includes(roleId);
   const mainMenu = isAdmin ? filterByRole(ADMIN_MAIN_MENU) : COMPANY_MAIN_MENU;
   const secondaryMenu = isAdmin ? filterByRole(ADMIN_SYSTEM_MENU) : COMPANY_OTHERS_MENU;
   const dashboardHref = isAdmin ? "/admin" : "/dashboard";
