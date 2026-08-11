@@ -318,12 +318,24 @@ class SubmissionAdminController extends Controller
                 $submission->load(['user.companyDetail.companyField', 'certificateUser.certificate']);
                 $certUser = $submission->certificateUser;
                 
-                $bgImageBase64 = '';
-                if ($certUser && $certUser->certificate && $certUser->certificate->file_path) {
+                $activeTemplate = \App\Models\CertificateTemplate::where('is_active', true)->first();
+
+                $bgPath = null;
+                if ($activeTemplate && $activeTemplate->background_path) {
+                    $bgPath = storage_path('app/public/' . $activeTemplate->background_path);
+                } else if ($certUser && $certUser->certificate && $certUser->certificate->file_path) {
                     $bgPath = storage_path('app/public/' . $certUser->certificate->file_path);
-                    if (file_exists($bgPath)) {
-                        $bgImageBase64 = 'data:image/jpeg;base64,' . base64_encode(file_get_contents($bgPath));
-                    }
+                }
+                
+                if (!$bgPath || !file_exists($bgPath)) {
+                    $bgPath = public_path('assets/certificate_default_bg.jpg');
+                }
+
+                $bgImageBase64 = '';
+                if (file_exists($bgPath)) {
+                    // Try to get mime type for proper base64, fallback to jpeg
+                    $mime = mime_content_type($bgPath) ?: 'image/jpeg';
+                    $bgImageBase64 = 'data:' . $mime . ';base64,' . base64_encode(file_get_contents($bgPath));
                 }
 
                 $qrUrl = url('/verified-companies');
@@ -337,17 +349,38 @@ class SubmissionAdminController extends Controller
                     }
                 } catch (\Exception $e) {}
 
+                $sectorEn = $submission->user->companyDetail->companyField->name ?? 'Maritime Sector';
+                $sectorIdMap = [
+                    "Marine Fisheries and Aquaculture" => "Perikanan dan Akuakultur Laut",
+                    "Maritime Transport, Shipping, and Ports" => "Transportasi Maritim, Pelayaran, dan Pelabuhan",
+                    "Marine Tourism and Cruise Ships" => "Pariwisata Bahari dan Kapal Pesiar",
+                    "Biotechnology and Marine Bioproducts Processing" => "Bioteknologi dan Pengolahan Bioproduk Laut",
+                    "Seawater Desalination" => "Desalinasi Air Laut",
+                    "Deep Sea Mining, Oil, and Gas" => "Pertambangan, Minyak, dan Gas Laut Dalam",
+                    "Marine Renewable Energy" => "Energi Terbarukan Laut",
+                    "Ship and Boat Building" => "Pembuatan Kapal dan Perahu",
+                    "Ocean Building" => "Bangunan Laut",
+                    "Marine Defense and Security" => "Pertahanan dan Keamanan Laut",
+                    "Maritime Research and Education" => "Riset dan Edukasi Maritim",
+                    "Marine Communication, Equipment and Instrumentation" => "Komunikasi, Peralatan, dan Instrumentasi Kelautan",
+                ];
+                $sectorId = $sectorIdMap[$sectorEn] ?? 'Sektor Maritim';
+
                 $data = [
                     'bg_image_base64' => $bgImageBase64,
                     'mmic_code'       => ($certUser->published_at ? $certUser->published_at->format('dmY') : '') . ($certUser->mmic ?? ''),
                     'company_name'    => $submission->user->name,
                     'company_address' => $submission->user->companyDetail->address ?? '',
-                    'company_sector'  => $submission->user->companyDetail->companyField->name ?? 'Maritime Sector',
+                    'company_sector'  => $sectorId,
+                    'company_sector_en' => $sectorEn,
                     'becdex_category_id' => $certUser->certificate->id ?? 10,
                     'qr_base64'       => $qrBase64,
-                    'published_date'  => $certUser->published_at ? $certUser->published_at->format('d-m-Y') : '',
-                    'valid_until'     => $certUser->valid_until ? $certUser->valid_until->format('d-m-Y') : '',
+                    'published_date'  => $certUser->published_at ? $certUser->published_at->format('d F Y') : '',
+                    'valid_until'     => $certUser->valid_until ? $certUser->valid_until->format('d F Y') : '',
+                    'published_date_en' => $certUser->published_at ? $certUser->published_at->locale('en')->translatedFormat('d F Y') : '',
+                    'valid_until_en'    => $certUser->valid_until ? $certUser->valid_until->locale('en')->translatedFormat('d F Y') : '',
                     'director_name'   => $certUser->direktur ?? 'Rahmat Ihsan, S.H.',
+                    'config'          => $activeTemplate ? $activeTemplate->config : \App\Models\CertificateTemplate::getDefaultConfig(),
                 ];
 
                 $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('pdf.certificate', $data);

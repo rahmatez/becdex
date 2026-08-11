@@ -246,7 +246,11 @@ class SubmissionController extends Controller
             $bgPath = public_path('assets/certificate_default_bg.jpg');
         }
 
-        $bgImageBase64 = $bgPath;
+        $bgImageBase64 = '';
+        if (file_exists($bgPath)) {
+            $mime = mime_content_type($bgPath) ?: 'image/jpeg';
+            $bgImageBase64 = 'data:' . $mime . ';base64,' . base64_encode(file_get_contents($bgPath));
+        }
 
         // 2. Format dates
         $publishedDate = $certUser->published_at ? $certUser->published_at->format('d F Y') : '';
@@ -312,7 +316,7 @@ class SubmissionController extends Controller
             'published_date_en' => $publishedDateEn,
             'valid_until_en'    => $validUntilEn,
             'director_name'   => $directorName,
-            'config'          => $activeTemplate ? $activeTemplate->config : [],
+            'config'          => $activeTemplate ? $activeTemplate->config : \App\Models\CertificateTemplate::getDefaultConfig(),
         ];
 
         // 6. Generate PDF using Barryvdh\DomPDF\Facade\Pdf
