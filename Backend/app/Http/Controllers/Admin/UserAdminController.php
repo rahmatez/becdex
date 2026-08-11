@@ -52,13 +52,19 @@ class UserAdminController extends Controller
             'is_active' => 'required|integer|in:0,1,2',
         ]);
 
-        $user = User::create([
+        $dataToCreate = [
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
             'role_id' => $validated['role_id'],
             'is_active' => $validated['is_active'],
-        ]);
+        ];
+
+        if ($validated['is_active'] == 1) {
+            $dataToCreate['email_verified_at'] = now();
+        }
+
+        $user = User::create($dataToCreate);
 
         return response()->json([
             'message' => 'Pengguna berhasil dibuat.',
@@ -88,6 +94,10 @@ class UserAdminController extends Controller
             'role_id' => $validated['role_id'],
             'is_active' => $validated['is_active'],
         ];
+
+        if ($validated['is_active'] == 1 && !$user->hasVerifiedEmail()) {
+            $dataToUpdate['email_verified_at'] = now();
+        }
 
         if (!empty($validated['password'])) {
             $dataToUpdate['password'] = Hash::make($validated['password']);
@@ -169,7 +179,15 @@ class UserAdminController extends Controller
         ]);
 
         $user = User::findOrFail($id);
-        $user->update(['is_active' => $validated['is_active']]);
+        
+        $dataToUpdate = ['is_active' => $validated['is_active']];
+        
+        // Auto-verify email if admin activates the account
+        if ($validated['is_active'] == 1 && !$user->hasVerifiedEmail()) {
+            $dataToUpdate['email_verified_at'] = now();
+        }
+
+        $user->update($dataToUpdate);
 
         return response()->json([
             'message' => 'Status user berhasil diperbarui.',
