@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { AppLayout } from "@/components/layouts/AppLayout";
 import { Save, Eye } from "lucide-react";
 import { toast } from "sonner";
@@ -76,6 +76,35 @@ export default function CertificateDesignerPage() {
     };
     fetchTemplates();
   }, []);
+
+  // Keyboard arrow key navigation for selected element
+  const handleKeyDown = useCallback((e: KeyboardEvent) => {
+    if (!selectedElement) return;
+    // Don't intercept if user is typing in an input/select/textarea
+    const tag = (e.target as HTMLElement).tagName.toLowerCase();
+    if (tag === 'input' || tag === 'select' || tag === 'textarea') return;
+
+    const arrowKeys = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'];
+    if (!arrowKeys.includes(e.key)) return;
+
+    e.preventDefault(); // prevent page scroll
+    const step = e.shiftKey ? 1 : 0.1;
+
+    setConfig(prev => {
+      const el = prev[selectedElement];
+      let { x, y } = el;
+      if (e.key === 'ArrowUp')    y = Math.round((y - step) * 10) / 10;
+      if (e.key === 'ArrowDown')  y = Math.round((y + step) * 10) / 10;
+      if (e.key === 'ArrowLeft')  x = Math.round((x - step) * 10) / 10;
+      if (e.key === 'ArrowRight') x = Math.round((x + step) * 10) / 10;
+      return { ...prev, [selectedElement]: { ...el, x, y } };
+    });
+  }, [selectedElement]);
+
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [handleKeyDown]);
 
   const handleSave = async () => {
     try {
@@ -193,7 +222,7 @@ export default function CertificateDesignerPage() {
             ))}
           </div>
           <div className="mt-4 text-center text-xs text-slate-500">
-            Klik elemen di atas lalu atur posisinya (X dan Y) melalui panel Properties di samping kanan.
+            Klik elemen untuk memilihnya · Geser dengan <kbd className="px-1.5 py-0.5 bg-slate-200 dark:bg-slate-700 rounded font-mono text-[10px]">←↑↓→</kbd> · Tahan <kbd className="px-1.5 py-0.5 bg-slate-200 dark:bg-slate-700 rounded font-mono text-[10px]">Shift</kbd> untuk langkah lebih besar
           </div>
         </div>
 
