@@ -65,8 +65,17 @@ export default function CertificateDesignerPage() {
           if (active) {
             setActiveTemplate(active);
             if (active.config) {
-              // Merge so new default fields aren't lost if they load an old config
-              setConfig(prev => ({ ...prev, ...active.config }));
+              setConfig(prev => {
+                const merged: TemplateConfig = { ...prev };
+                Object.keys(active.config).forEach((k) => {
+                  merged[k] = {
+                    ...prev[k],
+                    ...active.config[k],
+                    text: active.config[k]?.text || prev[k]?.text || k,
+                  };
+                });
+                return merged;
+              });
             }
           }
         }
