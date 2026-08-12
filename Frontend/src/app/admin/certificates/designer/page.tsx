@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import { AppLayout } from "@/components/layouts/AppLayout";
-import { Save, Eye } from "lucide-react";
+import { Save, Eye, RotateCcw } from "lucide-react";
 import { toast } from "sonner";
 import api from "@/lib/api";
 
@@ -20,6 +20,21 @@ type TemplateConfig = {
   };
 };
 
+const DEFAULT_CONFIG: TemplateConfig = {
+  mmic_code: { x: 74, y: 12.3, fontSize: 12, color: "#000000", textAlign: "right", fontFamily: "Helvetica", fontWeight: "bold", width: "auto", text: "BICCID002072026" },
+  company_name: { x: 17, y: 28.5, fontSize: 20, color: "#000000", textAlign: "left", fontFamily: "Helvetica", fontWeight: "bold", width: "80%", text: "PT Eco Karya Teknologi (Crustea Indonesia)" },
+  company_address: { x: 17, y: 31, fontSize: 10, color: "#000000", textAlign: "left", fontFamily: "Helvetica", fontWeight: "bold", width: "80%", text: "Jl. Griya Lestari No.19 Blok D3, Gondoriyo, Ngaliyan, Semarang" },
+  company_sector: { x: 39, y: 62.5, fontSize: 13, color: "#000000", textAlign: "left", fontFamily: "Helvetica", fontWeight: "bold", width: "auto", text: "Perikanan Tangkap dan Budidaya" },
+  company_sector_en: { x: 39, y: 64.5, fontSize: 13, color: "#000000", textAlign: "left", fontFamily: "Helvetica", fontWeight: "bold", width: "auto", text: "Marine Fisheries and Aquaculture" },
+  published_date_1: { x: 23, y: 92.5, fontSize: 9, color: "#000000", textAlign: "center", fontFamily: "Helvetica", fontWeight: "bold", width: "auto", text: "29 Agustus 2026" },
+  valid_until: { x: 40, y: 92.5, fontSize: 9, color: "#000000", textAlign: "center", fontFamily: "Helvetica", fontWeight: "bold", width: "auto", text: "sampai 28 Agustus 2029" },
+  published_date_2: { x: 30, y: 95.8, fontSize: 9, color: "#000000", textAlign: "center", fontFamily: "Helvetica", fontWeight: "bold", width: "auto", text: "29 Agustus 2026" },
+  published_date_1_en: { x: 23, y: 94, fontSize: 9, color: "#000000", textAlign: "center", fontFamily: "Helvetica", fontWeight: "bold", width: "auto", text: "29 August 2026" },
+  valid_until_en: { x: 40, y: 94, fontSize: 9, color: "#000000", textAlign: "center", fontFamily: "Helvetica", fontWeight: "bold", width: "auto", text: "until 28 August 2029" },
+  published_date_2_en: { x: 30, y: 97.4, fontSize: 9, color: "#000000", textAlign: "center", fontFamily: "Helvetica", fontWeight: "bold", width: "auto", text: "29 August 2026" },
+  qr_code: { x: 70, y: 78.5, fontSize: 75, color: "#000000", textAlign: "center", fontFamily: "Helvetica", fontWeight: "bold", width: "auto", text: "[QR CODE]" },
+};
+
 interface Template {
   id: number;
   background_path?: string;
@@ -33,24 +48,11 @@ export default function CertificateDesignerPage() {
   const canvasRef = useRef<HTMLDivElement>(null);
   const [bgCategory, setBgCategory] = useState<string>("excellent");
   const bgImage = activeTemplate?.background_path
-    ? `${(process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000").replace(/\/api\/?$/, '')}/storage/${activeTemplate.background_path}?v=2`
-    : `/certificate/${bgCategory}.jpg?v=2`;
+    ? `${(process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000").replace(/\/api\/?$/, '')}/storage/${activeTemplate.background_path}?v=20260812_3`
+    : `/certificate/${bgCategory}.jpg?v=20260812_3`;
 
   // Config state
-  const [config, setConfig] = useState<TemplateConfig>({
-    mmic_code: { x: 74, y: 12.3, fontSize: 12, color: "#000000", textAlign: "right", fontFamily: "Helvetica", fontWeight: "bold", width: "auto", text: "BICCID002072026" },
-    company_name: { x: 17, y: 28.5, fontSize: 20, color: "#000000", textAlign: "left", fontFamily: "Helvetica", fontWeight: "bold", width: "80%", text: "PT Eco Karya Teknologi (Crustea Indonesia)" },
-    company_address: { x: 17, y: 31, fontSize: 10, color: "#000000", textAlign: "left", fontFamily: "Helvetica", fontWeight: "bold", width: "80%", text: "Jl. Griya Lestari No.19 Blok D3, Gondoriyo, Ngaliyan, Semarang" },
-    company_sector: { x: 39, y: 62.5, fontSize: 13, color: "#000000", textAlign: "left", fontFamily: "Helvetica", fontWeight: "bold", width: "auto", text: "Perikanan Tangkap dan Budidaya" },
-    company_sector_en: { x: 39, y: 64.5, fontSize: 13, color: "#000000", textAlign: "left", fontFamily: "Helvetica", fontWeight: "bold", width: "auto", text: "Marine Fisheries and Aquaculture" },
-    published_date_1: { x: 23, y: 92.5, fontSize: 9, color: "#000000", textAlign: "center", fontFamily: "Helvetica", fontWeight: "bold", width: "auto", text: "29 Agustus 2026" },
-    valid_until: { x: 40, y: 92.5, fontSize: 9, color: "#000000", textAlign: "center", fontFamily: "Helvetica", fontWeight: "bold", width: "auto", text: "sampai 28 Agustus 2029" },
-    published_date_2: { x: 30, y: 95.8, fontSize: 9, color: "#000000", textAlign: "center", fontFamily: "Helvetica", fontWeight: "bold", width: "auto", text: "29 Agustus 2026" },
-    published_date_1_en: { x: 23, y: 94, fontSize: 9, color: "#000000", textAlign: "center", fontFamily: "Helvetica", fontWeight: "bold", width: "auto", text: "29 August 2026" },
-    valid_until_en: { x: 40, y: 94, fontSize: 9, color: "#000000", textAlign: "center", fontFamily: "Helvetica", fontWeight: "bold", width: "auto", text: "until 28 August 2029" },
-    published_date_2_en: { x: 30, y: 97.4, fontSize: 9, color: "#000000", textAlign: "center", fontFamily: "Helvetica", fontWeight: "bold", width: "auto", text: "29 August 2026" },
-    qr_code: { x: 70, y: 78.5, fontSize: 75, color: "#000000", textAlign: "center", fontFamily: "Helvetica", fontWeight: "bold", width: "auto", text: "[QR CODE]" },
-  });
+  const [config, setConfig] = useState<TemplateConfig>(DEFAULT_CONFIG);
 
   const [selectedElement, setSelectedElement] = useState<string | null>(null);
 
@@ -162,6 +164,13 @@ export default function CertificateDesignerPage() {
       console.error(err);
       toast.dismiss();
       toast.error("Gagal memuat pratinjau PDF.");
+    }
+  };
+
+  const handleResetDefault = () => {
+    if (confirm("Apakah Anda yakin ingin mereset layout elemen ke posisi & teks standar terbaru?")) {
+      setConfig(DEFAULT_CONFIG);
+      toast.info("Layout berhasil di-reset ke standar. Klik 'Simpan Desain' untuk menerapkan ke database.");
     }
   };
 
@@ -333,15 +342,21 @@ export default function CertificateDesignerPage() {
           <div className="mt-auto pt-6 space-y-2">
             <button 
               onClick={handleSave}
-              className="w-full flex items-center justify-center gap-2 bg-[#0c2340] hover:bg-blue-700 text-white font-bold py-2.5 rounded-xl shadow-md transition-all text-sm"
+              className="w-full flex items-center justify-center gap-2 bg-[#0c2340] hover:bg-blue-700 text-white font-bold py-2.5 rounded-xl shadow-md transition-all text-sm cursor-pointer"
             >
               <Save size={16} /> Simpan Desain
             </button>
             <button 
               onClick={handlePreview}
-              className="w-full flex items-center justify-center gap-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold py-2.5 rounded-xl transition-all text-sm border border-emerald-200"
+              className="w-full flex items-center justify-center gap-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold py-2.5 rounded-xl transition-all text-sm border border-emerald-200 cursor-pointer"
             >
               <Eye size={16} /> Preview PDF Asli
+            </button>
+            <button 
+              onClick={handleResetDefault}
+              className="w-full flex items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold py-2 rounded-xl transition-all text-xs border border-slate-300 dark:border-slate-700 cursor-pointer"
+            >
+              <RotateCcw size={14} /> Reset ke Standar Terbaru
             </button>
           </div>
         </div>

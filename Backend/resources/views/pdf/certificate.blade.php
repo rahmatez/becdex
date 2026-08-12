@@ -342,9 +342,9 @@
             @elseif($key === 'published_date_1_en' || $key === 'published_date_2_en')
                 {{ $published_date_en ?? '' }}
             @elseif($key === 'valid_until')
-                sampai {{ $valid_until ?? '' }}
+                {{ (strpos($valid_until ?? '', 'sampai') === false && strpos($style['text'] ?? '', 'sampai') === false) ? 'sampai ' : '' }}{{ $valid_until ?? '' }}
             @elseif($key === 'valid_until_en')
-                until {{ $valid_until_en ?? '' }}
+                {{ (strpos($valid_until_en ?? '', 'until') === false && strpos($style['text'] ?? '', 'until') === false) ? 'until ' : '' }}{{ $valid_until_en ?? '' }}
             @elseif($key === 'score')
                 {{ $becdex_score ?? '' }}
             @elseif($key === 'qr_code')
