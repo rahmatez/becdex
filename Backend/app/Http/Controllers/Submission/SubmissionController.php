@@ -253,8 +253,8 @@ class SubmissionController extends Controller
         }
 
         // 2. Format dates
-        $publishedDate = $certUser->published_at ? $certUser->published_at->format('d F Y') : '';
-        $validUntil = $certUser->valid_until ? $certUser->valid_until->format('d F Y') : '';
+        $publishedDate = $certUser->published_at ? $certUser->published_at->locale('id')->translatedFormat('d F Y') : '';
+        $validUntil = $certUser->valid_until ? $certUser->valid_until->locale('id')->translatedFormat('d F Y') : '';
         $publishedDateEn = $certUser->published_at ? $certUser->published_at->locale('en')->translatedFormat('d F Y') : '';
         $validUntilEn = $certUser->valid_until ? $certUser->valid_until->locale('en')->translatedFormat('d F Y') : '';
 
