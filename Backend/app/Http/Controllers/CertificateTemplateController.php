@@ -120,6 +120,16 @@ class CertificateTemplateController extends Controller
             $bgPath = storage_path('app/public/certificates/excellent.jpg');
         }
 
+        if (!$bgPath || !file_exists($bgPath)) {
+            $bgPath = public_path('assets/certificate_default_bg.jpg');
+        }
+
+        $bgImageBase64 = '';
+        if (file_exists($bgPath)) {
+            $mime = mime_content_type($bgPath) ?: 'image/jpeg';
+            $bgImageBase64 = 'data:' . $mime . ';base64,' . base64_encode(file_get_contents($bgPath));
+        }
+
         $data = [
             'mmic_code' => 'BICCID002072026',
             'company_name' => 'PT Eco Karya Teknologi (Crustea Indonesia)',
@@ -134,7 +144,7 @@ class CertificateTemplateController extends Controller
             'valid_until_en' => '28 August 2029',
             'director_name' => 'Kaisar Akhir',
             'qr_base64' => 'https://becdex.com', // Dummy QR
-            'bg_image_base64' => $bgPath,
+            'bg_image_base64' => $bgImageBase64,
             'config' => $template->config ?? [],
             'is_preview' => true
         ];
