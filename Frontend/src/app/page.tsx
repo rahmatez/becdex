@@ -43,22 +43,27 @@ export default function LandingPage() {
       title: "Chairman of the Admiralty Court of Republic of Indonesia",
     },
     {
-      photo: "/expert/dr ir diah.jpg",
-      name: "Dr. Ir. Diah Pranitasari",
-      title:
-        "Head of the Master of Management Program and Indonesia Collage of Economy (STIE Indonesia)",
+      photo: "/expert/agung.png",
+      name: "Prof. Dr. Agung Dhamar Syakti",
+      title: "Professor and Rector of Universitas Maritim Raja Ali Haji (UMRAH)",
+      customStyle: { transform: "scale(1.4) translateY(-10%)", transformOrigin: "top center" },
     },
     {
       photo: "/expert/Evi-gravitiani.jpg",
       name: "Prof. Dr. Evi Gravitiani",
       title:
-        "Associate Professor and Dean, Faculty of Economics",
+        "Professor of Natural Resource Economics, Universitas Sebelas Maret (UNS)",
+    },
+    {
+      photo: "/expert/Prof.-Dr.-Asadatun-Abdullah-S.Pi_.-M.S.M.-M.Si_.jpg",
+      name: "Prof. Dr. Asadatun Abdullah",
+      title: "Professor of Aquatic Product Technology, Faculty of Fisheries and Marine Sciences, IPB University",
     },
     {
       photo: "/expert/begin.png",
       name: "Dr. Beginer Subhan",
       title:
-        "Associate Professor of Marine Science and Technology, Faculty of Fisheries and Marine Sciences, IPB University",
+        "Associate Professor and Dean, Faculty of Fisheries and Marine Sciences, IPB University",
       customStyle: { transform: "scale(1.3) translateY(-10%)", transformOrigin: "top center" },
     },
     {
@@ -70,7 +75,13 @@ export default function LandingPage() {
       photo: "/expert/Derry-Wanta.jpg",
       name: "Dr. Derry Wanta",
       title:
-        "Vice Director, Indonesia Blue Economics Center",
+        "Vice Director, Indonesia Blue Economy Center",
+    },
+    {
+      photo: "/expert/dr ir diah.jpg",
+      name: "Dr. Ir. Diah Pranitasari",
+      title:
+        "Head of the Master of Management Program, Indonesia College of Economy (STIE Indonesia)",
     },
     {
       photo: "/expert/sony.jpg",
@@ -83,17 +94,6 @@ export default function LandingPage() {
       name: "Nurmaria Sarosa",
       title:
         "Chairperson of WiLAT Indonesia",
-    },
-    {
-      photo: "/expert/agung.png",
-      name: "Prof. Dr. Agung Dhamar Syakti",
-      title: "Rector of Universitas Maritim Raja Ali Haji (UMRAH)",
-      customStyle: { transform: "scale(1.4) translateY(-10%)", transformOrigin: "top center" },
-    },
-    {
-      photo: "/expert/Prof.-Dr.-Asadatun-Abdullah-S.Pi_.-M.S.M.-M.Si_.jpg",
-      name: "Prof. Dr. Asadatun Abdullah",
-      title: "Professor of Aquatic Product Technology, IPB University",
     },
   ];
   const EXPERTS_PER_VIEW = 5;
