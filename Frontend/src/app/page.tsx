@@ -55,10 +55,11 @@ export default function LandingPage() {
         "Associate Professor and Dean, Faculty of Economics",
     },
     {
-      photo: "/expert/dr subhan.jpg",
+      photo: "/expert/begin.png",
       name: "Dr. Beginer Subhan",
       title:
         "Associate Professor of Marine Science and Technology, Faculty of Fisheries and Marine Sciences, IPB University",
+      customStyle: { transform: "scale(1.3) translateY(-10%)", transformOrigin: "top center" },
     },
     {
       photo: "/expert/gugus_wijonarko.jpg",
@@ -69,24 +70,25 @@ export default function LandingPage() {
       photo: "/expert/Derry-Wanta.jpg",
       name: "Dr. Derry Wanta",
       title:
-        "Lecturer in Accounting at Universitas Darma Persada & Blue Finance Technical Specialist",
+        "Vice Director, Indonesia Blue Economics Center",
     },
     {
       photo: "/expert/sony.jpg",
       name: "Dr. Sony Junianto",
       title:
-        "Lecturer in Energy Generation Systems, Politeknik Elektronika Negeri Surabaya (PENS)",
+        "Assistant Professor and Coordinator of Applied Bachelor Degree Program in Energy Generation Systems, Politeknik Elektronika Negeri Surabaya (PENS)",
     },
     {
       photo: "/expert/nurmaria sarosa.jpg",
       name: "Nurmaria Sarosa",
       title:
-        "Chairperson of WiLAT Indonesia & Independent Commissioner of Bank BRI",
+        "Chairperson of WiLAT Indonesia",
     },
     {
-      photo: "/expert/agung_dhamar_syakti.jpg",
+      photo: "/expert/agung.png",
       name: "Prof. Dr. Agung Dhamar Syakti",
       title: "Rector of Universitas Maritim Raja Ali Haji (UMRAH)",
+      customStyle: { transform: "scale(1.4) translateY(-10%)", transformOrigin: "top center" },
     },
     {
       photo: "/expert/Prof.-Dr.-Asadatun-Abdullah-S.Pi_.-M.S.M.-M.Si_.jpg",
@@ -356,6 +358,7 @@ export default function LandingPage() {
                         width={240}
                         height={300}
                         className="expert-slide-photo"
+                        style={expert.customStyle || {}}
                       />
                     </div>
                     <div className="expert-slide-info">
