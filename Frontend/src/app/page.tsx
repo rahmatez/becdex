@@ -46,13 +46,13 @@ export default function LandingPage() {
       photo: "/expert/dr ir diah.jpg",
       name: "Dr. Ir. Diah Pranitasari",
       title:
-        "Associate Professor, Faculty of Economics and Business, STIE Indonesia Jakarta",
+        "Head of the Master of Management Program and Indonesia Collage of Economy (STIE Indonesia)",
     },
     {
       photo: "/expert/Evi-gravitiani.jpg",
       name: "Prof. Dr. Evi Gravitiani",
       title:
-        "Professor of Natural Resource Economics, Faculty of Economics and Business, Universitas Sebelas Maret (UNS)",
+        "Associate Professor and Dean, Faculty of Economics",
     },
     {
       photo: "/expert/dr subhan.jpg",
