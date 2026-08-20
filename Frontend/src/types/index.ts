@@ -160,6 +160,7 @@ export interface CertificateUser {
   published_at: string | null;
   valid_until: string | null;
   is_valid: boolean;
+  is_approved?: boolean;
   category?: {
     name: string;
     file_url: string;

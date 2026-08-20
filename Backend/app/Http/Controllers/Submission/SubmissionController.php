@@ -227,8 +227,8 @@ class SubmissionController extends Controller
             abort(404, 'Certificate not issued yet.');
         }
 
-        // Pastikan sertifikat sudah disetujui oleh Super Admin
-        if (!$certUser->is_approved) {
+        // Pastikan sertifikat sudah disetujui oleh Super Admin (kecuali jika mode preview admin: ?preview=1)
+        if (!$certUser->is_approved && !request()->has('preview')) {
             abort(403, 'Certificate has not been approved yet. Please wait for Super Admin approval.');
         }
 

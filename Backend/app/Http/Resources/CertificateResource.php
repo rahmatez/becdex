@@ -14,6 +14,7 @@ class CertificateResource extends JsonResource
             'published_at' => $this->published_at?->format('Y-m-d'),
             'valid_until'  => $this->valid_until?->format('Y-m-d'),
             'is_valid'     => $this->isValid(),
+            'is_approved'  => (bool) $this->is_approved,
             'category'     => $this->whenLoaded('certificate', fn () => [
                 'name'     => $this->certificate->category,
                 'file_url' => $this->certificate->file_url,
