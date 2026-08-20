@@ -168,7 +168,7 @@ export default function LandingPage() {
           {/* Left Content */}
           <div className="space-y-6 pt-0">
             <h1 className="text-4xl md:text-5xl font-extrabold text-[#012970] leading-tight tracking-tight">
-              Blue Economy Company Index (BECdex)
+              BECdex International Certification Center (BICC)
             </h1>
 
             <div className="space-y-3">
@@ -448,7 +448,7 @@ export default function LandingPage() {
       {/* Partners & Certifications Section */}
       <section className="bg-white py-14 border-t border-gray-100">
         <div className="container-custom text-center flex flex-col gap-14">
-          
+
           {/* Certification Body */}
           <div className="space-y-4">
             <div className="section-header">
@@ -496,38 +496,38 @@ export default function LandingPage() {
 
           {/* Strategic Partners */}
           <div className="space-y-4">
-          <div className="section-header">
-            <p>STRATEGIC PARTNERS</p>
+            <div className="section-header">
+              <p>STRATEGIC PARTNERS</p>
+            </div>
+            <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12 pt-4">
+              {[
+                { src: "/blue_institute.webp", href: "#" },
+                {
+                  src: "/maritim_muda_partner.png",
+                  href: "https://maritimmuda.id",
+                },
+                {
+                  src: "/stie_ibec_partner.webp",
+                  href: "https://ibec.stei.ac.id/",
+                },
+              ].map((p, idx) => (
+                <a
+                  key={idx}
+                  href={p.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:scale-105 transition-transform duration-300">
+                  <Image
+                    src={p.src}
+                    alt="Strategic Partner"
+                    width={200}
+                    height={90}
+                    className="object-contain max-h-20"
+                  />
+                </a>
+              ))}
+            </div>
           </div>
-          <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12 pt-4">
-            {[
-              { src: "/blue_institute.webp", href: "#" },
-              {
-                src: "/maritim_muda_partner.png",
-                href: "https://maritimmuda.id",
-              },
-              {
-                src: "/stie_ibec_partner.webp",
-                href: "https://ibec.stei.ac.id/",
-              },
-            ].map((p, idx) => (
-              <a
-                key={idx}
-                href={p.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:scale-105 transition-transform duration-300">
-                <Image
-                  src={p.src}
-                  alt="Strategic Partner"
-                  width={200}
-                  height={90}
-                  className="object-contain max-h-20"
-                />
-              </a>
-            ))}
-          </div>
-        </div>
         </div>
       </section>
 
