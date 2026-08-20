@@ -159,17 +159,21 @@ export function ScorePaymentTab({ submission, onUpdate }: Props) {
           </div>
         </div>
       )}
-      {/* === STATUS 2/4: Draft — User masih mengisi, belum submit === */}
+      {/* === STATUS 2/4: Draft ATAU Revisi — User masih mengisi/merevisi === */}
       {isDraftOrRevision && (
         <div className="space-y-4">
           <div className="flex items-start gap-3.5 bg-blue-50/80 dark:bg-blue-950/50 border border-blue-200 dark:border-blue-800/80 rounded-2xl p-5 shadow-2xs">
             <SendHorizonal size={22} className="text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
             <div>
               <p className="text-sm font-extrabold text-[#0c2340] dark:text-white">
-                Simpan & Lanjutkan ke Pembayaran
+                {alreadyPaid || submission.status.id === 4
+                  ? "Kirim Ulang Hasil Revisi ke Admin"
+                  : "Simpan & Lanjutkan ke Pembayaran"}
               </p>
               <p className="text-xs text-slate-600 dark:text-slate-300 mt-1 leading-relaxed font-medium">
-                Jika Anda sudah melengkapi kuesioner dan dokumen, klik tombol di bawah untuk menyimpan pengajuan. Anda akan diarahkan ke tahap pembayaran biaya sertifikasi. Pengajuan tidak dapat diubah setelah disimpan.
+                {alreadyPaid || submission.status.id === 4
+                  ? "Anda telah menyelesaikan perbaikan kuesioner & dokumen pendukung. Klik tombol di bawah untuk mengirimkan ulang hasil revisi Anda ke tim auditor untuk ditinjau kembali (Gratis / Tidak ada biaya pembayaran ulang)."
+                  : "Jika Anda sudah melengkapi kuesioner dan dokumen, klik tombol di bawah untuk menyimpan pengajuan. Anda akan diarahkan ke tahap pembayaran biaya sertifikasi."}
               </p>
             </div>
           </div>
@@ -178,7 +182,12 @@ export function ScorePaymentTab({ submission, onUpdate }: Props) {
             id="btn-submit-verification"
             onClick={() => submitVerificationMutation.mutate()}
             disabled={submitVerificationMutation.isPending || !score.requirements.score_met || !score.requirements.documents_met}
-            className="w-full flex items-center justify-center gap-2.5 bg-[#0c2340] hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-500 text-white py-4 rounded-xl font-extrabold text-sm transition-all shadow-md shadow-[#0c2340]/20 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+            className={cn(
+              "w-full flex items-center justify-center gap-2.5 py-4 rounded-xl font-extrabold text-sm transition-all shadow-md disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer",
+              alreadyPaid || submission.status.id === 4
+                ? "bg-emerald-600 hover:bg-emerald-700 text-white shadow-emerald-600/20"
+                : "bg-[#0c2340] hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-500 text-white shadow-[#0c2340]/20"
+            )}
           >
             {submitVerificationMutation.isPending ? (
               <Loader2 size={18} className="animate-spin" />
@@ -187,7 +196,9 @@ export function ScorePaymentTab({ submission, onUpdate }: Props) {
             )}
             <span>
               {submitVerificationMutation.isPending
-                ? "Menyimpan pengajuan..."
+                ? "Mengirimkan hasil revisi..."
+                : alreadyPaid || submission.status.id === 4
+                ? "Kirim Ulang Hasil Revisi ke Admin (Gratis)"
                 : "Simpan & Lanjut ke Pembayaran"}
             </span>
           </button>
