@@ -1302,8 +1302,17 @@ export function AssessmentTab({ submission, onUpdate, onGoToScore }: Props) {
         <div className="mt-8 mb-4 flex justify-end">
           <button
             onClick={onGoToScore}
-            className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl text-sm font-extrabold bg-blue-600 text-white hover:bg-blue-700 hover:-translate-y-0.5 transition-all shadow-lg shadow-blue-500/30">
-            <span>Submit & Bayar</span>
+            className={cn(
+              "inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl text-sm font-extrabold text-white transition-all shadow-lg cursor-pointer",
+              submission.status.id === 4 || submission.has_successful_payment
+                ? "bg-emerald-600 hover:bg-emerald-700 shadow-emerald-600/30"
+                : "bg-blue-600 hover:bg-blue-700 shadow-blue-500/30"
+            )}>
+            <span>
+              {submission.status.id === 4 || submission.has_successful_payment
+                ? "Lanjut ke Skor & Kirim Revisi"
+                : "Lanjut ke Skor & Pembayaran"}
+            </span>
             <ChevronRight size={18} strokeWidth={2.5} />
           </button>
         </div>
