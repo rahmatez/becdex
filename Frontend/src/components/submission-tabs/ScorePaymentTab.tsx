@@ -104,13 +104,15 @@ export function ScorePaymentTab({ submission, onUpdate }: Props) {
       return res.data;
     },
     onSuccess: (data) => {
-      // Backend returns different message if already paid (survey revision)
       const msg = (data as { message?: string })?.message ?? "";
-      const isRevision = msg.toLowerCase().includes("revisi");
-      if (isRevision) {
+      const isFreeRevision = msg.toLowerCase().includes("revisi") && !msg.toLowerCase().includes("pembayaran");
+      
+      if (isFreeRevision) {
         toast.success("Revisi berhasil dikirim! Admin akan meninjau ulang dokumen yang direvisi.");
       } else {
-        toast.success("Pengajuan berhasil disimpan! Silakan selesaikan pembayaran biaya sertifikasi.");
+        toast.success("Pengajuan berhasil dikunci! Membuat invoice pembayaran Xendit...");
+        // Auto trigger payment creation so user is redirected to Xendit right away
+        payMutation.mutate();
       }
       queryClient.invalidateQueries({ queryKey: ["submission", submission.id] });
       queryClient.invalidateQueries({ queryKey: ["score", submission.id] });
@@ -132,8 +134,7 @@ export function ScorePaymentTab({ submission, onUpdate }: Props) {
 
   if (!score) return null;
 
-  const canPay      = score.can_proceed_to_payment && !score.has_successful_payment;
-  const alreadyPaid = score.has_successful_payment;
+  const canPay = score.can_proceed_to_payment;
 
   // Status-based UI flags
   const isDraftOrRevision  = [2, 4].includes(submission.status.id); // User still filling
@@ -319,9 +320,8 @@ export function ScorePaymentTab({ submission, onUpdate }: Props) {
         </div>
       </div>
 
-
       {/* === STATUS 1: Pending Payment — Menunggu pembayaran user === */}
-      {isPendingPayment && !canPay && (
+      {isPendingPayment && (
         <div className="flex items-start gap-3.5 bg-amber-50/80 dark:bg-amber-950/50 border border-amber-200 dark:border-amber-800/80 rounded-2xl p-5 shadow-2xs">
           <Clock size={22} className="text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
           <div>
@@ -329,7 +329,9 @@ export function ScorePaymentTab({ submission, onUpdate }: Props) {
               Pengajuan Disimpan — Menunggu Pembayaran
             </p>
             <p className="text-xs text-amber-700 dark:text-amber-300 mt-1 leading-relaxed font-medium">
-              Pengajuan Anda sudah disimpan. Selesaikan pembayaran biaya sertifikasi di bawah untuk melanjutkan ke tahap verifikasi oleh Admin.
+              {submission.is_post_survey_revision
+                ? "Pengajuan revisi pasca survei sudah disimpan. Silakan selesaikan pembayaran biaya survei lokasi di bawah untuk melanjutkan."
+                : "Pengajuan Anda sudah disimpan. Selesaikan pembayaran biaya sertifikasi di bawah untuk melanjutkan ke tahap verifikasi oleh Admin."}
             </p>
           </div>
         </div>
@@ -350,8 +352,8 @@ export function ScorePaymentTab({ submission, onUpdate }: Props) {
         </div>
       )}
 
-      {/* === Payment Section — hanya muncul ketika status 1 (Pending Payment) dan belum bayar === */}
-      {!alreadyPaid && isPendingPayment && canPay && (
+      {/* === Payment Section — muncul ketika status 1 (Pending Payment) === */}
+      {isPendingPayment && canPay && (
         <div className="space-y-4">
           {/* Xendit Info Banner */}
           <div className="flex items-start gap-3 bg-blue-50/70 dark:bg-blue-950/40 border border-blue-200/80 dark:border-blue-800/80 rounded-2xl p-4 shadow-xs">
@@ -375,7 +377,9 @@ export function ScorePaymentTab({ submission, onUpdate }: Props) {
             )}
             <span>
               {payMutation.isPending
-                ? "Membuat Invoice Pembayaran..."
+                ? "Membuat Invoice Pembayaran Xendit..."
+                : submission.is_post_survey_revision
+                ? "Bayar Biaya Survei Sekarang via Xendit"
                 : "Bayar Biaya Sertifikasi Sekarang via Xendit"}
             </span>
           </button>
@@ -403,8 +407,8 @@ export function ScorePaymentTab({ submission, onUpdate }: Props) {
         </div>
       )}
 
-      {/* === Sudah bayar, sudah di verifikasi atau lebih lanjut === */}
-      {alreadyPaid && !isOnVerification && !isSurvey && !isCertified && (
+      {/* === Sudah bayar, bukan status 1 (Pending Payment) === */}
+      {!isPendingPayment && !isDraftOrRevision && !isOnVerification && !isSurvey && !isCertified && !isRejectedPermanently && (
         <div className="flex items-start gap-3.5 bg-emerald-50/80 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800/80 rounded-2xl p-5 shadow-2xs">
           <CheckCircle2 size={22} className="text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
           <div>
