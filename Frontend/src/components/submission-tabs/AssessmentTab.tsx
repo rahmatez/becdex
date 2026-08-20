@@ -391,6 +391,11 @@ export function AssessmentTab({ submission, onUpdate, onGoToScore }: Props) {
   const mandatoryUnanswered = mandatoryTotal - mandatoryAnswered;
 
   const [showUnansweredOnly, setShowUnansweredOnly] = useState(false);
+  const [showRevisionOnly, setShowRevisionOnly] = useState(false);
+
+  const revisionIndicatorsCount = useMemo(() => {
+    return (submission.per_indicators ?? []).filter((pi) => pi.status?.id === 5).length;
+  }, [submission.per_indicators]);
 
   // Helper calculation for fulfilled indicators & mandatory indicator progress
   const indicatorStats = useMemo(() => {
@@ -588,12 +593,49 @@ export function AssessmentTab({ submission, onUpdate, onGoToScore }: Props) {
             <span>Panduan Skoring</span>
           </button>
 
+          {/* Revision Filter Toggle Button (Shown when revision indicators exist) */}
+          {revisionIndicatorsCount > 0 && (
+            <button
+              onClick={() => {
+                const nextVal = !showRevisionOnly;
+                setShowRevisionOnly(nextVal);
+                if (nextVal) {
+                  setShowUnansweredOnly(false);
+                  // Auto expand all aspects and indicators that need revision
+                  const newAspects = new Set<string>();
+                  const newIndicators = new Set<number>();
+                  for (const pi of submission.per_indicators ?? []) {
+                    if (pi.status?.id === 5) {
+                      newAspects.add(pi.indicator.principle.outcome.aspect.name);
+                      newIndicators.add(pi.indicator_id);
+                    }
+                  }
+                  setExpandedAspects(newAspects);
+                  setExpandedIndicators(newIndicators);
+                }
+              }}
+              className={cn(
+                "px-3 py-1.5 rounded-xl text-xs font-extrabold transition-all border shadow-2xs flex items-center gap-1.5 cursor-pointer animate-pulse",
+                showRevisionOnly
+                  ? "bg-amber-600 border-amber-700 text-white dark:bg-amber-600 dark:border-amber-500"
+                  : "bg-amber-100 dark:bg-amber-950/80 border-amber-300 dark:border-amber-700 text-amber-900 dark:text-amber-200 hover:bg-amber-200"
+              )}>
+              <MdWarning className="w-4 h-4" />
+              <span>
+                {showRevisionOnly
+                  ? "Tampilkan Semua Indikator"
+                  : `Filter: Indikator Revisi (${revisionIndicatorsCount})`}
+              </span>
+            </button>
+          )}
+
           {/* Unanswered Filter Toggle Button */}
           <button
             onClick={() => {
               const nextVal = !showUnansweredOnly;
               setShowUnansweredOnly(nextVal);
               if (nextVal) {
+                setShowRevisionOnly(false);
                 // Auto expand aspects with unanswered questions
                 const newAspects = new Set<string>();
                 for (const [
@@ -654,7 +696,12 @@ export function AssessmentTab({ submission, onUpdate, onGoToScore }: Props) {
       <div className="space-y-3">
         {Array.from(grouped.entries()).map(([aspectName, outcomeMap]) => {
           const aspectUnanswered = aspectUnansweredCounts.get(aspectName) ?? 0;
+          const hasRevisionInAspect = (submission.per_indicators ?? []).some(
+            (pi) => pi.indicator.principle.outcome.aspect.name === aspectName && pi.status?.id === 5
+          );
+
           if (showUnansweredOnly && aspectUnanswered === 0) return null;
+          if (showRevisionOnly && !hasRevisionInAspect) return null;
 
           return (
             <div
@@ -727,6 +774,8 @@ export function AssessmentTab({ submission, onUpdate, onGoToScore }: Props) {
                                   ).length;
                                 if (showUnansweredOnly && indUnanswered === 0)
                                   return null;
+                                if (showRevisionOnly && pi.status?.id !== 5)
+                                  return null;
 
                                 // Lock indicators that are already valid (status 3) during revision phase (status 4)
                                 const isIndicatorEditable =
@@ -739,7 +788,12 @@ export function AssessmentTab({ submission, onUpdate, onGoToScore }: Props) {
                                 return (
                                   <div
                                     key={pi.id}
-                                    className="border border-slate-200/60 dark:border-slate-800/80 rounded-xl overflow-hidden bg-white dark:bg-slate-900 shadow-2xs transition-colors">
+                                    className={cn(
+                                      "border rounded-xl overflow-hidden bg-white dark:bg-slate-900 shadow-2xs transition-all",
+                                      pi.status?.id === 5
+                                        ? "border-amber-400 dark:border-amber-600 bg-amber-50/20 dark:bg-amber-950/20 ring-2 ring-amber-400/40"
+                                        : "border-slate-200/60 dark:border-slate-800/80"
+                                    )}>
                                     {/* Indicator Header */}
                                     <button
                                       onClick={() =>
@@ -750,7 +804,9 @@ export function AssessmentTab({ submission, onUpdate, onGoToScore }: Props) {
                                         <span
                                           className={cn(
                                             "w-2.5 h-2.5 rounded-full shrink-0 shadow-2xs",
-                                            indUnanswered > 0
+                                            pi.status?.id === 5
+                                              ? "bg-amber-500 animate-ping"
+                                              : indUnanswered > 0
                                               ? "bg-amber-500 animate-pulse"
                                               : "bg-emerald-500",
                                           )}
@@ -835,31 +891,24 @@ export function AssessmentTab({ submission, onUpdate, onGoToScore }: Props) {
                                             {indUnanswered} pertanyaan
                                           </span>
                                         )}
-                                        {!isIndicatorEditable &&
-                                          submission.status.id === 4 &&
-                                          pi.status?.id === 4 && (
-                                            <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded-md border border-emerald-200/60 dark:border-emerald-800 shrink-0">
-                                              <MdCheckCircle className="inline w-3 h-3 mr-1 mb-0.5" />
-                                              {t.tab_assessment_done ||
-                                                "Lolos Verifikasi"}
-                                            </span>
-                                          )}
-                                        {!isIndicatorEditable &&
-                                          submission.status.id === 4 &&
-                                          pi.status?.id === 5 && (
-                                            <span className="text-[10px] font-bold text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/60 px-2 py-0.5 rounded-md border border-amber-200/60 dark:border-amber-800 shrink-0 animate-pulse">
-                                              <MdWarning className="inline w-3 h-3 mr-1 mb-0.5" />
-                                              Butuh Revisi
-                                            </span>
-                                          )}
-                                        {!isIndicatorEditable &&
-                                          submission.status.id === 4 &&
-                                          pi.status?.id === 6 && (
-                                            <span className="text-[10px] font-bold text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/60 px-2 py-0.5 rounded-md border border-rose-200/60 dark:border-rose-800 shrink-0">
-                                              <XCircle className="inline w-3 h-3 mr-1 mb-0.5" />
-                                              Gagal (Invalid)
-                                            </span>
-                                          )}
+                                        {submission.status.id === 4 && pi.status?.id === 4 && (
+                                          <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded-md border border-emerald-200/60 dark:border-emerald-800 shrink-0">
+                                            <MdCheckCircle className="inline w-3 h-3 mr-1 mb-0.5" />
+                                            {t.tab_assessment_done || "Lolos Verifikasi"}
+                                          </span>
+                                        )}
+                                        {pi.status?.id === 5 && (
+                                          <span className="text-[10px] font-extrabold text-amber-900 dark:text-amber-100 bg-amber-400 dark:bg-amber-600 px-2.5 py-0.5 rounded-md border border-amber-500 shrink-0 animate-pulse shadow-2xs">
+                                            <MdWarning className="inline w-3.5 h-3.5 mr-1 mb-0.5 text-amber-950 dark:text-white" />
+                                            Butuh Revisi
+                                          </span>
+                                        )}
+                                        {submission.status.id === 4 && pi.status?.id === 6 && (
+                                          <span className="text-[10px] font-bold text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/60 px-2 py-0.5 rounded-md border border-rose-200/60 dark:border-rose-800 shrink-0">
+                                            <XCircle className="inline w-3 h-3 mr-1 mb-0.5" />
+                                            Gagal (Invalid)
+                                          </span>
+                                        )}
                                       </div>
                                       {expandedIndicators.has(
                                         pi.indicator_id,
@@ -881,6 +930,19 @@ export function AssessmentTab({ submission, onUpdate, onGoToScore }: Props) {
                                       pi.indicator_id,
                                     ) && (
                                       <div className="bg-slate-50/50 dark:bg-slate-900/60 border-t border-slate-100 dark:border-slate-800 px-4 py-4 space-y-4">
+                                        {/* Auditor Revision Note Callout Box */}
+                                        {pi.status?.id === 5 && (
+                                          <div className="bg-amber-50 dark:bg-amber-950/80 border-2 border-amber-400 dark:border-amber-700 rounded-xl p-4 mb-4 text-xs text-amber-950 dark:text-amber-100 shadow-sm">
+                                            <div className="flex items-center gap-2 mb-1 font-black text-amber-800 dark:text-amber-300 uppercase tracking-wider text-[11px]">
+                                              <MdWarning className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" />
+                                              <span>📌 Catatan &amp; Instruksi Revisi Auditor:</span>
+                                            </div>
+                                            <p className="font-extrabold text-slate-900 dark:text-white text-sm pl-6 leading-relaxed">
+                                              {pi.comment ? `"${pi.comment}"` : "Silakan periksa kembali jawaban dan berkas pendukung pada indikator ini."}
+                                            </p>
+                                          </div>
+                                        )}
+
                                         <div className="space-y-3">
                                           {pi.indicator.questions.map(
                                             (question) => {

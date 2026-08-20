@@ -92,12 +92,16 @@ export function DocumentsTab({ submission }: Props) {
             const docs = uploadedDocsByIndicator.get(pi.indicator_id) ?? [];
             const hasDoc = docs.length > 0;
 
+            const isRevision = pi.status?.id === 5;
+
             return (
               <div
                 key={pi.id}
                 className={cn(
                   "border rounded-2xl p-5 shadow-2xs transition-all",
-                  hasDoc
+                  isRevision
+                    ? "border-amber-400 bg-amber-50/40 dark:border-amber-700 dark:bg-amber-950/40 ring-2 ring-amber-400/50"
+                    : hasDoc
                     ? "border-emerald-200/80 bg-emerald-50/30 dark:border-emerald-800/60 dark:bg-emerald-950/20"
                     : "border-slate-200/80 bg-white dark:border-slate-800 dark:bg-slate-900"
                 )}
@@ -107,27 +111,38 @@ export function DocumentsTab({ submission }: Props) {
                     <span
                       className={cn(
                         "w-2.5 h-2.5 rounded-full shrink-0 shadow-2xs",
-                        hasDoc ? "bg-emerald-500" : "bg-slate-300 dark:bg-slate-600"
+                        isRevision
+                          ? "bg-amber-500 animate-ping"
+                          : hasDoc
+                          ? "bg-emerald-500"
+                          : "bg-slate-300 dark:bg-slate-600"
                       )}
                     />
                     <span className="text-sm md:text-base font-extrabold text-slate-800 dark:text-white truncate tracking-tight">
                       {pi.indicator.name}
                     </span>
                   </div>
-                  <span className="bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-300 font-semibold px-2.5 py-1 rounded-lg text-[11px] shrink-0 border border-blue-100 dark:border-blue-900/50">
-                    {pi.indicator.principle.name}
-                  </span>
+                  <div className="flex items-center gap-2 shrink-0">
+                    {isRevision && (
+                      <span className="bg-amber-400 text-amber-950 dark:bg-amber-600 dark:text-white font-extrabold px-2.5 py-0.5 rounded-md text-[10px] animate-pulse">
+                        ⚠️ Butuh Revisi
+                      </span>
+                    )}
+                    <span className="bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-300 font-semibold px-2.5 py-1 rounded-lg text-[11px] shrink-0 border border-blue-100 dark:border-blue-900/50">
+                      {pi.indicator.principle.name}
+                    </span>
+                  </div>
                 </div>
 
                 {/* Auditor Revision Note */}
-                {pi.comment && (
-                  <div className="mb-4 bg-amber-50 dark:bg-amber-950/60 border border-amber-200 dark:border-amber-800/80 rounded-xl p-3.5 text-xs text-amber-900 dark:text-amber-200 shadow-2xs flex items-start gap-2.5">
-                    <span className="w-5 h-5 rounded-full bg-amber-100 dark:bg-amber-900 text-amber-700 dark:text-amber-300 flex items-center justify-center font-bold shrink-0 mt-0.5">!</span>
+                {(pi.comment || isRevision) && (
+                  <div className="mb-4 bg-amber-50 dark:bg-amber-950/60 border border-amber-300 dark:border-amber-800/80 rounded-xl p-3.5 text-xs text-amber-900 dark:text-amber-200 shadow-2xs flex items-start gap-2.5">
+                    <span className="w-5 h-5 rounded-full bg-amber-200 dark:bg-amber-900 text-amber-900 dark:text-amber-300 flex items-center justify-center font-bold shrink-0 mt-0.5">!</span>
                     <div>
-                      <span className="font-extrabold uppercase tracking-wider text-[10px] block text-amber-700 dark:text-amber-300 mb-0.5">
+                      <span className="font-extrabold uppercase tracking-wider text-[10px] block text-amber-800 dark:text-amber-300 mb-0.5">
                         Catatan &amp; Instruksi Revisi Auditor
                       </span>
-                      <p className="font-semibold leading-relaxed">{pi.comment}</p>
+                      <p className="font-bold leading-relaxed">{pi.comment ? `"${pi.comment}"` : "Silakan periksa kembali jawaban dan berkas pendukung pada indikator ini."}</p>
                     </div>
                   </div>
                 )}

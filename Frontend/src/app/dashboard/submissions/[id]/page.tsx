@@ -173,26 +173,78 @@ export default function SubmissionDetailPage() {
 
       {/* Revision / Survey Alert Banner */}
       {submission.status.id === 4 && (
-        <div className="rounded-2xl border border-amber-300 bg-amber-50/90 dark:border-amber-800 dark:bg-amber-950/60 p-5 shadow-sm text-amber-900 dark:text-amber-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 animate-in fade-in slide-in-from-top-2 duration-300">
-          <div className="flex items-start gap-3.5">
-            <div className="w-10 h-10 rounded-xl bg-amber-100 dark:bg-amber-900/80 text-amber-700 dark:text-amber-300 flex items-center justify-center font-extrabold shrink-0 mt-0.5">
-              !
+        <div className="rounded-2xl border-2 border-amber-400 bg-amber-50/95 dark:border-amber-700 dark:bg-amber-950/70 p-6 shadow-md text-amber-950 dark:text-amber-100 flex flex-col gap-4 animate-in fade-in slide-in-from-top-2 duration-300 mb-6">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-3 border-b border-amber-200/80 dark:border-amber-800/80">
+            <div className="flex items-start gap-3.5">
+              <div className="w-10 h-10 rounded-xl bg-amber-500 text-white flex items-center justify-center font-black text-xl shrink-0 shadow-sm mt-0.5">
+                !
+              </div>
+              <div>
+                <h4 className="font-extrabold text-base md:text-lg tracking-tight text-amber-950 dark:text-amber-100">
+                  {t.dash_sub_rev_title || "Pengajuan Memerlukan Perbaikan / Revisi Dokumen (Kesempatan Ke-2)"}
+                </h4>
+                <p className="text-xs font-semibold text-amber-800 dark:text-amber-300 mt-0.5">
+                  Tim verifikator auditor BECdex mengembalikan pengajuan Anda untuk dilakukan perbaikan berkas/jawaban.
+                </p>
+              </div>
             </div>
-            <div>
-              <h4 className="font-extrabold text-sm md:text-base tracking-tight text-amber-800 dark:text-amber-200">
-                {t.dash_sub_rev_title || "Pengajuan Memerlukan Perbaikan / Revisi Dokumen (2nd Attempt)"}
-              </h4>
-              <p className="text-xs text-amber-700 dark:text-amber-300 mt-1 leading-relaxed">
-                {t.dash_sub_rev_desc || "Tim verifikator auditor BECdex telah meninjau pengajuan Anda dan meminta beberapa penyesuaian. Silakan periksa Catatan Revisi Auditor di tab Dokumen Terunggah untuk memperbaiki berkas yang perlu disempurnakan."}
+            <button
+              onClick={() => setActiveTab("assessment")}
+              className="px-4 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-extrabold text-xs shadow-md transition-all shrink-0 cursor-pointer flex items-center gap-2"
+            >
+              <span>Buka Form Assessment &amp; Perbaiki</span> &rarr;
+            </button>
+          </div>
+
+          {/* General Admin Return Reason */}
+          {submission.reason && (
+            <div className="bg-white/80 dark:bg-slate-900/80 border border-amber-300 dark:border-amber-800/80 rounded-xl p-4 text-xs">
+              <span className="font-extrabold uppercase tracking-wider text-[10px] text-amber-700 dark:text-amber-400 block mb-1">
+                💬 Catatan / Alasan Utama Pengembalian dari Admin:
+              </span>
+              <p className="font-bold text-slate-800 dark:text-slate-200 leading-relaxed text-sm">
+                &ldquo;{submission.reason}&rdquo;
               </p>
             </div>
-          </div>
-          <button
-            onClick={() => setActiveTab("documents")}
-            className="px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-extrabold text-xs shadow-xs transition-all shrink-0 cursor-pointer"
-          >
-            {t.dash_sub_rev_btn || "Lihat Catatan & Perbaiki Dokumen"} &rarr;
-          </button>
+          )}
+
+          {/* List of Problematic Indicators needing revision */}
+          {(() => {
+            const revisedIndicators = (submission.per_indicators ?? []).filter(
+              (pi) => pi.status?.id === 5
+            );
+            if (revisedIndicators.length === 0) return null;
+            return (
+              <div className="space-y-2">
+                <span className="font-extrabold uppercase tracking-wider text-[11px] text-amber-900 dark:text-amber-300 block">
+                  📋 Indikator yang Wajib Diperbaiki ({revisedIndicators.length} Indikator):
+                </span>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
+                  {revisedIndicators.map((pi) => (
+                    <div
+                      key={pi.id}
+                      onClick={() => setActiveTab("assessment")}
+                      className="bg-amber-100/70 hover:bg-amber-100 dark:bg-amber-900/40 dark:hover:bg-amber-900/60 border border-amber-300 dark:border-amber-700/80 rounded-xl p-3 text-xs transition-colors cursor-pointer flex flex-col justify-between"
+                    >
+                      <div>
+                        <div className="flex items-center justify-between gap-2 mb-1">
+                          <span className="font-extrabold text-amber-950 dark:text-amber-100">
+                            ★ {pi.indicator.name}
+                          </span>
+                          <span className="bg-amber-200 dark:bg-amber-800 text-amber-900 dark:text-amber-100 font-extrabold text-[10px] px-2 py-0.5 rounded-md shrink-0">
+                            Revisi
+                          </span>
+                        </div>
+                        <p className="text-[11px] text-amber-800 dark:text-amber-300 italic font-medium">
+                          {pi.comment ? `"${pi.comment}"` : "Silakan tinjau kembali berkas/jawaban indikator ini."}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            );
+          })()}
         </div>
       )}
 
