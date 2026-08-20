@@ -35,9 +35,35 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ title }) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [showNotifications, setShowNotifications] = React.useState(false);
+  const [searchQuery, setSearchQuery] = React.useState("");
+  const [isSearchOpen, setIsSearchOpen] = React.useState(false);
   const queryClient = useQueryClient();
 
   const isAdmin = user?.role?.id && [1, 6, 7, 10, 11].includes(user.role.id);
+
+  const searchableMenu = isAdmin
+    ? [
+        { label: "Overview Admin", href: "/admin" },
+        { label: "Verifikasi Pengajuan", href: "/admin/submissions" },
+        { label: "Kelola Pengguna", href: "/admin/users" },
+        { label: "Riwayat Transaksi", href: "/admin/payments" },
+        { label: "Sertifikat", href: "/admin/certificates" },
+        { label: "Indikator & Kerangka Kerja", href: "/admin/framework" },
+        { label: "Data Induk", href: "/admin/master" },
+        { label: "Profil Admin", href: "/admin/profile" },
+      ]
+    : [
+        { label: "Dashboard Perusahaan", href: "/dashboard" },
+        { label: "Pengajuan Sertifikasi (Submissions)", href: "/dashboard/submissions" },
+        { label: "Riwayat Pembayaran", href: "/dashboard/payments" },
+        { label: "Panduan Pengguna", href: "/dashboard/guide" },
+        { label: "Audit Checklist", href: "/dashboard/audit-checklist" },
+        { label: "Profil Perusahaan", href: "/dashboard/profile" },
+      ];
+
+  const filteredMenu = searchableMenu.filter((item) =>
+    item.label.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   // Fetch Notifications
   const { data: notificationsData } = useQuery({
@@ -125,7 +151,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ title }) => {
           )}
 
           {/* Search Box */}
-          <div className="hidden sm:block lg:ml-auto w-full max-w-md">
+          <div className="hidden sm:block lg:ml-auto w-full max-w-md relative">
             <div className="relative">
               <span className="absolute -translate-y-1/2 left-3.5 top-1/2 pointer-events-none text-slate-400">
                 <Search size={16} />
@@ -133,6 +159,12 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ title }) => {
               <input
                 ref={inputRef}
                 type="text"
+                value={searchQuery}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  setIsSearchOpen(true);
+                }}
+                onFocus={() => setIsSearchOpen(true)}
                 placeholder={t.header_search || "Cari submission, indikator, atau dokumen... (Cmd+K)"}
                 className="h-10 w-full rounded-xl border border-slate-200/80 bg-slate-50/50 py-2 pl-10 pr-12 text-xs text-slate-800 placeholder:text-slate-400 focus:border-blue-500 focus:bg-white focus:outline-hidden focus:ring-2 focus:ring-blue-500/10 dark:border-slate-800 dark:bg-slate-900/60 dark:text-slate-100 dark:focus:border-blue-500 transition-all shadow-2xs"
               />
@@ -140,6 +172,37 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ title }) => {
                 ⌘K
               </span>
             </div>
+
+            {/* Quick Search Results Dropdown */}
+            {isSearchOpen && searchQuery.trim().length > 0 && (
+              <div className="absolute left-0 right-0 mt-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-xl z-50 overflow-hidden">
+                <div className="p-2 border-b border-slate-100 dark:border-slate-800 text-[11px] font-bold text-slate-400 px-3 uppercase">
+                  Hasil Pencarian Menu ({filteredMenu.length})
+                </div>
+                <div className="max-h-60 overflow-y-auto divide-y divide-slate-100 dark:divide-slate-800">
+                  {filteredMenu.length > 0 ? (
+                    filteredMenu.map((item, idx) => (
+                      <Link
+                        key={idx}
+                        href={item.href}
+                        onClick={() => {
+                          setIsSearchOpen(false);
+                          setSearchQuery("");
+                        }}
+                        className="flex items-center justify-between px-3 py-2.5 hover:bg-blue-50 dark:hover:bg-slate-800 text-xs font-semibold text-slate-700 dark:text-slate-200 transition-colors"
+                      >
+                        <span>{item.label}</span>
+                        <span className="text-[10px] font-normal text-slate-400">{item.href}</span>
+                      </Link>
+                    ))
+                  ) : (
+                    <div className="p-4 text-center text-xs text-slate-400">
+                      Tidak ada menu atau halaman yang cocok dengan &quot;{searchQuery}&quot;
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
         </div>
 

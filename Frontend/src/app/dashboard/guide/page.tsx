@@ -136,13 +136,15 @@ export default function UserGuidePage() {
               ? "Pelajari tahapan lengkap proses sertifikasi Blue Economy Company Index (BECdex) dari awal pendaftaran hingga penerbitan sertifikat." 
               : "Learn the complete steps of the Blue Economy Company Index (BECdex) certification process from initial registration to certificate issuance."}
           </p>
-          <button 
-            onClick={() => window.open('#', '_blank')}
-            className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-[#012970] text-white font-bold text-sm shadow-sm hover:bg-[#021f54] hover:shadow-md transition-all active:scale-95"
+          <a 
+            href="/proposal.pdf"
+            target="_blank"
+            download
+            className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-[#012970] text-white font-bold text-sm shadow-sm hover:bg-[#021f54] hover:shadow-md transition-all active:scale-95 cursor-pointer"
           >
             <DownloadCloud size={18} />
             {locale === 'id' ? "Unduh Buku Panduan (PDF)" : "Download Guidebook (PDF)"}
-          </button>
+          </a>
         </div>
 
         {/* Timeline Section */}

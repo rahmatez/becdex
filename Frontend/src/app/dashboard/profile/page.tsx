@@ -289,7 +289,16 @@ export default function ProfilePage() {
           </div>
         </div>
 
-        <form onSubmit={handleSubmit((data) => mutation.mutate(data))} className="space-y-6">
+        <form
+          onSubmit={handleSubmit(
+            (data) => mutation.mutate(data),
+            (errors) => {
+              const firstErr = Object.values(errors)[0];
+              toast.error(firstErr?.message ? String(firstErr.message) : "Mohon lengkapi semua bidang wajib yang ditandai (*)");
+            }
+          )}
+          className="space-y-6"
+        >
           
           {/* Company Info Card */}
           <div className="rounded-2xl border border-slate-200/80 bg-white dark:border-slate-800 dark:bg-slate-900 p-6 md:p-8 shadow-sm space-y-5">
@@ -391,7 +400,7 @@ export default function ProfilePage() {
                   <Globe size={13} className="text-blue-500" />
                   <span>{t.dash_profile_website || "Website"} <span className="text-slate-400 font-normal">(Opsional)</span></span>
                 </label>
-                <input required {...register("website")} type="url" placeholder="https://" className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/80 text-slate-800 dark:text-white text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" />
+                <input {...register("website")} type="text" placeholder="https://example.com" className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/80 text-slate-800 dark:text-white text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" />
               </div>
             </div>
           </div>

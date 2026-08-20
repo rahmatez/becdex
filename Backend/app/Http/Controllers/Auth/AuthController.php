@@ -102,7 +102,7 @@ class AuthController extends Controller
     public function getSessions(Request $request): JsonResponse
     {
         $userId = $request->user()->id;
-        $currentSessionId = $request->session()->getId();
+        $currentSessionId = $request->hasSession() ? $request->session()->getId() : null;
 
         $sessions = \Illuminate\Support\Facades\DB::table('sessions')
             ->where('user_id', $userId)
@@ -114,7 +114,7 @@ class AuthController extends Controller
                     'ip_address' => $session->ip_address,
                     'user_agent' => $session->user_agent,
                     'last_activity' => \Carbon\Carbon::createFromTimestamp($session->last_activity)->diffForHumans(),
-                    'is_current_device' => $session->id === $currentSessionId,
+                    'is_current_device' => $currentSessionId !== null && $session->id === $currentSessionId,
                 ];
             });
 
