@@ -171,11 +171,11 @@ class SubmissionController extends Controller
             ], 422);
         }
 
-        // Cek apakah user sudah pernah bayar (misal: dikembalikan dari survei untuk revisi)
-        $alreadyPaid = $submission->hasSuccessfulPayment();
+        // Cek apakah pengajuan membutuhkan pembayaran (Pertama kali ATAU Revisi Pasca Survei)
+        $requiresPayment = $submission->requiresPayment();
 
-        if ($alreadyPaid) {
-            // Langsung masuk ke verifikasi — tidak perlu bayar lagi
+        if (!$requiresPayment) {
+            // Revisi dokumen awal biasa: Langsung masuk ke verifikasi — gratis tanpa bayar lagi
             $submission->update([
                 'submission_status_id' => 3, // On Verification Process
                 'initial_score'        => $initialScore,
@@ -192,15 +192,19 @@ class SubmissionController extends Controller
             ]);
         }
 
+        // Jika memerlukan pembayaran (Pertama kali ATAU Revisi Pasca Survei):
         // Simpan initial score, ubah status ke Pending Payment (1)
-        // User wajib bayar dulu sebelum admin bisa melakukan verifikasi (pertama kali)
         $submission->update([
             'submission_status_id' => 1, // Pending Payment
             'initial_score'        => $initialScore,
         ]);
 
+        $message = $submission->isPostSurveyRevision()
+            ? 'Revisi pasca survei berhasil dikunci. Silakan lanjutkan ke pembayaran biaya survei.'
+            : 'Submission berhasil dikunci. Silakan lanjutkan ke pembayaran biaya sertifikasi.';
+
         return response()->json([
-            'message' => 'Submission berhasil dikunci. Silakan lanjutkan ke pembayaran biaya sertifikasi.',
+            'message' => $message,
             'data'    => new SubmissionResource($submission->load('status')),
         ]);
     }

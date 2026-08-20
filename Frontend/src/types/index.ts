@@ -45,6 +45,8 @@ export interface Submission {
   survey_score: number;
   can_proceed_to_payment: boolean;
   has_successful_payment: boolean;
+  is_post_survey_revision?: boolean;
+  requires_payment?: boolean;
   documents_uploaded: number;
   reason: string | null;
   created_at: string;

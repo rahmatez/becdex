@@ -166,12 +166,16 @@ export function ScorePaymentTab({ submission, onUpdate }: Props) {
             <SendHorizonal size={22} className="text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
             <div>
               <p className="text-sm font-extrabold text-[#0c2340] dark:text-white">
-                {alreadyPaid || submission.status.id === 4
+                {submission.is_post_survey_revision && submission.requires_payment
+                  ? "Simpan & Lanjut ke Pembayaran Survei"
+                  : !submission.requires_payment
                   ? "Kirim Ulang Hasil Revisi ke Admin"
                   : "Simpan & Lanjutkan ke Pembayaran"}
               </p>
               <p className="text-xs text-slate-600 dark:text-slate-300 mt-1 leading-relaxed font-medium">
-                {alreadyPaid || submission.status.id === 4
+                {submission.is_post_survey_revision && submission.requires_payment
+                  ? "Anda telah menyelesaikan perbaikan dokumen pasca survei lapangan. Klik tombol di bawah untuk menyimpan pengajuan dan melanjutkan ke pembayaran biaya survei lokasi via Xendit."
+                  : !submission.requires_payment
                   ? "Anda telah menyelesaikan perbaikan kuesioner & dokumen pendukung. Klik tombol di bawah untuk mengirimkan ulang hasil revisi Anda ke tim auditor untuk ditinjau kembali (Gratis / Tidak ada biaya pembayaran ulang)."
                   : "Jika Anda sudah melengkapi kuesioner dan dokumen, klik tombol di bawah untuk menyimpan pengajuan. Anda akan diarahkan ke tahap pembayaran biaya sertifikasi."}
               </p>
@@ -184,7 +188,7 @@ export function ScorePaymentTab({ submission, onUpdate }: Props) {
             disabled={submitVerificationMutation.isPending || !score.requirements.score_met || !score.requirements.documents_met}
             className={cn(
               "w-full flex items-center justify-center gap-2.5 py-4 rounded-xl font-extrabold text-sm transition-all shadow-md disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer",
-              alreadyPaid || submission.status.id === 4
+              !submission.requires_payment
                 ? "bg-emerald-600 hover:bg-emerald-700 text-white shadow-emerald-600/20"
                 : "bg-[#0c2340] hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-500 text-white shadow-[#0c2340]/20"
             )}
@@ -196,8 +200,10 @@ export function ScorePaymentTab({ submission, onUpdate }: Props) {
             )}
             <span>
               {submitVerificationMutation.isPending
-                ? "Mengirimkan hasil revisi..."
-                : alreadyPaid || submission.status.id === 4
+                ? "Memproses pengajuan..."
+                : submission.is_post_survey_revision && submission.requires_payment
+                ? "Simpan & Lanjut ke Pembayaran Survei"
+                : !submission.requires_payment
                 ? "Kirim Ulang Hasil Revisi ke Admin (Gratis)"
                 : "Simpan & Lanjut ke Pembayaran"}
             </span>

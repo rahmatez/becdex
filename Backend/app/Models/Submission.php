@@ -151,6 +151,46 @@ class Submission extends Model
     }
 
     /**
+     * Apakah revisi ini merupakan revisi pasca survei lokasi?
+     */
+    public function isPostSurveyRevision(): bool
+    {
+        return $this->activityLogs()
+            ->where('action', 'admin_return_from_survey')
+            ->exists();
+    }
+
+    /**
+     * Apakah pengajuan membutuhkan pembayaran baru?
+     * - Belum pernah bayar sama sekali, ATAU
+     * - Dikembalikan dari survei lokasi (Post-survey revision) dan belum ada pembayaran settlement setelah log pengembalian tersebut.
+     */
+    public function requiresPayment(): bool
+    {
+        if (!$this->hasSuccessfulPayment()) {
+            return true;
+        }
+
+        if ($this->isPostSurveyRevision()) {
+            $lastReturnLog = $this->activityLogs()
+                ->where('action', 'admin_return_from_survey')
+                ->latest()
+                ->first();
+
+            if ($lastReturnLog) {
+                $hasPostSurveyPayment = $this->paymentTransactions()
+                    ->where('transaction_status', 'settlement')
+                    ->where('created_at', '>', $lastReturnLog->created_at)
+                    ->exists();
+
+                return !$hasPostSurveyPayment;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Apakah ada pembayaran yang sudah sukses (settlement)?
      */
     public function hasSuccessfulPayment(): bool
