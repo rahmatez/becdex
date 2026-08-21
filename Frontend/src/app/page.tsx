@@ -499,14 +499,14 @@ export default function LandingPage() {
             <div className="section-header">
               <p>STRATEGIC PARTNERS</p>
             </div>
-            <div className="flex flex-wrap justify-center items-center gap-6 pt-4">
+            <div className="flex flex-wrap justify-center items-center gap-4 pt-4">
               {[
                 {
                   src: "/stie_ibec_partner.webp",
                   href: "https://ibec.stei.ac.id/",
-                  width: 280,
-                  height: 120,
-                  className: "object-contain max-h-28",
+                  width: 380,
+                  height: 160,
+                  className: "object-contain max-h-36",
                 },
                 {
                   src: "/maritim_muda_partner.png",
