@@ -234,7 +234,7 @@ export default function CertificateDesignerPage() {
               >
                 {key === 'qr_code' ? (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=dummy" style={{width:'100%', height:'100%'}} alt="QR Code" />
+                  <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https%3A%2F%2Fbecdex.com%2Fverified-companies" style={{width:'100%', height:'100%'}} alt="QR Code" />
                 ) : style.text}
               </div>
             ))}
