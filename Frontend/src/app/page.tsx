@@ -499,16 +499,21 @@ export default function LandingPage() {
             <div className="section-header">
               <p>STRATEGIC PARTNERS</p>
             </div>
-            <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12 pt-4">
+            <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16 pt-4">
               {[
-                { src: "/blue_institute.webp", href: "#" },
                 {
                   src: "/maritim_muda_partner.png",
                   href: "https://maritimmuda.id",
+                  width: 200,
+                  height: 90,
+                  className: "object-contain max-h-20",
                 },
                 {
                   src: "/stie_ibec_partner.webp",
                   href: "https://ibec.stei.ac.id/",
+                  width: 320,
+                  height: 140,
+                  className: "object-contain max-h-32",
                 },
               ].map((p, idx) => (
                 <a
@@ -520,9 +525,9 @@ export default function LandingPage() {
                   <Image
                     src={p.src}
                     alt="Strategic Partner"
-                    width={200}
-                    height={90}
-                    className="object-contain max-h-20"
+                    width={p.width}
+                    height={p.height}
+                    className={p.className}
                   />
                 </a>
               ))}
