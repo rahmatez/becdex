@@ -677,8 +677,8 @@ const id = {
 
     about_sectors: "12 Sektor Maritim yang Dievaluasi dalam BECdex",
     about_sector_list: [
-      "Bioteknologi dan Pengolahan Bioproduk Laut",
       "Penambangan Laut Dalam, Minyak, dan Gas",
+      "Bioteknologi Laut dan Pengolahan Bioproduk",
       "Komunikasi, Peralatan, dan Instrumentasi Laut",
       "Pertahanan dan Keamanan Laut",
       "Perikanan dan Akuakultur Laut",

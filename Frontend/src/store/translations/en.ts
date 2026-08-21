@@ -677,8 +677,8 @@ const en = {
 
   about_sectors: "The 12 Maritime Sectors Evaluated under BECdex",
   about_sector_list: [
-    "Biotechnology and Marine Bioproducts Processing",
     "Deep Sea Mining, Oil, and Gas",
+    "Marine Biotechnology and Bioproducts Processing",
     "Marine Communication, Equipment and Instrumentation",
     "Marine Defense and Security",
     "Marine Fisheries and Aquaculture",
