@@ -6,7 +6,7 @@ import { AppLayout } from "@/components/layouts/AppLayout";
 import { LoadingSpinner, EmptyState } from "@/components/ui/index";
 import api from "@/lib/api";
 import { formatDate, cn } from "@/lib/utils";
-import { Award, Search, ChevronLeft, ChevronRight, ShieldCheck, Building2, CheckCircle2 } from "lucide-react";
+import { Award, Search, ChevronLeft, ChevronRight, ShieldCheck, Building2, CheckCircle2, Eye } from "lucide-react";
 import { useTranslation } from "@/store/lang";
 import Link from "next/link";
 import { useAuthStore } from "@/store/auth";
@@ -144,6 +144,7 @@ export default function AdminCertificatesPage() {
                     <th className="px-6 py-4">{t.dash_admin_cert_col_valid_until || "Berlaku Hingga"}</th>
                     <th className="px-6 py-4">Status Approval</th>
                     <th className="px-6 py-4 text-right">{t.dash_admin_cert_col_status || "Status Masa Berlaku"}</th>
+                    <th className="px-6 py-4 text-right">Aksi</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-sm font-medium text-slate-700 dark:text-slate-200">
@@ -188,31 +189,40 @@ export default function AdminCertificatesPage() {
                         <td className="px-6 py-4 text-xs font-semibold text-slate-700 dark:text-slate-300">
                           {formatDate(c.valid_until)}
                         </td>
-                        <td className="px-6 py-4 text-right">
-                          {/* Approval Status + Approve Button */}
+                        <td className="px-6 py-4">
+                          {/* Status Approval */}
                           {c.is_approved ? (
-                            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border shadow-2xs bg-emerald-50 text-emerald-700 border-emerald-200/80 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-800">
+                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200/80 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-800">
                               <span className="w-1.5 h-1.5 rounded-full shrink-0 bg-emerald-500" />
-                              {isActive ? (t.dash_admin_cert_status_active || "Aktif & Valid") : (t.dash_admin_cert_status_expired || "Expired")}
+                              Approved
                             </span>
                           ) : (
-                            <div className="flex items-center justify-end gap-2">
-                              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border shadow-2xs bg-amber-50 text-amber-700 border-amber-200/80 dark:bg-amber-950/60 dark:text-amber-300 dark:border-amber-800">
-                                <span className="w-1.5 h-1.5 rounded-full shrink-0 bg-amber-500 animate-pulse" />
-                                Pending Approval
-                              </span>
-                              {canApprove && (
-                                <button
-                                  onClick={() => approveMutation.mutate(c.id)}
-                                  disabled={approveMutation.isPending}
-                                  className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white transition-colors shadow-sm disabled:opacity-60 cursor-pointer"
-                                >
-                                  <CheckCircle2 size={13} />
-                                  Setujui
-                                </button>
-                              )}
-                            </div>
+                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200/80 dark:bg-amber-950/60 dark:text-amber-300 dark:border-amber-800">
+                              <span className="w-1.5 h-1.5 rounded-full shrink-0 bg-amber-500 animate-pulse" />
+                              Pending Approval
+                            </span>
                           )}
+                        </td>
+                        <td className="px-6 py-4 text-right">
+                          {/* Status Masa Berlaku (Validity Status) */}
+                          <span className={cn(
+                            "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold border",
+                            isActive
+                              ? "bg-teal-50 text-teal-700 border-teal-200/80 dark:bg-teal-950/60 dark:text-teal-300 dark:border-teal-800"
+                              : "bg-red-50 text-red-700 border-red-200/80 dark:bg-red-950/60 dark:text-red-300 dark:border-red-800"
+                          )}>
+                            <span className={cn("w-1.5 h-1.5 rounded-full shrink-0", isActive ? "bg-teal-500" : "bg-red-500")} />
+                            {isActive ? (t.dash_admin_cert_status_active || "Aktif & Valid") : (t.dash_admin_cert_status_expired || "Expired")}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 text-right">
+                          <Link
+                            href={`/admin/certificates/${c.id}`}
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200/80 dark:bg-blue-950/50 dark:hover:bg-blue-950 dark:text-blue-300 dark:border-blue-800 transition-colors shadow-2xs cursor-pointer"
+                          >
+                            <Eye size={13} />
+                            Lihat
+                          </Link>
                         </td>
                       </tr>
                     );
