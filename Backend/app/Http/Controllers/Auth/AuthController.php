@@ -71,9 +71,9 @@ class AuthController extends Controller
             ], 403);
         }
 
-        // Delete old tokens for this user, then create a fresh one
-        $user->tokens()->delete();
-        $token = $user->createToken('web-login')->plainTextToken;
+        // Create a new token for this device/session
+        $deviceInfo = $request->header('User-Agent', 'Unknown Device');
+        $token = $user->createToken($deviceInfo)->plainTextToken;
 
         return response()->json([
             'message' => 'Login successful.',
@@ -89,9 +89,14 @@ class AuthController extends Controller
      */
     public function logout(Request $request): JsonResponse
     {
-        \Illuminate\Support\Facades\Auth::guard('web')->logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+        // Revoke current access token
+        $request->user()->currentAccessToken()->delete();
+
+        if ($request->hasSession()) {
+            \Illuminate\Support\Facades\Auth::guard('web')->logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+        }
 
         return response()->json(['message' => 'Logged out successfully.']);
     }
@@ -101,20 +106,21 @@ class AuthController extends Controller
      */
     public function getSessions(Request $request): JsonResponse
     {
-        $userId = $request->user()->id;
-        $currentSessionId = $request->hasSession() ? $request->session()->getId() : null;
+        $user = $request->user();
+        $currentTokenId = $user->currentAccessToken()->id ?? null;
 
-        $sessions = \Illuminate\Support\Facades\DB::table('sessions')
-            ->where('user_id', $userId)
-            ->orderBy('last_activity', 'desc')
+        $sessions = $user->tokens()
+            ->orderBy('last_used_at', 'desc')
+            ->orderBy('created_at', 'desc')
             ->get()
-            ->map(function ($session) use ($currentSessionId) {
+            ->map(function ($token) use ($currentTokenId) {
+                $lastActivityTime = $token->last_used_at ?? $token->created_at;
                 return [
-                    'id' => $session->id,
-                    'ip_address' => $session->ip_address,
-                    'user_agent' => $session->user_agent,
-                    'last_activity' => \Carbon\Carbon::createFromTimestamp($session->last_activity)->diffForHumans(),
-                    'is_current_device' => $currentSessionId !== null && $session->id === $currentSessionId,
+                    'id' => (string) $token->id,
+                    'ip_address' => 'Device / Token',
+                    'user_agent' => $token->name ?? 'Unknown Device',
+                    'last_activity' => $lastActivityTime ? $lastActivityTime->diffForHumans() : 'Recently',
+                    'is_current_device' => $token->id === $currentTokenId,
                 ];
             });
 
@@ -126,11 +132,10 @@ class AuthController extends Controller
      */
     public function revokeSession(Request $request, string $id): JsonResponse
     {
-        $userId = $request->user()->id;
+        $user = $request->user();
 
-        \Illuminate\Support\Facades\DB::table('sessions')
+        $user->tokens()
             ->where('id', $id)
-            ->where('user_id', $userId)
             ->delete();
 
         return response()->json(['message' => 'Session revoked successfully.']);

@@ -75,18 +75,15 @@ export function ActiveSessions() {
                 {getDeviceIcon(session.user_agent)}
               </div>
               <div>
-                <p className="text-sm font-bold text-slate-800 dark:text-white">
-                  {session.ip_address}
+                <p className="text-sm font-bold text-slate-800 dark:text-white flex items-center gap-2">
+                  <span>{session.user_agent.length > 50 ? session.user_agent.substring(0, 50) + "..." : session.user_agent}</span>
                   {session.is_current_device && (
-                    <span className="ml-2 text-[10px] bg-green-100 text-green-700 px-2 py-0.5 rounded-full uppercase tracking-wider">
+                    <span className="text-[10px] bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wider">
                       Perangkat Ini
                     </span>
                   )}
                 </p>
-                <p className="text-xs text-slate-500 mt-1 max-w-xs md:max-w-md truncate">
-                  {session.user_agent}
-                </p>
-                <p className="text-xs text-slate-400 mt-0.5">
+                <p className="text-xs text-slate-400 mt-1">
                   Aktivitas terakhir: {session.last_activity}
                 </p>
               </div>
