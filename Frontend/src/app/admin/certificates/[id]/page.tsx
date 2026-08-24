@@ -1,3 +1,4 @@
+content = '''\
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
@@ -14,6 +15,7 @@ import {
 } from "lucide-react";
 import { useAuthStore } from "@/store/auth";
 import { canApproveCertificate } from "@/lib/roles";
+import { useTranslation } from "@/store/lang";
 import Link from "next/link";
 
 interface CertDetail {
@@ -32,6 +34,7 @@ export default function AdminCertificateDetailPage() {
   const params = useParams();
   const router = useRouter();
   const { user } = useAuthStore();
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
   const certId = params?.id as string;
   const canApprove = canApproveCertificate(user);
@@ -72,11 +75,11 @@ export default function AdminCertificateDetailPage() {
         return url;
       });
     } catch {
-      setPdfError("Gagal memuat preview PDF. Coba refresh atau download langsung.");
+      setPdfError(t.dash_admin_cert_preview_error || "Gagal memuat preview PDF. Coba refresh atau download langsung.");
     } finally {
       setPdfLoading(false);
     }
-  }, [certId]);
+  }, [certId, t.dash_admin_cert_preview_error]);
 
   useEffect(() => {
     fetchPdfBlob();
@@ -97,11 +100,11 @@ export default function AdminCertificateDetailPage() {
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `sertifikat_${data?.user?.name?.replace(/\s+/g, "_") ?? certId}.pdf`;
+      a.download = `sertifikat_${data?.user?.name?.replace(/\\s+/g, "_") ?? certId}.pdf`;
       a.click();
       URL.revokeObjectURL(url);
     } catch {
-      alert("Gagal mengunduh PDF. Coba lagi.");
+      alert(t.dash_admin_cert_preview_error || "Gagal mengunduh PDF. Coba lagi.");
     }
   };
 
@@ -117,11 +120,11 @@ export default function AdminCertificateDetailPage() {
   };
 
   return (
-    <AppLayout title={cert ? `Sertifikat - ${cert.user?.name ?? "Detail"}` : "Detail Sertifikat"}>
+    <AppLayout title={cert ? `${t.dash_admin_cert_detail_title || "Detail Sertifikat"} — ${cert.user?.name ?? ""}` : (t.dash_admin_cert_detail_title || "Detail Sertifikat")}>
       <div className="mb-5 flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
         <Link href="/admin/certificates" className="inline-flex items-center gap-1.5 hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-medium">
           <ArrowLeft size={14} />
-          Kembali ke Daftar Sertifikat
+          {t.dash_admin_cert_back || "Kembali ke Daftar Sertifikat"}
         </Link>
         {cert && (
           <>
@@ -136,9 +139,9 @@ export default function AdminCertificateDetailPage() {
       ) : isError || !cert ? (
         <div className="rounded-2xl border border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-950/30 p-10 text-center">
           <ShieldAlert size={36} className="mx-auto mb-3 text-red-500" />
-          <p className="text-sm font-semibold text-red-700 dark:text-red-400">Sertifikat tidak ditemukan atau terjadi kesalahan.</p>
+          <p className="text-sm font-semibold text-red-700 dark:text-red-400">{t.dash_admin_cert_not_found || "Sertifikat tidak ditemukan atau terjadi kesalahan."}</p>
           <button onClick={() => router.push("/admin/certificates")} className="mt-4 px-4 py-2 rounded-xl bg-red-600 text-white text-xs font-bold hover:bg-red-700 transition-colors cursor-pointer">
-            Kembali ke Daftar
+            {t.dash_admin_cert_back || "Kembali ke Daftar"}
           </button>
         </div>
       ) : (
@@ -161,17 +164,17 @@ export default function AdminCertificateDetailPage() {
                 {cert.is_approved ? (
                   <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border bg-emerald-50 text-emerald-700 border-emerald-200/80 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-800">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />
-                    Sudah Diapprove
+                    {t.dash_admin_cert_approved_badge || "Approved"}
                   </span>
                 ) : (
                   <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border bg-amber-50 text-amber-700 border-amber-200/80 dark:bg-amber-950/60 dark:text-amber-300 dark:border-amber-800">
                     <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse shrink-0" />
-                    Pending Approval
+                    {t.dash_admin_cert_pending_badge || "Pending Approval"}
                   </span>
                 )}
                 <span className={cn("inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border", isActive ? "bg-teal-50 text-teal-700 border-teal-200/80 dark:bg-teal-950/60 dark:text-teal-300 dark:border-teal-800" : "bg-red-50 text-red-700 border-red-200/80 dark:bg-red-950/60 dark:text-red-300 dark:border-red-800")}>
                   <span className={cn("w-1.5 h-1.5 rounded-full shrink-0", isActive ? "bg-teal-500" : "bg-red-500")} />
-                  {isActive ? "Masih Berlaku" : "Sudah Expired"}
+                  {isActive ? (t.dash_admin_cert_valid_badge || "Active & Valid") : (t.dash_admin_cert_expired_badge || "Expired")}
                 </span>
                 {cert.certificate?.category && (
                   <span className={cn("inline-flex items-center px-3 py-1 rounded-full text-xs font-extrabold border uppercase tracking-wide", getCategoryStyle(cert.certificate.category))}>
@@ -181,44 +184,44 @@ export default function AdminCertificateDetailPage() {
               </div>
 
               <div className="space-y-1">
-                <InfoRow icon={<Hash size={14} />} label="Nomor MMIC" value={<span className="font-mono font-bold text-slate-800 dark:text-white">{cert.mmic || ""}</span>} />
-                <InfoRow icon={<FileText size={14} />} label="Direktur" value={cert.direktur || ""} />
-                <InfoRow icon={<BarChart3 size={14} />} label="Skor Valid" value={<span className="font-extrabold text-slate-900 dark:text-white">{Number(cert.submission?.valid_score ?? cert.submission?.initial_score ?? 0).toFixed(1)}%</span>} />
-                <InfoRow icon={<Calendar size={14} />} label="Tanggal Terbit" value={formatDate(cert.published_at)} />
-                <InfoRow icon={<Calendar size={14} />} label="Berlaku Hingga" value={<span className={isActive ? "text-teal-700 dark:text-teal-400 font-bold" : "text-red-600 dark:text-red-400 font-bold"}>{formatDate(cert.valid_until)}</span>} />
+                <InfoRow icon={<Hash size={14} />} label={t.dash_admin_cert_col_mmic || "Nomor MMIC"} value={<span className="font-mono font-bold text-slate-800 dark:text-white">{cert.mmic || "—"}</span>} />
+                <InfoRow icon={<FileText size={14} />} label={t.dash_admin_cert_director || "Direktur"} value={cert.direktur || "—"} />
+                <InfoRow icon={<BarChart3 size={14} />} label={t.dash_admin_cert_col_score || "Skor Valid"} value={<span className="font-extrabold text-slate-900 dark:text-white">{Number(cert.submission?.valid_score ?? cert.submission?.initial_score ?? 0).toFixed(1)}%</span>} />
+                <InfoRow icon={<Calendar size={14} />} label={t.dash_admin_cert_col_published || "Tanggal Diterbitkan"} value={formatDate(cert.published_at)} />
+                <InfoRow icon={<Calendar size={14} />} label={t.dash_admin_cert_col_valid_until || "Berlaku Hingga"} value={<span className={isActive ? "text-teal-700 dark:text-teal-400 font-bold" : "text-red-600 dark:text-red-400 font-bold"}>{formatDate(cert.valid_until)}</span>} />
               </div>
             </div>
 
             <div className="rounded-2xl border border-slate-200/80 bg-white dark:border-slate-800 dark:bg-slate-900 p-5 shadow-xs flex flex-col gap-3 transition-colors">
-              <p className="text-xs font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1">Aksi</p>
+              <p className="text-xs font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1">{t.dash_admin_cert_actions || "Aksi"}</p>
 
               <button onClick={handleDownload} className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 active:scale-[0.98] text-white font-bold text-sm shadow-md shadow-blue-600/20 transition-all cursor-pointer">
                 <Download size={16} />
-                Download PDF Sertifikat
+                {t.dash_admin_cert_download_btn || "Download PDF Sertifikat"}
               </button>
 
               <button onClick={fetchPdfBlob} disabled={pdfLoading} className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-semibold text-sm transition-all disabled:opacity-60 cursor-pointer">
                 <RefreshCw size={15} className={pdfLoading ? "animate-spin" : ""} />
-                {pdfLoading ? "Memuat..." : "Refresh Preview"}
+                {pdfLoading ? (t.dash_admin_cert_loading_preview || "Memuat...") : (t.dash_admin_cert_refresh_btn || "Refresh Preview")}
               </button>
 
               {cert.submission?.id && (
                 <Link href={`/admin/submissions/${cert.submission.id}`} className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-semibold text-sm transition-all cursor-pointer">
                   <ExternalLink size={15} />
-                  Lihat Submission Terkait
+                  {t.dash_admin_cert_view_submission || "Lihat Submission Terkait"}
                 </Link>
               )}
 
               {canApprove && !cert.is_approved && (
                 <button onClick={() => approveMutation.mutate()} disabled={approveMutation.isPending} className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] text-white font-bold text-sm shadow-md shadow-emerald-600/20 transition-all disabled:opacity-60 cursor-pointer">
                   <CheckCircle2 size={16} />
-                  {approveMutation.isPending ? "Memproses..." : "Setujui Sertifikat Ini"}
+                  {approveMutation.isPending ? (t.dash_admin_cert_approving || "Memproses...") : (t.dash_admin_cert_approve_btn || "Setujui Sertifikat Ini")}
                 </button>
               )}
               {canApprove && cert.is_approved && (
                 <div className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 font-semibold text-sm">
                   <ShieldCheck size={15} />
-                  Sertifikat Sudah Diapprove
+                  {t.dash_admin_cert_already_approved || "Sertifikat Sudah Diapprove"}
                 </div>
               )}
             </div>
@@ -229,14 +232,14 @@ export default function AdminCertificateDetailPage() {
             <div className="rounded-2xl border border-slate-200/80 bg-white dark:border-slate-800 dark:bg-slate-900 shadow-xs overflow-hidden transition-colors">
               <div className="px-6 py-4 border-b border-slate-100 dark:border-slate-800 flex items-center gap-3 bg-slate-50/50 dark:bg-slate-800/30">
                 <FileText size={16} className="text-slate-500 dark:text-slate-400 shrink-0" />
-                <span className="font-extrabold text-slate-800 dark:text-white text-sm">Preview Sertifikat PDF</span>
+                <span className="font-extrabold text-slate-800 dark:text-white text-sm">{t.dash_admin_cert_preview_heading || "Preview Sertifikat PDF"}</span>
                 <span className="ml-auto text-xs text-slate-400 dark:text-slate-500 font-medium">{cert.user?.name}</span>
               </div>
               <div className="relative bg-slate-100 dark:bg-slate-800/50" style={{ minHeight: "750px" }}>
                 {pdfLoading && (
                   <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 z-10 bg-white/80 dark:bg-slate-900/80">
                     <div className="w-10 h-10 rounded-full border-2 border-blue-200 border-t-blue-600 animate-spin" />
-                    <p className="text-xs font-medium text-slate-500 dark:text-slate-400">Sedang memuat preview PDF...</p>
+                    <p className="text-xs font-medium text-slate-500 dark:text-slate-400">{t.dash_admin_cert_loading_pdf || "Sedang memuat preview PDF..."}</p>
                   </div>
                 )}
                 {pdfError && !pdfLoading && (
@@ -245,10 +248,10 @@ export default function AdminCertificateDetailPage() {
                       <FileText size={26} className="text-red-500" />
                     </div>
                     <div>
-                      <p className="font-bold text-slate-800 dark:text-white text-sm mb-1">Preview Tidak Tersedia</p>
+                      <p className="font-bold text-slate-800 dark:text-white text-sm mb-1">{t.dash_admin_cert_preview_unavailable || "Preview Tidak Tersedia"}</p>
                       <p className="text-xs text-slate-500 dark:text-slate-400 max-w-xs">{pdfError}</p>
                     </div>
-                    <button onClick={fetchPdfBlob} className="px-4 py-2 rounded-xl bg-blue-600 text-white text-xs font-bold hover:bg-blue-700 transition-colors cursor-pointer">Coba Lagi</button>
+                    <button onClick={fetchPdfBlob} className="px-4 py-2 rounded-xl bg-blue-600 text-white text-xs font-bold hover:bg-blue-700 transition-colors cursor-pointer">{t.dash_admin_cert_try_again || "Coba Lagi"}</button>
                   </div>
                 )}
                 {pdfBlobUrl && !pdfLoading && (
@@ -257,7 +260,7 @@ export default function AdminCertificateDetailPage() {
                 {!pdfBlobUrl && !pdfLoading && !pdfError && (
                   <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-center px-8">
                     <Building2 size={36} className="text-slate-300 dark:text-slate-600" />
-                    <p className="text-sm text-slate-400 dark:text-slate-500">PDF belum dimuat. Klik Refresh Preview.</p>
+                    <p className="text-sm text-slate-400 dark:text-slate-500">{t.dash_admin_cert_pdf_not_loaded || "PDF belum dimuat. Klik Refresh Preview."}</p>
                   </div>
                 )}
               </div>
@@ -280,3 +283,8 @@ function InfoRow({ icon, label, value }: { icon: React.ReactNode; label: string;
     </div>
   );
 }
+'''
+
+with open(r'C:\Users\irsya\.gemini\antigravity-ide\brain\6e3c744a-67ab-48ab-a146-51d6a88d6a9c\scratch\update_detail_i18n.py', 'w', encoding='utf-8') as f:
+    f.write(content)
+print('created script')
