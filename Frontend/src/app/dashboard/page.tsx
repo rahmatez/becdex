@@ -80,11 +80,11 @@ export default function DashboardPage() {
 
   if (error) {
     return (
-      <AppLayout title="Panel Sertifikasi">
-        <div className="rounded-2xl border border-rose-200 bg-rose-50 p-6 text-center text-rose-700 dark:border-rose-900/50 dark:bg-rose-950/30">
-          <AlertCircle className="mx-auto h-8 w-8 text-rose-500 mb-2" />
-          <h3 className="font-bold text-base">{t.dash_sub_err_load || "Gagal Memuat Data Pengajuan"}</h3>
-          <p className="text-xs mt-1 text-rose-600">{t.dash_sub_err_desc || "Terjadi kesalahan saat terhubung ke server BECdex. Silakan muat ulang halaman."}</p>
+      <AppLayout title={t.dash_panel_title || "Panel Perusahaan"}>
+        <div className="rounded-2xl border border-amber-200 bg-amber-50/80 p-8 text-center text-amber-900 dark:border-amber-800/60 dark:bg-amber-950/40 dark:text-amber-200 max-w-xl mx-auto my-8 shadow-sm">
+          <Clock className="mx-auto h-10 w-10 text-amber-600 dark:text-amber-400 mb-3 animate-pulse" />
+          <h3 className="font-extrabold text-lg text-slate-800 dark:text-white tracking-tight">{t.dash_sub_err_load}</h3>
+          <p className="text-xs md:text-sm mt-2 text-slate-600 dark:text-slate-300 leading-relaxed">{t.dash_sub_err_desc}</p>
         </div>
       </AppLayout>
     );

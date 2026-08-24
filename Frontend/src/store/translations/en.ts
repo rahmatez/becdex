@@ -896,8 +896,8 @@ const en = {
   // Dashboard
   dash_profile_sel_country: "Select Country",
   dash_profile_sel_sector: "Select Business Sector",
-  dash_sub_err_load: "Failed to Load Submission Data",
-  dash_sub_err_desc: "An error occurred while connecting to the BECdex server. Please refresh the page.",
+  dash_sub_err_load: "Your Account is Currently Under Verification",
+  dash_sub_err_desc: "Your account has been successfully approved to log in. Currently, the BECdex administrator is verifying your company profile so you can start creating and filling out certification submissions. Please wait a moment or contact our support team if you need further assistance.",
 } as const;
 
 export default en;

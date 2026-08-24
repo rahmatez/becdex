@@ -1,4 +1,3 @@
-content = '''\
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
@@ -283,8 +282,3 @@ function InfoRow({ icon, label, value }: { icon: React.ReactNode; label: string;
     </div>
   );
 }
-'''
-
-with open(r'C:\Users\irsya\.gemini\antigravity-ide\brain\6e3c744a-67ab-48ab-a146-51d6a88d6a9c\scratch\update_detail_i18n.py', 'w', encoding='utf-8') as f:
-    f.write(content)
-print('created script')

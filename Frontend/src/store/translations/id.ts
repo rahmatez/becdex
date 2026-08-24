@@ -897,8 +897,8 @@ const id = {
     // Dashboard
     dash_profile_sel_country: "Pilih Negara",
     dash_profile_sel_sector: "Pilih Sektor Usaha",
-    dash_sub_err_load: "Gagal Memuat Data Pengajuan",
-    dash_sub_err_desc: "Terjadi kesalahan saat terhubung ke server BECdex. Silakan muat ulang halaman.",
+    dash_sub_err_load: "Akun Anda Sedang Dalam Proses Verifikasi",
+    dash_sub_err_desc: "Akun Anda telah berhasil dikonfirmasi untuk masuk. Saat ini administrator BECdex sedang memverifikasi data perusahaan Anda agar dapat mulai membuat dan mengisi pengajuan sertifikasi (submission). Mohon tunggu beberapa saat atau hubungi tim bantuan jika memerlukan panduan lebih lanjut.",
 } as const;
 
 export default id;
