@@ -53,41 +53,41 @@ export function PublicHeader() {
         </Link>
 
         {/* Navigation & Actions Grouped on the Right side */}
-        <div className="hidden md:flex items-center gap-8">
-          <nav className="flex items-center gap-7 text-base font-bold">
+        <div className="hidden md:flex items-center gap-6">
+          <nav className="flex items-center gap-5 text-sm font-bold">
             <Link
               href="/"
-              className={`transition-colors py-1 ${isActive("/") ? "text-[#4154f1]" : "text-[#013289] hover:text-[#4154f1]"}`}
+              className={`transition-colors py-1 whitespace-nowrap ${isActive("/") ? "text-[#4154f1]" : "text-[#013289] hover:text-[#4154f1]"}`}
             >
               {t.nav_home}
             </Link>
             <Link
               href="/about"
-              className={`transition-colors py-1 ${isActive("/about") ? "text-[#4154f1]" : "text-[#013289] hover:text-[#4154f1]"}`}
+              className={`transition-colors py-1 whitespace-nowrap ${isActive("/about") ? "text-[#4154f1]" : "text-[#013289] hover:text-[#4154f1]"}`}
             >
               {t.nav_about}
             </Link>
             <Link
               href="/explore"
-              className={`transition-colors py-1 ${isActive("/explore") ? "text-[#4154f1]" : "text-[#013289] hover:text-[#4154f1]"}`}
+              className={`transition-colors py-1 whitespace-nowrap ${isActive("/explore") ? "text-[#4154f1]" : "text-[#013289] hover:text-[#4154f1]"}`}
             >
               {t.nav_explore}
             </Link>
             <Link
               href="/verified-companies"
-              className={`transition-colors py-1 ${isActive("/verified-companies") ? "text-[#4154f1]" : "text-[#013289] hover:text-[#4154f1]"}`}
+              className={`transition-colors py-1 whitespace-nowrap ${isActive("/verified-companies") ? "text-[#4154f1]" : "text-[#013289] hover:text-[#4154f1]"}`}
             >
               {t.nav_verified_companies}
             </Link>
             <Link
               href="/download"
-              className={`transition-colors py-1 ${isActive("/download") ? "text-[#4154f1]" : "text-[#013289] hover:text-[#4154f1]"}`}
+              className={`transition-colors py-1 whitespace-nowrap ${isActive("/download") ? "text-[#4154f1]" : "text-[#013289] hover:text-[#4154f1]"}`}
             >
               {t.nav_download}
             </Link>
           </nav>
 
-          <div className="flex items-center gap-4 border-l border-gray-100 pl-6">
+          <div className="flex items-center gap-3 border-l border-gray-100 pl-4">
             {/* Language Selector Dropdown (Desktop) */}
             <div className="relative" ref={langRef}>
               <button
