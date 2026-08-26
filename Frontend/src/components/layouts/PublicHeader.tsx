@@ -6,19 +6,37 @@ import { useTranslation, useLangStore } from "@/store/lang";
 import { useCmsStore } from "@/store/cms";
 import { Globe, Menu } from "lucide-react";
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 export function PublicHeader() {
   const { t, locale } = useTranslation();
   const { setLocale } = useLangStore();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isLangOpen, setIsLangOpen] = useState(false);
+  const [isLangOpenMobile, setIsLangOpenMobile] = useState(false);
   const pathname = usePathname();
   
+  const langRef = useRef<HTMLDivElement>(null);
+  const langRefMobile = useRef<HTMLDivElement>(null);
+
   const { fetchContents } = useCmsStore();
 
   useEffect(() => {
     fetchContents();
   }, [fetchContents]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (langRef.current && !langRef.current.contains(event.target as Node)) {
+        setIsLangOpen(false);
+      }
+      if (langRefMobile.current && !langRefMobile.current.contains(event.target as Node)) {
+        setIsLangOpenMobile(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const isActive = (path: string) => {
     if (path === "/") return pathname === "/";
@@ -70,25 +88,44 @@ export function PublicHeader() {
           </nav>
 
           <div className="flex items-center gap-4 border-l border-gray-100 pl-6">
-            {/* Language Selector Dropdown */}
-            <div className="relative group py-2">
-              <button className="flex items-center p-1 text-[#013289] hover:text-[#4154f1] transition-colors">
-                <Globe size={20} />
+            {/* Language Selector Dropdown (Desktop) */}
+            <div className="relative" ref={langRef}>
+              <button
+                onClick={() => setIsLangOpen(!isLangOpen)}
+                className="flex items-center gap-1.5 px-2.5 py-1.5 text-[#013289] hover:text-[#4154f1] hover:bg-gray-50 rounded-lg transition-colors cursor-pointer select-none border border-transparent hover:border-gray-200"
+                aria-label="Select Language"
+              >
+                <Globe size={18} />
+                <span className="text-xs font-bold uppercase tracking-wider">{locale}</span>
               </button>
-              <div className="absolute right-0 top-full mt-0 hidden group-hover:block bg-white border border-gray-100 shadow-lg rounded-lg overflow-hidden py-1 w-28">
-                <button
-                  onClick={() => setLocale("en")}
-                  className={`w-full text-left px-3 py-1.5 text-xs hover:bg-gray-50 flex items-center gap-1.5 ${locale === "en" ? "font-bold text-[#4154f1]" : "text-gray-700"}`}
-                >
-                  EN
-                </button>
-                <button
-                  onClick={() => setLocale("id")}
-                  className={`w-full text-left px-3 py-1.5 text-xs hover:bg-gray-50 flex items-center gap-1.5 ${locale === "id" ? "font-bold text-[#4154f1]" : "text-gray-700"}`}
-                >
-                  ID
-                </button>
-              </div>
+              {isLangOpen && (
+                <div className="absolute right-0 top-full mt-2 bg-white border border-gray-100 shadow-xl rounded-xl overflow-hidden py-1 w-36 z-50 animate-in fade-in zoom-in-95 duration-150">
+                  <button
+                    onClick={() => {
+                      setLocale("en");
+                      setIsLangOpen(false);
+                    }}
+                    className={`w-full text-left px-3.5 py-2 text-xs hover:bg-blue-50 flex items-center justify-between transition-colors cursor-pointer ${
+                      locale === "en" ? "font-bold text-[#4154f1] bg-blue-50/60" : "text-gray-700"
+                    }`}
+                  >
+                    <span>English</span>
+                    <span className="text-[10px] uppercase font-mono text-gray-400">EN</span>
+                  </button>
+                  <button
+                    onClick={() => {
+                      setLocale("id");
+                      setIsLangOpen(false);
+                    }}
+                    className={`w-full text-left px-3.5 py-2 text-xs hover:bg-blue-50 flex items-center justify-between transition-colors cursor-pointer ${
+                      locale === "id" ? "font-bold text-[#4154f1] bg-blue-50/60" : "text-gray-700"
+                    }`}
+                  >
+                    <span>Indonesia</span>
+                    <span className="text-[10px] uppercase font-mono text-gray-400">ID</span>
+                  </button>
+                </div>
+              )}
             </div>
 
             {/* Login & Registration Buttons */}
@@ -110,24 +147,43 @@ export function PublicHeader() {
         {/* Mobile Menu Trigger */}
         <div className="flex md:hidden items-center gap-3">
           {/* Language Selection Globe for mobile */}
-          <div className="relative group py-2">
-            <button className="flex items-center p-1 text-[#013289] hover:text-[#4154f1] transition-colors">
-              <Globe size={20} />
+          <div className="relative" ref={langRefMobile}>
+            <button
+              onClick={() => setIsLangOpenMobile(!isLangOpenMobile)}
+              className="flex items-center gap-1 p-1.5 text-[#013289] hover:text-[#4154f1] hover:bg-gray-50 rounded-lg transition-colors cursor-pointer"
+              aria-label="Select Language"
+            >
+              <Globe size={18} />
+              <span className="text-xs font-bold uppercase">{locale}</span>
             </button>
-            <div className="absolute right-0 top-full mt-0 hidden group-hover:block bg-white border border-gray-100 shadow-lg rounded-lg overflow-hidden py-1 w-28">
-              <button
-                onClick={() => setLocale("en")}
-                className={`w-full text-left px-3 py-1.5 text-xs hover:bg-gray-50 flex items-center gap-1.5 ${locale === "en" ? "font-bold text-[#4154f1]" : "text-gray-700"}`}
-              >
-                EN
-              </button>
-              <button
-                onClick={() => setLocale("id")}
-                className={`w-full text-left px-3 py-1.5 text-xs hover:bg-gray-50 flex items-center gap-1.5 ${locale === "id" ? "font-bold text-[#4154f1]" : "text-gray-700"}`}
-              >
-                ID
-              </button>
-            </div>
+            {isLangOpenMobile && (
+              <div className="absolute right-0 top-full mt-2 bg-white border border-gray-100 shadow-xl rounded-xl overflow-hidden py-1 w-36 z-50 animate-in fade-in zoom-in-95 duration-150">
+                <button
+                  onClick={() => {
+                    setLocale("en");
+                    setIsLangOpenMobile(false);
+                  }}
+                  className={`w-full text-left px-3.5 py-2 text-xs hover:bg-blue-50 flex items-center justify-between transition-colors ${
+                    locale === "en" ? "font-bold text-[#4154f1] bg-blue-50/60" : "text-gray-700"
+                  }`}
+                >
+                  <span>English</span>
+                  <span className="text-[10px] uppercase font-mono text-gray-400">EN</span>
+                </button>
+                <button
+                  onClick={() => {
+                    setLocale("id");
+                    setIsLangOpenMobile(false);
+                  }}
+                  className={`w-full text-left px-3.5 py-2 text-xs hover:bg-blue-50 flex items-center justify-between transition-colors ${
+                    locale === "id" ? "font-bold text-[#4154f1] bg-blue-50/60" : "text-gray-700"
+                  }`}
+                >
+                  <span>Indonesia</span>
+                  <span className="text-[10px] uppercase font-mono text-gray-400">ID</span>
+                </button>
+              </div>
+            )}
           </div>
           <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="p-1.5 text-gray-600 hover:bg-gray-100 rounded-lg">
             <Menu size={20} />
@@ -150,3 +206,4 @@ export function PublicHeader() {
     </header>
   );
 }
+
