@@ -5,6 +5,7 @@ import { AppLayout } from "@/components/layouts/AppLayout";
 import { Save, Eye, RotateCcw } from "lucide-react";
 import { toast } from "sonner";
 import api from "@/lib/api";
+import { useTranslation } from "@/store/lang";
 
 type TemplateConfig = {
   [key: string]: {
@@ -42,6 +43,7 @@ interface Template {
 }
 
 export default function CertificateDesignerPage() {
+  const { t } = useTranslation();
   const [activeTemplate, setActiveTemplate] = useState<Template | null>(null);
   
   // Canvas state
@@ -130,28 +132,28 @@ export default function CertificateDesignerPage() {
           headers: { "Content-Type": "multipart/form-data" }
         });
         setActiveTemplate(res.data.data);
-        toast.success("Desain sertifikat berhasil diperbarui.");
+        toast.success(t.dash_admin_cert_designer_toast_update_success || "Desain sertifikat berhasil diperbarui.");
       } else {
         const res = await api.post("/admin/certificate-templates", formData, {
           headers: { "Content-Type": "multipart/form-data" }
         });
         setActiveTemplate(res.data.data);
-        toast.success("Desain sertifikat baru berhasil dibuat.");
+        toast.success(t.dash_admin_cert_designer_toast_create_success || "Desain sertifikat baru berhasil dibuat.");
       }
     } catch (err) {
       console.error(err);
-      toast.error("Gagal menyimpan desain sertifikat.");
+      toast.error(t.dash_admin_cert_designer_toast_save_error || "Gagal menyimpan desain sertifikat.");
     }
   };
 
   const handlePreview = async () => {
     if (!activeTemplate) {
-      toast.error("Harap simpan desain terlebih dahulu untuk melihat pratinjau PDF.");
+      toast.error(t.dash_admin_cert_designer_toast_save_first || "Harap simpan desain terlebih dahulu untuk melihat pratinjau PDF.");
       return;
     }
     
     try {
-      const toastId = toast.loading("Memuat pratinjau PDF...");
+      const toastId = toast.loading(t.dash_admin_cert_designer_toast_loading_pdf || "Memuat pratinjau PDF...");
       const response = await api.get(`/admin/certificate-templates/${activeTemplate.id}/preview`, {
         responseType: 'blob'
       });
@@ -163,33 +165,31 @@ export default function CertificateDesignerPage() {
     } catch (err) {
       console.error(err);
       toast.dismiss();
-      toast.error("Gagal memuat pratinjau PDF.");
+      toast.error(t.dash_admin_cert_designer_toast_pdf_error || "Gagal memuat pratinjau PDF.");
     }
   };
 
   const handleResetDefault = () => {
-    if (confirm("Apakah Anda yakin ingin mereset layout elemen ke posisi & teks standar terbaru?")) {
+    if (confirm(t.dash_admin_cert_designer_reset_confirm || "Apakah Anda yakin ingin mereset layout elemen ke posisi & teks standar terbaru?")) {
       setConfig(DEFAULT_CONFIG);
-      toast.info("Layout berhasil di-reset ke standar. Klik 'Simpan Desain' untuk menerapkan ke database.");
+      toast.info(t.dash_admin_cert_designer_reset_info || "Layout berhasil di-reset ke standar. Klik 'Simpan Desain' untuk menerapkan ke database.");
     }
   };
 
-
-
   return (
-    <AppLayout title="Certificate Designer">
+    <AppLayout title={t.dash_admin_cert_designer_title || "Certificate Designer"}>
       <div className="flex flex-col md:flex-row gap-6 h-full min-h-[80vh]">
         
         {/* Canvas Area (A4 Landscape aspect ratio = 1.414) */}
         <div className="flex-1 bg-slate-100 dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 flex flex-col relative overflow-hidden">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="font-extrabold text-slate-800 dark:text-white">Visual Editor</h2>
+            <h2 className="font-extrabold text-slate-800 dark:text-white">{t.dash_admin_cert_designer_visual_editor || "Visual Editor"}</h2>
             <div className="flex items-center gap-3">
-              <span className="text-xs font-bold text-slate-500">Preview Latar:</span>
+              <span className="text-xs font-bold text-slate-500">{t.dash_admin_cert_designer_preview_bg || "Preview Latar:"}</span>
               <select 
                 value={bgCategory}
                 onChange={(e) => setBgCategory(e.target.value)}
-                className="px-3 py-1.5 bg-white dark:bg-slate-800 rounded-lg text-xs font-bold border border-slate-200 shadow-sm text-slate-700 dark:text-slate-300"
+                className="px-3 py-1.5 bg-white dark:bg-slate-800 rounded-lg text-xs font-bold border border-slate-200 shadow-sm text-slate-700 dark:text-slate-300 cursor-pointer"
               >
                 <option value="excellent">Excellent</option>
                 <option value="good">Good</option>
@@ -208,7 +208,7 @@ export default function CertificateDesignerPage() {
               <img src={bgImage} alt="Background" className="absolute inset-0 w-full h-full object-fill pointer-events-none" />
             ) : (
               <div className="absolute inset-0 flex items-center justify-center text-slate-400 font-bold border-2 border-dashed border-slate-300 bg-slate-50">
-                Upload A4 Landscape Background
+                {t.dash_admin_cert_designer_upload_bg || "Upload A4 Landscape Background"}
               </div>
             )}
 
@@ -240,23 +240,23 @@ export default function CertificateDesignerPage() {
             ))}
           </div>
           <div className="mt-4 text-center text-xs text-slate-500">
-            Klik elemen untuk memilihnya · Geser dengan <kbd className="px-1.5 py-0.5 bg-slate-200 dark:bg-slate-700 rounded font-mono text-[10px]">←↑↓→</kbd> · Tahan <kbd className="px-1.5 py-0.5 bg-slate-200 dark:bg-slate-700 rounded font-mono text-[10px]">Shift</kbd> untuk langkah lebih besar
+            {t.dash_admin_cert_designer_instructions || "Klik elemen untuk memilihnya · Geser dengan ←↑↓→ · Tahan Shift untuk langkah lebih besar"}
           </div>
         </div>
 
         {/* Properties Sidebar */}
         <div className="w-full md:w-72 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 flex flex-col shadow-2xs">
-          <h3 className="font-bold text-slate-800 dark:text-white mb-4 border-b pb-2">Properties</h3>
+          <h3 className="font-bold text-slate-800 dark:text-white mb-4 border-b pb-2">{t.dash_admin_cert_designer_properties || "Properti"}</h3>
           
           {selectedElement ? (
             <div className="space-y-4">
               <div>
-                <label className="text-xs font-bold text-slate-500 block mb-1">Editing Element:</label>
+                <label className="text-xs font-bold text-slate-500 block mb-1">{t.dash_admin_cert_designer_editing_element || "Elemen Dipilih:"}</label>
                 <div className="font-mono text-sm font-bold text-blue-600 bg-blue-50 py-1 px-2 rounded">{selectedElement}</div>
               </div>
               
               <div>
-                <label className="text-xs font-bold text-slate-500 block mb-1">Font Size (px)</label>
+                <label className="text-xs font-bold text-slate-500 block mb-1">{t.dash_admin_cert_designer_font_size || "Ukuran Font (px)"}</label>
                 <input 
                   type="number" 
                   value={config[selectedElement].fontSize}
@@ -266,7 +266,7 @@ export default function CertificateDesignerPage() {
               </div>
 
               <div>
-                <label className="text-xs font-bold text-slate-500 block mb-1">Text Color</label>
+                <label className="text-xs font-bold text-slate-500 block mb-1">{t.dash_admin_cert_designer_text_color || "Warna Teks"}</label>
                 <div className="flex gap-2 items-center">
                   <input 
                     type="color" 
@@ -284,7 +284,7 @@ export default function CertificateDesignerPage() {
               </div>
 
               <div>
-                <label className="text-xs font-bold text-slate-500 block mb-1">Text Align</label>
+                <label className="text-xs font-bold text-slate-500 block mb-1">{t.dash_admin_cert_designer_text_align || "Rataan Teks"}</label>
                 <select 
                   value={config[selectedElement].textAlign}
                   onChange={(e) => setConfig(prev => ({...prev, [selectedElement]: {...prev[selectedElement], textAlign: e.target.value as "left" | "center" | "right"}}))}
@@ -297,7 +297,7 @@ export default function CertificateDesignerPage() {
               </div>
 
               <div>
-                <label className="text-xs font-bold text-slate-500 block mb-1">Font Weight</label>
+                <label className="text-xs font-bold text-slate-500 block mb-1">{t.dash_admin_cert_designer_font_weight || "Ketebalan Font"}</label>
                 <select 
                   value={config[selectedElement].fontWeight || "normal"}
                   onChange={(e) => setConfig(prev => ({...prev, [selectedElement]: {...prev[selectedElement], fontWeight: e.target.value}}))}
@@ -312,7 +312,7 @@ export default function CertificateDesignerPage() {
 
               <div className="pt-4 border-t border-slate-100 flex gap-4">
                 <div className="flex-1">
-                  <label className="text-xs font-bold text-slate-500 block mb-1">Position X (%)</label>
+                  <label className="text-xs font-bold text-slate-500 block mb-1">{t.dash_admin_cert_designer_pos_x || "Posisi X (%)"}</label>
                   <input 
                     type="number" 
                     step="0.1"
@@ -322,7 +322,7 @@ export default function CertificateDesignerPage() {
                   />
                 </div>
                 <div className="flex-1">
-                  <label className="text-xs font-bold text-slate-500 block mb-1">Position Y (%)</label>
+                  <label className="text-xs font-bold text-slate-500 block mb-1">{t.dash_admin_cert_designer_pos_y || "Posisi Y (%)"}</label>
                   <input 
                     type="number" 
                     step="0.1"
@@ -335,7 +335,7 @@ export default function CertificateDesignerPage() {
             </div>
           ) : (
             <div className="flex-1 flex items-center justify-center text-sm text-slate-400 text-center">
-              Klik salah satu elemen di canvas untuk mengatur properti.
+              {t.dash_admin_cert_designer_select_prompt || "Klik salah satu elemen di canvas untuk mengatur properti."}
             </div>
           )}
 
@@ -344,19 +344,19 @@ export default function CertificateDesignerPage() {
               onClick={handleSave}
               className="w-full flex items-center justify-center gap-2 bg-[#0c2340] hover:bg-blue-700 text-white font-bold py-2.5 rounded-xl shadow-md transition-all text-sm cursor-pointer"
             >
-              <Save size={16} /> Simpan Desain
+              <Save size={16} /> {t.dash_admin_cert_designer_save || "Simpan Desain"}
             </button>
             <button 
               onClick={handlePreview}
               className="w-full flex items-center justify-center gap-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold py-2.5 rounded-xl transition-all text-sm border border-emerald-200 cursor-pointer"
             >
-              <Eye size={16} /> Preview PDF Asli
+              <Eye size={16} /> {t.dash_admin_cert_designer_preview_pdf || "Preview PDF Asli"}
             </button>
             <button 
               onClick={handleResetDefault}
               className="w-full flex items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold py-2 rounded-xl transition-all text-xs border border-slate-300 dark:border-slate-700 cursor-pointer"
             >
-              <RotateCcw size={14} /> Reset ke Standar Terbaru
+              <RotateCcw size={14} /> {t.dash_admin_cert_designer_reset || "Reset ke Standar Terbaru"}
             </button>
           </div>
         </div>
@@ -365,3 +365,4 @@ export default function CertificateDesignerPage() {
     </AppLayout>
   );
 }
+

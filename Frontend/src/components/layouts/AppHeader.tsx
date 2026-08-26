@@ -43,22 +43,22 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ title }) => {
 
   const searchableMenu = isAdmin
     ? [
-        { label: "Overview Admin", href: "/admin" },
-        { label: "Verifikasi Pengajuan", href: "/admin/submissions" },
-        { label: "Kelola Pengguna", href: "/admin/users" },
-        { label: "Riwayat Transaksi", href: "/admin/payments" },
-        { label: "Sertifikat", href: "/admin/certificates" },
-        { label: "Indikator & Kerangka Kerja", href: "/admin/framework" },
-        { label: "Data Induk", href: "/admin/master" },
-        { label: "Profil Admin", href: "/admin/profile" },
+        { label: t.sidebar_admin_dash || "Overview Admin", href: "/admin" },
+        { label: t.sidebar_admin_submissions || "Verifikasi Pengajuan", href: "/admin/submissions" },
+        { label: t.sidebar_admin_users || "Kelola Pengguna", href: "/admin/users" },
+        { label: t.sidebar_admin_payments || "Riwayat Transaksi", href: "/admin/payments" },
+        { label: t.sidebar_admin_certificates || "Sertifikat", href: "/admin/certificates" },
+        { label: t.sidebar_admin_framework || "Indikator & Kerangka Kerja", href: "/admin/framework" },
+        { label: t.sidebar_admin_master || "Data Induk", href: "/admin/master" },
+        { label: t.sidebar_admin_profile || "Profil Admin", href: "/admin/profile" },
       ]
     : [
-        { label: "Dashboard Perusahaan", href: "/dashboard" },
-        { label: "Pengajuan Sertifikasi (Submissions)", href: "/dashboard/submissions" },
-        { label: "Riwayat Pembayaran", href: "/dashboard/payments" },
-        { label: "Panduan Pengguna", href: "/dashboard/guide" },
-        { label: "Audit Checklist", href: "/dashboard/audit-checklist" },
-        { label: "Profil Perusahaan", href: "/dashboard/profile" },
+        { label: t.sidebar_company_dash || "Dashboard Perusahaan", href: "/dashboard" },
+        { label: t.sidebar_company_submissions || "Pengajuan Sertifikasi (Submissions)", href: "/dashboard/submissions" },
+        { label: t.sidebar_company_payments || "Riwayat Pembayaran", href: "/dashboard/payments" },
+        { label: t.sidebar_company_guide || "Panduan Pengguna", href: "/dashboard/guide" },
+        { label: t.sidebar_company_audit || "Audit Checklist", href: "/dashboard/audit-checklist" },
+        { label: t.sidebar_company_profile || "Profil Perusahaan", href: "/dashboard/profile" },
       ];
 
   const filteredMenu = searchableMenu.filter((item) =>
@@ -177,7 +177,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ title }) => {
             {isSearchOpen && searchQuery.trim().length > 0 && (
               <div className="absolute left-0 right-0 mt-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-xl z-50 overflow-hidden">
                 <div className="p-2 border-b border-slate-100 dark:border-slate-800 text-[11px] font-bold text-slate-400 px-3 uppercase">
-                  Hasil Pencarian Menu ({filteredMenu.length})
+                  {t.header_search_results?.replace("{count}", String(filteredMenu.length)) || `Hasil Pencarian Menu (${filteredMenu.length})`}
                 </div>
                 <div className="max-h-60 overflow-y-auto divide-y divide-slate-100 dark:divide-slate-800">
                   {filteredMenu.length > 0 ? (
@@ -197,7 +197,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ title }) => {
                     ))
                   ) : (
                     <div className="p-4 text-center text-xs text-slate-400">
-                      Tidak ada menu atau halaman yang cocok dengan &quot;{searchQuery}&quot;
+                      {t.header_search_no_results?.replace("{query}", searchQuery) || `Tidak ada menu atau halaman yang cocok dengan "${searchQuery}"`}
                     </div>
                   )}
                 </div>
@@ -243,7 +243,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ title }) => {
             onClick={toggleTheme}
             className="relative flex items-center justify-center w-10 h-10 rounded-xl border border-slate-200/80 text-slate-600 hover:bg-slate-100 dark:border-slate-800 dark:text-slate-300 dark:hover:bg-slate-800 transition-all cursor-pointer shadow-2xs"
             aria-label="Toggle Light/Dark Theme"
-            title={theme === "dark" ? "Ganti ke Light Mode" : "Ganti ke Dark Mode"}
+            title={theme === "dark" ? (t.header_theme_to_light || "Ganti ke Light Mode") : (t.header_theme_to_dark || "Ganti ke Dark Mode")}
           >
             <Sun size={18} className="hidden dark:block text-amber-400" />
             <Moon size={18} className="block dark:hidden text-slate-600" />
@@ -268,7 +268,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ title }) => {
             {showNotifications && (
               <div className="absolute right-0 mt-3 w-80 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl shadow-2xl z-50 overflow-hidden animate-in fade-in slide-in-from-top-4 duration-200">
                 <div className="p-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between bg-slate-50/50 dark:bg-slate-800/30">
-                  <h3 className="font-extrabold text-sm text-slate-800 dark:text-white">Notifikasi</h3>
+                  <h3 className="font-extrabold text-sm text-slate-800 dark:text-white">{t.header_notif_title || "Notifikasi"}</h3>
                   {unreadCount > 0 && (
                     <button
                       onClick={() => {
@@ -277,14 +277,14 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ title }) => {
                       className="text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1 cursor-pointer"
                     >
                       <Check size={14} />
-                      Tandai Dibaca
+                      {t.header_notif_mark_read || "Tandai Dibaca"}
                     </button>
                   )}
                 </div>
                 <div className="max-h-87.5 overflow-y-auto custom-scrollbar">
                   {notifications.length === 0 ? (
                     <div className="p-6 text-center text-xs text-slate-500">
-                      Belum ada notifikasi
+                      {t.header_notif_empty || "Belum ada notifikasi"}
                     </div>
                   ) : (
                     <div className="divide-y divide-slate-100 dark:divide-slate-800/60">

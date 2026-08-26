@@ -80,7 +80,7 @@ export default function AdminCertificatesPage() {
               className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-md shadow-blue-600/20 transition-all cursor-pointer whitespace-nowrap"
             >
               <Award size={14} />
-              <span className="hidden sm:inline">Desain Sertifikat</span>
+              <span className="hidden sm:inline">{t.dash_admin_cert_design_btn || "Desain Sertifikat"}</span>
             </Link>
             <div className="relative flex-1 sm:w-72">
               <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
@@ -142,9 +142,9 @@ export default function AdminCertificatesPage() {
                     <th className="px-6 py-4">{t.dash_admin_cert_col_score || "Skor Valid"}</th>
                     <th className="px-6 py-4">{t.dash_admin_cert_col_published || "Tanggal Diterbitkan"}</th>
                     <th className="px-6 py-4">{t.dash_admin_cert_col_valid_until || "Berlaku Hingga"}</th>
-                    <th className="px-6 py-4">Status Approval</th>
+                    <th className="px-6 py-4">{t.dash_admin_cert_col_approval_status || "Status Approval"}</th>
                     <th className="px-6 py-4 text-right">{t.dash_admin_cert_col_status || "Status Masa Berlaku"}</th>
-                    <th className="px-6 py-4 text-right">Aksi</th>
+                    <th className="px-6 py-4 text-right">{t.dash_admin_cert_col_action || "Aksi"}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-sm font-medium text-slate-700 dark:text-slate-200">
@@ -194,12 +194,12 @@ export default function AdminCertificatesPage() {
                           {c.is_approved ? (
                             <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200/80 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-800">
                               <span className="w-1.5 h-1.5 rounded-full shrink-0 bg-emerald-500" />
-                              Approved
+                              {t.dash_admin_cert_approved || "Disetujui"}
                             </span>
                           ) : (
                             <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200/80 dark:bg-amber-950/60 dark:text-amber-300 dark:border-amber-800">
                               <span className="w-1.5 h-1.5 rounded-full shrink-0 bg-amber-500 animate-pulse" />
-                              Pending Approval
+                              {t.dash_admin_cert_pending_approval || "Menunggu Persetujuan"}
                             </span>
                           )}
                         </td>
@@ -221,7 +221,7 @@ export default function AdminCertificatesPage() {
                             className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200/80 dark:bg-blue-950/50 dark:hover:bg-blue-950 dark:text-blue-300 dark:border-blue-800 transition-colors shadow-2xs cursor-pointer"
                           >
                             <Eye size={13} />
-                            Lihat
+                            {t.dash_admin_cert_btn_view || "Lihat"}
                           </Link>
                         </td>
                       </tr>

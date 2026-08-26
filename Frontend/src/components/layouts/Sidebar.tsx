@@ -252,18 +252,18 @@ export function Sidebar() {
             <div className="absolute -right-6 -bottom-6 w-24 h-24 rounded-full bg-blue-500/10 blur-xl pointer-events-none" />
             <Compass size={28} className="text-blue-600 dark:text-blue-300 mb-2.5 opacity-90" />
             <h4 className="text-sm font-bold tracking-tight mb-1 text-slate-900 dark:text-white">
-              {isAdmin ? "Sistem BECdex v2.0" : "Maritim Muda Nusantara"}
+              {isAdmin ? (t.sidebar_admin_card_title || "Sistem BECdex v2.0") : (t.sidebar_company_card_title || "Maritim Muda Nusantara")}
             </h4>
             <p className="text-xs text-slate-600 dark:text-blue-200/90 leading-relaxed mb-3">
               {isAdmin
-                ? "Portal pengelola dan verifikator indeks ekonomi biru nasional."
-                : "Tingkatkan standar kelestarian laut & ekonomi perusahaan Anda."}
+                ? (t.sidebar_admin_card_desc || "Portal pengelola dan verifikator indeks ekonomi biru nasional.")
+                : (t.sidebar_company_card_desc || "Tingkatkan standar kelestarian laut & ekonomi perusahaan Anda.")}
             </p>
             <Link
               href={isAdmin ? "/admin/settings" : "/dashboard/submissions"}
               className="inline-flex items-center gap-1.5 text-xs font-semibold bg-blue-600 hover:bg-blue-700 text-white dark:bg-white/10 dark:hover:bg-white/20 dark:text-white px-3 py-1.5 rounded-lg backdrop-blur-xs transition-colors shadow-xs"
             >
-              <span>{isAdmin ? "Pengaturan" : "Ajukan Indeks"}</span>
+              <span>{isAdmin ? (t.sidebar_card_btn_settings || "Pengaturan") : (t.sidebar_card_btn_apply || "Ajukan Indeks")}</span>
               <ChevronRight size={14} />
             </Link>
           </div>
@@ -298,7 +298,7 @@ export function Sidebar() {
           {showFullText && (
             <div className="min-w-0 flex-1">
               <p className="text-slate-800 dark:text-slate-200 text-xs font-bold truncate leading-none mb-1">
-                {user?.name ?? "Pengguna"}
+                {user?.name ?? (t.sidebar_user_default || "Pengguna")}
               </p>
               <p className="text-slate-400 dark:text-slate-500 text-[10px] truncate font-mono leading-none">
                 {user?.email ?? "—"}
@@ -309,14 +309,14 @@ export function Sidebar() {
 
         <button
           onClick={() => setShowLogoutModal(true)}
-          title="Keluar dari sistem"
+          title={t.sidebar_logout || "Logout"}
           className={cn(
             "w-full flex items-center justify-center gap-2.5 rounded-xl py-2.5 text-slate-500 hover:text-red-600 hover:bg-red-50 dark:text-slate-400 dark:hover:bg-red-950/30 dark:hover:text-red-400 text-xs font-semibold transition-all duration-200 cursor-pointer border border-transparent hover:border-red-200/50 dark:hover:border-red-900/50",
             !showFullText ? "px-0" : "px-3"
           )}
         >
           <LogOut size={16} strokeWidth={2} />
-          {showFullText && <span>Keluar</span>}
+          {showFullText && <span>{t.sidebar_logout || "Logout"}</span>}
         </button>
       </div>
 
@@ -328,23 +328,23 @@ export function Sidebar() {
               <LogOut size={24} />
             </div>
             <h3 className="text-lg font-bold text-center text-slate-900 dark:text-white mb-2">
-              Konfirmasi Keluar
+              {t.sidebar_logout_title || "Konfirmasi Keluar"}
             </h3>
             <p className="text-sm text-center text-slate-500 dark:text-slate-400 mb-6">
-              Apakah Anda yakin ingin keluar dari sistem? Anda harus masuk kembali untuk mengakses dasbor.
+              {t.sidebar_logout_desc || "Apakah Anda yakin ingin keluar dari sistem? Anda harus masuk kembali untuk mengakses dasbor."}
             </p>
             <div className="flex items-center gap-3">
               <button
                 onClick={() => setShowLogoutModal(false)}
                 className="flex-1 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors text-sm"
               >
-                Batal
+                {t.sidebar_logout_cancel || "Batal"}
               </button>
               <button
                 onClick={handleLogout}
                 className="flex-1 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white font-semibold transition-colors text-sm shadow-md shadow-red-600/20"
               >
-                Ya, Keluar
+                {t.sidebar_logout_confirm || "Ya, Keluar"}
               </button>
             </div>
           </div>
