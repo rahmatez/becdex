@@ -159,7 +159,7 @@ export default function AdminSubmissionDetailPage({ params }: { params: Promise<
     });
   };
 
-  const isAdminEditable = [3, 6, 7].includes(Number(submission?.status?.id));
+  const isAdminEditable = [2, 3, 4, 6, 7].includes(Number(submission?.status?.id));
 
   const returnMutation = useMutation({
     mutationFn: async () => {
@@ -309,7 +309,7 @@ export default function AdminSubmissionDetailPage({ params }: { params: Promise<
       </div>
 
       {/* Warning Revision Limit — only show during active verification/survey */}
-      {[3, 7].includes(Number(submission.status.id)) && (submission.revision_count ?? 0) >= 1 ? (
+      {[2, 3, 4, 6, 7].includes(Number(submission.status.id)) && (submission.revision_count ?? 0) >= 1 ? (
         <div className="mb-6 flex items-start gap-3.5 bg-rose-50/80 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-800/80 rounded-2xl p-5 shadow-2xs">
           <XCircle size={22} className="text-rose-600 dark:text-rose-400 shrink-0 mt-0.5" />
           <div>
@@ -324,7 +324,7 @@ export default function AdminSubmissionDetailPage({ params }: { params: Promise<
       ) : null}
 
       {/* Info Uploaded Indicators Below 35 */}
-      {[3, 7].includes(Number(submission.status.id)) && uploadedIndicatorsCount < 35 && (
+      {[2, 3, 4, 6, 7].includes(Number(submission.status.id)) && uploadedIndicatorsCount < 35 && (
         <div className="mb-6 flex items-start gap-3.5 bg-amber-50/80 dark:bg-amber-950/50 border border-amber-200 dark:border-amber-800/80 rounded-2xl p-5 shadow-2xs animate-in fade-in slide-in-from-top-4 duration-500">
           <AlertTriangle size={22} className="text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
           <div>
@@ -339,7 +339,7 @@ export default function AdminSubmissionDetailPage({ params }: { params: Promise<
       )}
 
       {/* Warning Unverified Indicators */}
-      {[3, 7].includes(Number(submission.status.id)) && unverifiedCount > 0 && uploadedIndicatorsCount >= 35 && (
+      {[2, 3, 4, 6, 7].includes(Number(submission.status.id)) && unverifiedCount > 0 && uploadedIndicatorsCount >= 35 && (
         <div className="mb-6 flex items-start gap-3.5 bg-amber-50/80 dark:bg-amber-950/50 border border-amber-200 dark:border-amber-800/80 rounded-2xl p-5 shadow-2xs animate-in fade-in slide-in-from-top-4 duration-500">
           <AlertTriangle size={22} className="text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
           <div>

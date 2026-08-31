@@ -93,9 +93,9 @@ class SubmissionAdminController extends Controller
 
         $submission = Submission::findOrFail($id);
 
-        if (!in_array($submission->submission_status_id, [3, 7])) {
+        if (!in_array($submission->submission_status_id, [2, 3, 4, 6, 7])) {
             return response()->json([
-                'message' => 'Status tidak dapat diubah karena submission tidak dalam tahap verifikasi atau survei (Status 3 / 7).',
+                'message' => 'Status tidak dapat diubah karena pengajuan sudah disetujui, tersertifikasi, atau ditolak permanen.',
             ], 422);
         }
 
@@ -414,9 +414,9 @@ class SubmissionAdminController extends Controller
         $submission = Submission::with('user')->findOrFail($id);
 
         // Bisa dikembalikan dari Status 3 (verifikasi) ATAU Status 7 (survei lapangan)
-        if (!in_array($submission->submission_status_id, [3, 7])) {
+        if (!in_array($submission->submission_status_id, [2, 3, 4, 6, 7])) {
             return response()->json([
-                'message' => 'Pengajuan tidak sedang dalam tahap verifikasi atau survei lapangan.',
+                'message' => 'Pengajuan tidak sedang dalam tahap verifikasi, revisi, atau survei lapangan.',
             ], 422);
         }
 
