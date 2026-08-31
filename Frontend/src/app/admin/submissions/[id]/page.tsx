@@ -255,6 +255,11 @@ export default function AdminSubmissionDetailPage({ params }: { params: Promise<
     return map;
   }, [submission?.per_indicators]);
 
+  const uploadedIndicatorsCount = useMemo(() => {
+    if (!submission?.documents) return 0;
+    return new Set(submission.documents.map((d) => (d as IndicatorDoc & { indicator_id: number }).indicator_id)).size;
+  }, [submission?.documents]);
+
   if (!authorized) return null;
 
   if (isLoading) {
@@ -318,8 +323,23 @@ export default function AdminSubmissionDetailPage({ params }: { params: Promise<
         </div>
       ) : null}
 
+      {/* Info Uploaded Indicators Below 35 */}
+      {[3, 7].includes(Number(submission.status.id)) && uploadedIndicatorsCount < 35 && (
+        <div className="mb-6 flex items-start gap-3.5 bg-amber-50/80 dark:bg-amber-950/50 border border-amber-200 dark:border-amber-800/80 rounded-2xl p-5 shadow-2xs animate-in fade-in slide-in-from-top-4 duration-500">
+          <AlertTriangle size={22} className="text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+          <div>
+            <p className="text-sm font-extrabold text-amber-900 dark:text-amber-200">
+              Dokumen Belum Mencapai Minimal 35 Indikator ({uploadedIndicatorsCount}/35 Indikator Terisi)
+            </p>
+            <p className="text-xs text-amber-700 dark:text-amber-300 mt-1 leading-relaxed font-medium">
+              Perusahaan baru mengunggah dokumen bukti pada {uploadedIndicatorsCount} indikator. Anda dapat menandai indikator dengan status <strong>Revisi</strong> dan mengembalikan pengajuan agar perusahaan dapat melengkapi berkas yang kurang.
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* Warning Unverified Indicators */}
-      {[3, 7].includes(Number(submission.status.id)) && unverifiedCount > 0 && (
+      {[3, 7].includes(Number(submission.status.id)) && unverifiedCount > 0 && uploadedIndicatorsCount >= 35 && (
         <div className="mb-6 flex items-start gap-3.5 bg-amber-50/80 dark:bg-amber-950/50 border border-amber-200 dark:border-amber-800/80 rounded-2xl p-5 shadow-2xs animate-in fade-in slide-in-from-top-4 duration-500">
           <AlertTriangle size={22} className="text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
           <div>
@@ -582,6 +602,8 @@ export default function AdminSubmissionDetailPage({ params }: { params: Promise<
                   const docs = (submission.documents ?? []).filter(
                     (d) => (d as IndicatorDoc & { indicator_id: number }).indicator_id === pi.indicator_id
                   );
+                  const isAssessmentDisabled = !isAdminEditable || indicatorMutation.isPending;
+
                   return (
                     <div key={pi.id} className="transition-colors">
                       <div className="flex items-center justify-between px-5 py-3.5 hover:bg-slate-50/50 dark:hover:bg-slate-800/40">
@@ -598,12 +620,15 @@ export default function AdminSubmissionDetailPage({ params }: { params: Promise<
                             )}
                           />
                           <div className="flex items-center gap-2 flex-1 min-w-0">
-                            <span className="shrink-0 text-[10px] font-extrabold text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded-md font-mono uppercase tracking-widest">
+                            <span className="shrink-0 text-xs text-blue-600 dark:text-blue-400 font-extrabold font-mono bg-blue-50 dark:bg-blue-950/60 px-2 py-0.5 rounded-md border border-blue-200/60 dark:border-blue-800">
                               {t.dash_admin_sub_id_indicator || "Indikator"} {indicatorNumberMap.get(pi.indicator_id) ?? "—"}
                             </span>
                             <span className="truncate">{locale === 'id' ? (pi.indicator.name_id || pi.indicator.name) : pi.indicator.name}</span>
                             {(pi.indicator.description || pi.indicator.evidence || pi.indicator.regulation) && (
                               <span
+                                role="button"
+                                tabIndex={0}
+                                title={t.dash_admin_sub_id_tooltip_detail || "Lihat Syarat & Bukti Indikator"}
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   setInfoModalIndicator({
@@ -614,8 +639,19 @@ export default function AdminSubmissionDetailPage({ params }: { params: Promise<
                                     regulation: locale === 'en' ? (pi.indicator.regulation_en || pi.indicator.regulation) : (pi.indicator.regulation || pi.indicator.regulation_en),
                                   });
                                 }}
-                                className="inline-flex items-center gap-1.5 text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors px-2.5 py-1 rounded-full cursor-pointer shrink-0"
-                                title={t.dash_admin_sub_id_tooltip_detail || "Lihat Syarat & Bukti Indikator"}
+                                onKeyDown={(e) => {
+                                  if (e.key === 'Enter' || e.key === ' ') {
+                                    e.stopPropagation();
+                                    setInfoModalIndicator({
+                                      name: locale === 'id' ? (pi.indicator.name_id || pi.indicator.name) : pi.indicator.name,
+                                      description: locale === 'en' ? (pi.indicator.description_en || pi.indicator.description) : (pi.indicator.description || pi.indicator.description_en),
+                                      evidence: locale === 'en' ? (pi.indicator.evidence_en || pi.indicator.evidence) : (pi.indicator.evidence || pi.indicator.evidence_en),
+                                      verification_method: locale === 'en' ? (pi.indicator.verification_method_en || pi.indicator.verification_method) : (pi.indicator.verification_method || pi.indicator.verification_method_en),
+                                      regulation: locale === 'en' ? (pi.indicator.regulation_en || pi.indicator.regulation) : (pi.indicator.regulation || pi.indicator.regulation_en),
+                                    });
+                                  }
+                                }}
+                                className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[11px] font-bold text-slate-500 hover:text-blue-600 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors border border-transparent hover:border-slate-200 dark:hover:border-slate-700 cursor-pointer"
                               >
                                 <Info size={14} />
                                 <span className="text-[10px] font-bold uppercase tracking-wider hidden sm:inline-block">
@@ -624,7 +660,7 @@ export default function AdminSubmissionDetailPage({ params }: { params: Promise<
                               </span>
                             )}
                           </div>
-                          {/* Badge Perlu Dicek Ulang — tampil saat indikator ditandai Revisi (Declined) ATAU sudah disubmit ulang (Submitted) tapi punya comment bekas revisi */}
+                          {/* Badge Perlu Dicek Ulang */}
                           {(pi.status.id === 5 || (pi.status.id === 2 && pi.comment)) && (
                             <span className="shrink-0 inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-rose-100 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 text-[10px] font-bold border border-rose-200 dark:border-rose-800">
                               <AlertTriangle size={9} />
@@ -650,7 +686,7 @@ export default function AdminSubmissionDetailPage({ params }: { params: Promise<
                                 })),
                               })
                             }
-                            disabled={!isAdminEditable || indicatorMutation.isPending}
+                            disabled={isAssessmentDisabled}
                             title={t.dash_admin_sub_id_tooltip_valid || "Setuju & Verifikasi"}
                             className={cn(
                               "inline-flex items-center gap-1 px-2.5 py-1 rounded-xl font-bold text-xs transition-all border cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed",
@@ -674,7 +710,7 @@ export default function AdminSubmissionDetailPage({ params }: { params: Promise<
                                   })),
                                 })
                               }
-                              disabled={!isAdminEditable || indicatorMutation.isPending}
+                              disabled={isAssessmentDisabled}
                               title={t.dash_admin_sub_id_tooltip_revise || "Minta perusahaan merevisi dokumen"}
                               className={cn(
                                 "inline-flex items-center gap-1 px-2.5 py-1 rounded-xl font-bold text-xs transition-all border cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed",
@@ -698,7 +734,7 @@ export default function AdminSubmissionDetailPage({ params }: { params: Promise<
                                   })),
                                 })
                               }
-                              disabled={!isAdminEditable || indicatorMutation.isPending}
+                              disabled={isAssessmentDisabled}
                               title="Tolak permanen / Gagal (Invalid)"
                               className={cn(
                                 "inline-flex items-center gap-1 px-2.5 py-1 rounded-xl font-bold text-xs transition-all border cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed",
@@ -821,8 +857,7 @@ export default function AdminSubmissionDetailPage({ params }: { params: Promise<
                                             valid_values: [{ question_id: q.id, valid_value: val }],
                                           });
                                         }}
-                                        disabled={!isAdminEditable || indicatorMutation.isPending}
-                                        className="px-3 py-1.5 text-xs border border-slate-200/80 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white rounded-xl focus:outline-hidden focus:border-blue-500 font-bold cursor-pointer transition-all shadow-2xs disabled:opacity-50 disabled:cursor-not-allowed"
+                                        className="px-3 py-1.5 text-xs border border-slate-200/80 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white rounded-xl focus:outline-hidden focus:border-blue-500 font-bold cursor-pointer transition-all shadow-2xs"
                                       >
                                         <option value="">{t.dash_admin_sub_id_score_select || "-- Set Skor --"}</option>
                                         <option value="0">{t.dash_admin_sub_id_score_0 || "0 (Ditolak)"}</option>

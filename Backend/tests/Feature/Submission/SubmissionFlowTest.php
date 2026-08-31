@@ -443,4 +443,31 @@ class SubmissionFlowTest extends TestCase
             'submission_id' => $submission->id,
         ]);
     }
+
+    /** @test */
+    public function admin_can_assess_indicator_for_revision_even_if_total_documents_below_35()
+    {
+        $this->actingAs($this->admin);
+        $submission = Submission::factory()->onVerification()->create([
+            'user_id' => $this->company->id,
+        ]);
+        $indicator = $this->createIndicator();
+        SubmissionPerIndicator::create([
+            'submission_id'          => $submission->id,
+            'indicator_id'           => $indicator->id,
+            'per_indicator_status_id'=> 3,
+        ]);
+
+        $response = $this->putJson("/api/admin/submissions/{$submission->id}/indicators/{$indicator->id}", [
+            'status_id' => 5, // Revisi
+            'comment'   => 'Dokumen belum diunggah, silakan unggah berkas bukti.',
+        ]);
+
+        $response->assertStatus(200);
+        $this->assertDatabaseHas('submission_per_indicators', [
+            'submission_id'          => $submission->id,
+            'indicator_id'           => $indicator->id,
+            'per_indicator_status_id'=> 5,
+        ]);
+    }
 }
