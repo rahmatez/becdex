@@ -111,6 +111,7 @@ Route::middleware('auth:sanctum')->group(function () {
         // Indicator Comments
         Route::get('/{id}/indicators/{indicator_id}/comments', [IndicatorCommentController::class, 'index']);
         Route::post('/{id}/indicators/{indicator_id}/comments', [IndicatorCommentController::class, 'store']);
+        Route::put('/{id}/indicators/{indicator_id}/comments/{comment_id}', [IndicatorCommentController::class, 'update']);
     });
 
     // Notifications
@@ -148,6 +149,7 @@ Route::middleware('auth:sanctum')->group(function () {
             // Indicator Comments for Admin
             Route::get('submissions/{id}/indicators/{indicator_id}/comments',  [IndicatorCommentController::class, 'index']);
             Route::post('submissions/{id}/indicators/{indicator_id}/comments', [IndicatorCommentController::class, 'store']);
+            Route::put('submissions/{id}/indicators/{indicator_id}/comments/{comment_id}', [IndicatorCommentController::class, 'update']);
 
             // Activity Logs
             Route::get('submissions/{id}/activity-logs', [ActivityLogController::class, 'index']);

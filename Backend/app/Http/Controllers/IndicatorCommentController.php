@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Enums\RoleId;
 use App\Models\SubmissionPerIndicator;
@@ -60,5 +61,54 @@ class IndicatorCommentController extends Controller
         }
 
         return response()->json(['message' => 'Comment added', 'data' => $comment->load('user:id,name')]);
+    }
+
+    /**
+     * Update isi pesan komentar indikator.
+     *
+     * @param Request $request
+     * @param string $submission_id
+     * @param string $indicator_id
+     * @param string $comment_id
+     * @return JsonResponse
+     */
+    public function update(Request $request, string $submission_id, string $indicator_id, string $comment_id): JsonResponse
+    {
+        // 1. Validasi Input
+        $request->validate([
+            'message' => 'required|string|max:2000',
+        ]);
+
+        // 2. Ambil data relasi SubmissionPerIndicator
+        $perIndicator = SubmissionPerIndicator::where('submission_id', $submission_id)
+            ->where('indicator_id', $indicator_id)
+            ->firstOrFail();
+
+        // 3. Ambil komentar berdasarkan ID
+        $comment = IndicatorComment::where('submission_per_indicator_id', $perIndicator->id)
+            ->where('id', $comment_id)
+            ->firstOrFail();
+
+        $user = Auth::user();
+
+        // 4. Otorisasi: Hanya pemilik pesan atau Super Admin yang boleh edit
+        $isOwner = (int) $comment->user_id === (int) $user->id;
+        $isSuperAdmin = $user->role_id === RoleId::SuperAdmin->value;
+
+        if (!$isOwner && !$isSuperAdmin) {
+            return response()->json([
+                'message' => 'Anda tidak memiliki hak akses untuk mengubah pesan ini.'
+            ], 403);
+        }
+
+        // 5. Update teks pesan
+        $comment->update([
+            'message' => $request->message,
+        ]);
+
+        return response()->json([
+            'message' => 'Komentar berhasil diperbarui',
+            'data' => $comment->load('user:id,name'),
+        ]);
     }
 }
